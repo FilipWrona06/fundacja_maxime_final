@@ -1,18 +1,23 @@
+// src/components/footer/FooterNav.tsx
+
 'use client';
 
 import { motion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { memo } from 'react';
 
-// POPRAWKA 1: Zmieniamy nazwę importowanego typu
-import type { FooterLink } from '@/data/siteData';
-import { FooterLink as FooterLinkComponent } from './FooterLink'; // Zmieniamy nazwę komponentu, by uniknąć konfliktu
+// Zakładamy, że w `siteData` typ nazywa się `NavLink` lub `FooterLink`.
+// Upewnij się, że nazwa typu jest poprawna. Użyjmy "NavLink" dla spójności.
+import type { NavLink } from '@/data/siteData';
+import { FooterLink as FooterLinkComponent } from './FooterLink'; // Dobra praktyka, by uniknąć konfliktu nazw
 
 const softSpring = { type: 'spring', stiffness: 200, damping: 25 } as const;
 
 interface FooterNavProps {
-    // POPRAWKA 2: Używamy poprawnej nazwy typu
-    links: FooterLink[];
+    // --- GŁÓWNA POPRAWKA ---
+    // Dodajemy słowo kluczowe `readonly` przed typem tablicy.
+    // Teraz komponent akceptuje tablice "tylko do odczytu".
+    links: readonly NavLink[];
 }
 
 export const FooterNav = memo(({ links }: FooterNavProps) => {
@@ -27,7 +32,6 @@ export const FooterNav = memo(({ links }: FooterNavProps) => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.4 + index * 0.05, ...softSpring }}
                 >
-                    {/* Używamy komponentu o zmienionej nazwie */}
                     <FooterLinkComponent
                         href={link.href}
                         name={link.name}

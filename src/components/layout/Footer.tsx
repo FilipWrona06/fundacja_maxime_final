@@ -1,8 +1,11 @@
-import { contactData, footerLinks } from '@/data/siteData';
+// src/components/layout/Footer.tsx
+
+// POPRAWKA: Zmieniamy `footerLinks` na `navLinks`, aby pasowało do naszego pliku z danymi.
+import { contactData, navLinks } from '@/data/siteData';
 
 // Importujemy "wyspy", w tym nasz nowy animator
 import { CreditLink } from '../footer/CreditLink';
-import { FooterAnimator } from '../footer/FooterAnimator'; // <-- NOWY IMPORT
+import { FooterAnimator } from '../footer/FooterAnimator';
 import { FooterNav } from '../footer/FooterNav';
 import { Logo } from '../footer/Logo';
 import { NewsletterForm } from '../footer/NewsletterForm';
@@ -27,7 +30,8 @@ const Footer = () => {
                     {/* Kolumna 2: Nawigacja */}
                     <div className="flex flex-col items-center md:items-start">
                         <h3 className="text-lg font-bold text-arylideYellow">Nawigacja</h3>
-                        <FooterNav links={footerLinks} />
+                        {/* POPRAWKA: Przekazujemy `navLinks` zamiast `footerLinks` */}
+                        <FooterNav links={navLinks} />
                     </div>
 
                     {/* Kolumna 3: Kontakt */}

@@ -1,3 +1,5 @@
+// src/components/Navbar.tsx
+
 'use client';
 
 // POPRAWKA: Importy posortowane alfabetycznie, a importy typów oddzielone dla spójności.
@@ -8,25 +10,19 @@ import type { Ref, RefObject } from 'react';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { FaHeart } from 'react-icons/fa';
 
+// NOWOŚĆ: Import danych z zewnętrznego pliku. Upewnij się, że ścieżka jest poprawna.
+import { navLinks } from '@/data/siteData';
+import type { NavLink as LinkItem } from '@/data/siteData'; // Import typu dla spójności
+
 
 // --- DEFINICJE I KONFIGURACJA ---
 
 // 1. Definicje linków i stałych
-type LinkItem = {
-    readonly name: string;
-    readonly href: string;
-};
-
-const leftLinks: readonly LinkItem[] = [
-    { name: 'Strona główna', href: '/' },
-    { name: 'Galeria', href: '/galeria' },
-    { name: 'Wydarzenia', href: '/wydarzenia' },
-];
-const rightLinks: readonly LinkItem[] = [
-    { name: 'Aktualności', href: '/aktualnosci' },
-    { name: 'Kontakt', href: '/kontakt' },
-];
-const allLinks: readonly LinkItem[] = [...leftLinks, ...rightLinks];
+// TWORZYMY LINKI DYNAMICZNIE NA PODSTAWIE ZAIMPORTOWANYCH DANYCH
+// Zakładamy, że logo ma się pojawić po 3 linku. Możesz to łatwo zmienić.
+const leftLinks: readonly LinkItem[] = navLinks.slice(0, 3);
+const rightLinks: readonly LinkItem[] = navLinks.slice(3);
+const allLinks: readonly LinkItem[] = navLinks; // Dla menu mobilnego użyjemy całej tablicy
 const patroniteUrl = 'https://patronite.pl/stowarzyszeniemaxime';
 
 // 2. Stałe dla stylów i animacji - eleganckie i nowoczesne
