@@ -22,26 +22,21 @@ const softSpring = { type: 'spring', stiffness: 200, damping: 25 } as const;
 // --- KOMPONENTY POMOCNICZE ---
 
 const Logo = memo(() => {
-    const [isHovered, setIsHovered] = useState(false);
-
     return (
         <Link
             href="/"
             aria-label="Fundacja Maxime - strona główna"
             className="relative text-4xl font-youngest text-arylideYellow transition-all duration-300"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
         >
             <motion.span
                 className="relative inline-block"
-                animate={isHovered ? {
+                whileHover={{
                     filter: [
                         'drop-shadow(0 0 0px rgba(233,215,88,0))',
                         'drop-shadow(0 0 12px rgba(233,215,88,0.4))',
-                        'drop-shadow(0 0 8px rgba(233,215,88,0.3))'
+                        'drop-shadow(0 0 8px rgba(233,215,88,0.3))',
+                        'drop-shadow(0 0 0px rgba(233,215,88,0))',
                     ]
-                } : {
-                    filter: 'drop-shadow(0 0 0px rgba(233,215,88,0))'
                 }}
                 transition={{ duration: 0.6, ease: 'easeOut' }}
             >
@@ -193,6 +188,7 @@ const NewsletterForm = memo(() => {
                 <input
                     type="email"
                     placeholder="Twój adres e-mail"
+                    aria-label="Twój adres e-mail"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -203,7 +199,7 @@ const NewsletterForm = memo(() => {
                 <motion.button
                     type="submit"
                     aria-label="Zapisz się do newslettera"
-                    className="right-2 relative flex h-8 w-8 items-center justify-center rounded-full border border-arylideYellow bg-transparent text-arylideYellow overflow-hidden"
+                    className="right-2 relative flex h-8 w-8 items-center justify-center rounded-full border border-arylideYellow bg-transparent overflow-hidden"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     transition={smoothSpring}
@@ -218,9 +214,11 @@ const NewsletterForm = memo(() => {
                     />
                     <motion.span
                         className="relative z-10"
-                        animate={isButtonHovered ? { scale: [1, 1.2, 1], rotate: [0, -10, 10, -10, 0] } : { scale: 1, rotate: 0 }}
+                        animate={isButtonHovered 
+                            ? { scale: [1, 1.2, 1], rotate: [0, -10, 10, -10, 0], color: '#1a1a2e' } 
+                            : { scale: 1, rotate: 0, color: '#E9D758' }
+                        }
                         transition={{ duration: 0.6, ease: 'easeInOut' }}
-                        style={{ color: isButtonHovered ? '#1a1a2e' : undefined }}
                     >
                         <FiArrowRight size={20} />
                     </motion.span>

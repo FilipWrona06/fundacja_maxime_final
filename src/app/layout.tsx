@@ -45,7 +45,7 @@ export default function RootLayout({
   return (
     // Zmiana języka na polski dla lepszej dostępności i SEO
     <html lang="pl">
-      <body className={`${montserrat.variable} ${fontYoungest.variable} bg-raisinBlack text-white font-montserrat`}>
+      <body className={`${montserrat.variable} ${fontYoungest.variable}`}>
         {/* Navbar jest renderowany tutaj, poza <main> */}
         <Navbar />
 
