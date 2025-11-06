@@ -5,8 +5,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { memo, useState } from "react";
 import { Underline } from "../ui/Underline";
-
-const softSpring = { type: "spring", stiffness: 200, damping: 25 } as const;
+import { softSpring } from "@/lib/animations"; // ZMIANA: Import
 
 export const CreditLink = memo(
   ({ href, children }: { href: string; children: ReactNode }) => {

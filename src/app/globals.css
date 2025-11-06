@@ -1,3 +1,4 @@
+/* src/app/globals.css */
 @import "tailwindcss";
 
 @theme {
@@ -16,5 +17,11 @@
   /* Podstawowe style body */
   body {
     @apply bg-raisinBlack text-white font-montserrat;
+  }
+}
+
+@layer components {
+  .glass-effect {
+    @apply bg-oxfordBlue/15 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/20;
   }
 }

@@ -15,6 +15,8 @@ import type { NavLink as LinkItem } from '@/data/siteData';
 // --- GŁÓWNA ZMIANA: Import scentralizowanych, reużywalnych komponentów ---
 import { AnimatedNavLink } from '../ui/AnimatedNavLink';
 import { Logo } from '../ui/Logo';
+// ZMIANA: Importy animacji
+import { smoothSpring, hoverTransition, iconPopTransition, shineTransition } from '@/lib/animations';
 
 
 // --- DEFINICJE I KONFIGURACJA ---
@@ -24,13 +26,11 @@ const rightLinks: readonly LinkItem[] = navLinks.slice(3);
 const allLinks: readonly LinkItem[] = navLinks;
 const patroniteUrl = 'https://patronite.pl/stowarzyszeniemaxime';
 
-const glassStyle = "bg-oxfordBlue/15 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/20";
 const navBaseStyle = "flex items-center rounded-full py-5";
 const patroniteButtonBaseClasses = "relative flex items-center gap-x-2 rounded-full font-bold text-arylideYellow overflow-hidden";
 const skipLinkClasses = "sr-only focus:not-sr-only focus:absolute focus:z-[9999] focus:top-4 focus:left-4 focus:px-4 focus:py-2 focus:bg-arylideYellow focus:text-raisinBlack focus:rounded-lg focus:shadow-lg focus:font-bold focus:outline-none focus:ring-2 focus:ring-arylideYellow/50";
 
 const navTransition = { type: 'spring', stiffness: 260, damping: 30 } as const;
-const smoothSpring = { type: 'spring', stiffness: 300, damping: 30 } as const;
 
 const menuButtonVariants = {
     top: { closed: { rotate: 0, y: 0 }, open: { rotate: 45, y: 8 }},
@@ -42,8 +42,6 @@ const mobileMenuVariants: Variants = {
     hidden: { opacity: 0, scale: 0.95, transition: { staggerChildren: 0.03, staggerDirection: -1, when: "afterChildren", duration: 0.2 }},
     visible: { opacity: 1, scale: 1, transition: { staggerChildren: 0.06, staggerDirection: 1, when: "beforeChildren", duration: 0.3, ease: [0.22, 1, 0.36, 1] }},
 };
-
-// POPRAWKA: Wariant `mobileLinkVariants` został przeniesiony do `AnimatedNavLink.tsx`
 
 
 // --- WEWNĘTRZNY HOOK ---
@@ -106,12 +104,12 @@ const PatroniteLink = memo(({ isMobile = false, onClick }: PatroniteLinkProps) =
     return (
         <motion.div whileHover={!isMobile ? { scale: 1.05 } : undefined} whileTap={{ scale: 0.95 }} transition={smoothSpring}>
             <Link href={patroniteUrl} target="_blank" rel="noopener noreferrer" referrerPolicy="no-referrer" className={`${patroniteButtonBaseClasses} ${isMobile ? mobileClasses : desktopClasses}`} onClick={onClick} prefetch={false} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
-                <motion.span className="absolute inset-0 bg-linear-to-r from-arylideYellow via-arylideYellow/80 to-arylideYellow" initial={{ x: '-100%' }} animate={isHovered ? { x: '0%' } : { x: '-100%' }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} />
+                <motion.span className="absolute inset-0 bg-linear-to-r from-arylideYellow via-arylideYellow/80 to-arylideYellow" initial={{ x: '-100%' }} animate={isHovered ? { x: '0%' } : { x: '-100%' }} transition={hoverTransition} />
                 <span className="relative z-10 transition-colors duration-300" style={{ color: isHovered ? '#1a1a2e' : undefined }}>Wesprzyj nas</span>
-                <motion.span className="relative z-10" animate={isHovered ? { scale: [1, 1.2, 1], rotate: [0, -10, 10, -10, 0] } : { scale: 1, rotate: 0 }} transition={{ duration: 0.6, ease: 'easeInOut' }} style={{ color: isHovered ? '#1a1a2e' : undefined }} >
+                <motion.span className="relative z-10" animate={isHovered ? { scale: [1, 1.2, 1], rotate: [0, -10, 10, -10, 0] } : { scale: 1, rotate: 0 }} transition={iconPopTransition} style={{ color: isHovered ? '#1a1a2e' : undefined }} >
                     <FaHeart aria-hidden="true" />
                 </motion.span>
-                <motion.span className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent" initial={{ x: '-100%', skewX: -20 }} animate={isHovered ? { x: '200%' } : { x: '-100%' }} transition={{ duration: 0.8, ease: 'easeInOut' }} />
+                <motion.span className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent" initial={{ x: '-100%', skewX: -20 }} animate={isHovered ? { x: '200%' } : { x: '-100%' }} transition={shineTransition} />
             </Link>
         </motion.div>
     );
@@ -197,7 +195,7 @@ const Navbar = () => {
 
             <header className="fixed top-0 left-0 w-full z-50 flex justify-center p-4 md:pt-5">
                 <motion.div initial={{ y: -100, opacity: 0 }} animate={{ y: navbarY, opacity: 1 }} transition={navTransition}>
-                    <nav aria-label="Główna nawigacja" className={`hidden lg:flex gap-x-5 xl:gap-x-6 px-10 ${navBaseStyle} ${glassStyle}`} style={{ backdropFilter: `blur(${navbarBlur}px)`, transformStyle: 'preserve-3d', perspective: '1000px' }}>
+                    <nav aria-label="Główna nawigacja" className={`hidden lg:flex gap-x-5 xl:gap-x-6 px-10 ${navBaseStyle} glass-effect`} style={{ backdropFilter: `blur(${navbarBlur}px)`, transformStyle: 'preserve-3d', perspective: '1000px' }}>
                         <ul className="flex items-center gap-x-5 xl:gap-x-6" style={{ transformStyle: 'preserve-3d' }}>
                             {leftLinks.map((link) => (
                                 <AnimatedNavLink key={link.href} {...link} isActive={pathname === link.href} className="text-sm" />
@@ -215,7 +213,7 @@ const Navbar = () => {
                     </nav>
                 </motion.div>
 
-                <motion.nav aria-label="Główna nawigacja mobilna" className={`lg:hidden w-full justify-between px-5 md:px-10 ${navBaseStyle} ${glassStyle}`} initial={{ y: -100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={navTransition}>
+                <motion.nav aria-label="Główna nawigacja mobilna" className={`lg:hidden w-full justify-between px-5 md:px-10 ${navBaseStyle} glass-effect`} initial={{ y: -100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={navTransition}>
                     <Logo className="text-3xl" />
                     <AnimatedMenuButton isOpen={isMobileMenuOpen} onClick={toggleMobileMenu} buttonRef={menuButtonRef} />
                 </motion.nav>
@@ -223,7 +221,7 @@ const Navbar = () => {
 
             <AnimatePresence mode="wait">
                 {isMobileMenuOpen && (
-                    <motion.div key="mobile-menu" ref={mobileMenuRef} id={MOBILE_MENU_ID} role="dialog" aria-modal="true" aria-labelledby={MOBILE_MENU_HEADING_ID} className={`fixed inset-0 z-40 flex flex-col items-center justify-center lg:hidden ${glassStyle}`} initial="hidden" animate="visible" exit="hidden" variants={mobileMenuVariants} onAnimationComplete={(definition) => { if (definition === 'visible') { const firstFocusable = mobileMenuRef.current?.querySelector<HTMLElement>('a[href], button:not([disabled])'); setTimeout(() => { firstFocusable?.focus(); }, 50); } }}>
+                    <motion.div key="mobile-menu" ref={mobileMenuRef} id={MOBILE_MENU_ID} role="dialog" aria-modal="true" aria-labelledby={MOBILE_MENU_HEADING_ID} className="fixed inset-0 z-40 flex flex-col items-center justify-center lg:hidden glass-effect" initial="hidden" animate="visible" exit="hidden" variants={mobileMenuVariants} onAnimationComplete={(definition) => { if (definition === 'visible') { const firstFocusable = mobileMenuRef.current?.querySelector<HTMLElement>('a[href], button:not([disabled])'); setTimeout(() => { firstFocusable?.focus(); }, 50); } }}>
                         <h2 id={MOBILE_MENU_HEADING_ID} className="sr-only">Nawigacja mobilna</h2>
                         <div className="absolute inset-0 opacity-40 pointer-events-none">
                             <motion.div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-arylideYellow/10 rounded-full blur-[100px]" animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} />
@@ -232,7 +230,6 @@ const Navbar = () => {
                             {allLinks.map((link) => (
                                 <AnimatedNavLink key={link.href} {...link} isActive={pathname === link.href} isMobile onClick={closeMobileMenu} />
                             ))}
-                            {/* motion.li jest teraz częścią `AnimatedNavLink` w trybie `isMobile`, więc nie jest tutaj potrzebne */}
                             <li className="pt-8">
                                 <PatroniteLink isMobile onClick={closeMobileMenu} />
                             </li>
