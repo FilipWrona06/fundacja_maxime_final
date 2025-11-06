@@ -1,64 +1,86 @@
-// ZMIEŃ NAZWĘ TEGO PLIKU NA siteData.tsx
+// --- DEFINICJE TYPÓW ---
+// Definiujemy jawnie kształt naszych danych dla bezpieczeństwa i czytelności.
 
-import type { SVGProps } from 'react';
-import { FaFacebook, FaInstagram, FaYoutube } from 'react-icons/fa';
-
-// Ikona Patronite
-interface PatroniteIconProps extends SVGProps<SVGSVGElement> {
-	size?: string | number;
+export interface ContactData {
+  address: string;
+  email: string;
+  phone: string;
+  googleMapsLink: string;
 }
-export const PatroniteIcon = ({ size, ...props }: PatroniteIconProps) => (
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		viewBox="0 0 24 24"
-		fill="currentColor"
-		width={size || '1em'}
-		height={size || '1em'}
-		{...props}
-	>
-		<title>Patronite</title>
-		<path d="M16.48.5H3.03v23h4.91v-9.42h8.54c4.14 0 7.52-3.38 7.52-7.54S20.62.5 16.48.5z" />
-	</svg>
-);
+
+export interface SocialLink {
+  name: string;
+  href: string;
+  icon: string; // <-- Kluczowa zmiana: ikona jest teraz identyfikatorem tekstowym
+  colorClasses: {
+    background: string;
+    hover: string;
+  };
+}
+
+export interface FooterLink {
+  name: string;
+  href: string;
+}
+
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+
+// --- DANE APLIKACJI ---
 
 // Dane kontaktowe
-export const contactData = {
+export const contactData: ContactData = {
   address: 'ul. Mireckiego 70, 41-310 Dąbrowa Górnicza',
   email: 'kontakt@stowarzyszeniemaxime.com.pl',
   phone: '+48 123 456 789',
   googleMapsLink: 'https://maps.google.com/?q=ul.+Mireckiego+70,+41-310+Dąbrowa+Górnicza',
 };
 
-// Linki do mediów społecznościowych
-export const socialLinks = [
+// Linki do mediów społecznościowych (z `icon` jako string)
+export const socialLinks: SocialLink[] = [
   { 
     name: 'Facebook', 
     href: 'https://www.facebook.com/stowarzyszeniemaxime/', 
-    icon: FaFacebook,
-    color: 'hover:bg-[#1877F2]' 
+    icon: 'facebook',
+    colorClasses: { 
+      background: 'bg-[#1877F2]', 
+      hover: 'hover:bg-[#1877F2]' 
+    } 
   },
   { 
     name: 'Instagram', 
     href: 'https://www.instagram.com/maxime.orchestra/', 
-    icon: FaInstagram,
-    color: 'hover:bg-gradient-to-br hover:from-[#833AB4] hover:via-[#FD1D1D] hover:to-[#FCB045]'
+    icon: 'instagram',
+    colorClasses: { 
+      background: 'bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#FCB045]', 
+      hover: 'hover:bg-gradient-to-br hover:from-[#833AB4] hover:via-[#FD1D1D] hover:to-[#FCB045]' 
+    }
   },
   { 
     name: 'YouTube', 
     href: 'https://www.youtube.com/@stowarzyszeniemaxime', 
-    icon: FaYoutube,
-    color: 'hover:bg-[#FF0000]'
+    icon: 'youtube',
+    colorClasses: { 
+      background: 'bg-[#FF0000]', 
+      hover: 'hover:bg-[#FF0000]' 
+    }
   },
   { 
     name: 'Patronite', 
     href: 'https://patronite.pl/stowarzyszeniemaxime', 
-    icon: PatroniteIcon,
-    color: 'hover:bg-[#F96854]'
+    icon: 'patronite',
+    colorClasses: { 
+      background: 'bg-[#F96854]', 
+      hover: 'hover:bg-[#F96854]' 
+    }
   },
 ];
 
-// Linki w nawigacji (używane w stopce)
-export const footerLinks = [
+// Linki w nawigacji
+export const footerLinks: FooterLink[] = [
   { name: 'Strona główna', href: '/' },
   { name: 'Galeria', href: '/galeria' },
   { name: 'Wydarzenia', href: '/wydarzenia' },
@@ -67,7 +89,7 @@ export const footerLinks = [
 ];
 
 // Pytania i odpowiedzi (FAQ)
-export const faqItems = [
+export const faqItems: FaqItem[] = [
     {
         question: 'Jak mogę kupić bilet na koncert?',
         answer: 'Bilety dostępne są w zakładce Wydarzenia. Wybierz interesujący Cię koncert i kliknij "Kup bilety". Zostaniesz przekierowany do systemu sprzedaży biletów.',
