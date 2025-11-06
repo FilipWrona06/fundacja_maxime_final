@@ -21,7 +21,7 @@ const Footer = () => {
                     
                     {/* Kolumna 1: Logo */}
                     <div className="flex flex-col items-center md:items-start">
-                        <Logo />
+                        <Logo className='text-4xl' />
                         <p className="mt-4 max-w-xs text-sm text-philippineSilver/80">
                             Inspirujemy, wspieramy i działamy na rzecz rozwoju talentów i pasji.
                         </p>
