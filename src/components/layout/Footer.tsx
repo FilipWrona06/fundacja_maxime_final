@@ -1,9 +1,6 @@
 // src/components/layout/Footer.tsx
 
-// POPRAWKA: Zmieniamy `footerLinks` na `navLinks`, aby pasowało do naszego pliku z danymi.
 import { contactData, navLinks } from '@/data/siteData';
-
-// Importujemy "wyspy", w tym nasz nowy animator
 import { CreditLink } from '../footer/CreditLink';
 import { FooterAnimator } from '../footer/FooterAnimator';
 import { FooterNav } from '../footer/FooterNav';
@@ -12,15 +9,15 @@ import { NewsletterForm } from '../footer/NewsletterForm';
 import { SocialLinksGroup } from '../footer/SocialLinksGroup';
 
 const Footer = () => {
-    // Zwróć uwagę, że nie ma tu już tagu <footer> ani motion.footer
     return (
         <FooterAnimator>
-            {/* Cała zawartość stopki jest teraz dzieckiem komponentu klienckiego */}
             <div className="container relative z-10 mx-auto px-6 py-12">
-                <div className="grid grid-cols-1 gap-10 text-center md:grid-cols-2 md:text-left lg:grid-cols-[1.5fr_1fr_1fr_1.5fr]">
+                {/* ZMIANA: Wyrównanie do lewej tekstu jest teraz opóźnione do `lg` */}
+                <div className="grid grid-cols-1 gap-10 text-center md:grid-cols-2 lg:text-left lg:grid-cols-[1.5fr_1fr_1fr_1.5fr]">
                     
                     {/* Kolumna 1: Logo */}
-                    <div className="flex flex-col items-center md:items-start">
+                    {/* ZMIANA: Wyrównanie do lewej itemów flexboxa opóźnione do `lg` */}
+                    <div className="flex flex-col items-center md:col-span-2 lg:col-span-1 lg:items-start">
                         <Logo className='text-4xl' />
                         <p className="mt-4 max-w-xs text-sm text-philippineSilver/80">
                             Inspirujemy, wspieramy i działamy na rzecz rozwoju talentów i pasji.
@@ -28,14 +25,15 @@ const Footer = () => {
                     </div>
 
                     {/* Kolumna 2: Nawigacja */}
-                    <div className="flex flex-col items-center md:items-start">
+                    {/* ZMIANA: Wyrównanie do lewej itemów flexboxa opóźnione do `lg` */}
+                    <div className="flex flex-col items-center md:col-span-2 lg:col-span-1 lg:items-start">
                         <h3 className="text-lg font-bold text-arylideYellow">Nawigacja</h3>
-                        {/* POPRAWKA: Przekazujemy `navLinks` zamiast `footerLinks` */}
                         <FooterNav links={navLinks} />
                     </div>
 
                     {/* Kolumna 3: Kontakt */}
-                    <div className="flex flex-col items-center md:items-start">
+                    {/* ZMIANA: Wyrównanie do lewej itemów flexboxa opóźnione do `lg` */}
+                    <div className="flex flex-col items-center lg:items-start">
                         <h3 className="text-lg font-bold text-arylideYellow">Bądź w kontakcie</h3>
                         <div className="mt-6 space-y-2 text-sm text-philippineSilver/80">
                             <p>{contactData.address}</p>
@@ -45,7 +43,8 @@ const Footer = () => {
                     </div>
 
                     {/* Kolumna 4: Newsletter */}
-                    <div className="flex flex-col items-center md:items-start">
+                    {/* ZMIANA: Wyrównanie do lewej itemów flexboxa opóźnione do `lg` */}
+                    <div className="flex flex-col items-center lg:items-start">
                         <h3 className="text-lg font-bold text-arylideYellow">Newsletter</h3>
                         <p className="mt-6 text-sm text-philippineSilver/80">
                             Zapisz się, aby otrzymywać informacje o naszych wydarzeniach.
