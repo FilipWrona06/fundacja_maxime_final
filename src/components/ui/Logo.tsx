@@ -4,12 +4,17 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { memo } from 'react';
 
-export const Logo = memo(() => {
+interface LogoProps {
+    className?: string;
+}
+
+export const Logo = memo(({ className = '' }: LogoProps) => {
     return (
         <Link
             href="/"
             aria-label="Fundacja Maxime - strona główna"
-            className="relative text-4xl font-youngest text-arylideYellow transition-all duration-300"
+            // Łączymy domyślne klasy z przekazanymi, aby umożliwić personalizację
+            className={`relative font-youngest text-arylideYellow transition-all duration-300 ${className}`}
         >
             <motion.span
                 className="relative inline-block"
@@ -28,4 +33,7 @@ export const Logo = memo(() => {
         </Link>
     );
 });
+
 Logo.displayName = 'Logo';
+
+export default Logo;

@@ -17,4 +17,7 @@ export const Underline = memo(({ isActive, isHovered }: { isActive?: boolean; is
         }}
     />
 ));
+
 Underline.displayName = 'Underline';
+
+export default Underline;
