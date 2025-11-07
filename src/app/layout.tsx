@@ -55,7 +55,7 @@ export default function RootLayout({
           2. className="pt-28 md:pt-36" - dodaje margines od góry, aby treść
              nie była zasłonięta przez stałą nawigację. Możesz dostosować te wartości.
         */}
-        <main id="main-content" className="pt-28 md:pt-36">
+        <main id="main-content">
           {children}
         </main>
 
