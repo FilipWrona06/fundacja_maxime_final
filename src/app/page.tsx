@@ -1,56 +1,25 @@
-// src/app/page.tsx
+import dynamic from 'next/dynamic';
+import { groq } from 'next-sanity';
 
-import { client } from '@/sanity/lib/client'
-import { groq } from 'next-sanity'
-import HomePageClient from '../components/home/HomePageClient'
+import { HeroSection } from '@/components/home/HeroSection';
+import type { HomePageData } from '@/lib/types';
+import { client } from '@/sanity/lib/client';
 
-// Definiujemy typy dla danych, które pobierzemy z Sanity.
-// Zapewnia to bezpieczeństwo typów i autouzupełnianie w komponencie klienckim.
-export interface HomePageData {
-  heroSection: {
-    badgeText: string;
-    headingPart1: string;
-    headingPart2: string;
-    description: string;
-  };
-  statsSection: { value: string; label: string }[];
-  aboutSection: {
-    smallHeading: string;
-    headingPart1: string;
-    headingPart2: string;
-    headingPart3: string;
-    paragraph1: string;
-    paragraph2: string;
-    image: any; // Typ obrazu z Sanity
-    imageAlt: string;
-  };
-  impactSection: {
-    heading: string;
-    subheading: string;
-    impactCards: { title: string; desc: string; image: any; alt: string }[];
-  };
-  timelineSection: {
-    heading: string;
-    subheading: string;
-    timelineEvents: {
-      year: string;
-      fullYear: string;
-      title: string;
-      text: string;
-      image: any;
-      alt: string;
-    }[];
-  };
-  ctaSection: {
-    heading: string;
-    text: string;
-  };
-}
 
-// Komponent serwerowy, który wykonuje się podczas budowania strony
+// Usunięto stąd definicje interfejsów SanityImage i HomePageData,
+// ponieważ znajdują się teraz w `@/lib/types.ts`.
+
+
+// Dynamiczne importowanie komponentów ("Lazy Loading")
+const StatsSection = dynamic(() => import('@/components/home/StatsSection').then(mod => mod.StatsSection));
+const AboutSection = dynamic(() => import('@/components/home/AboutSection').then(mod => mod.AboutSection));
+const ImpactSection = dynamic(() => import('@/components/home/ImpactSection').then(mod => mod.ImpactSection));
+const TimelineSection = dynamic(() => import('@/components/home/TimelineSection').then(mod => mod.TimelineSection));
+const CTASection = dynamic(() => import('@/components/home/CtaSection').then(mod => mod.CTASection));
+
+
+// Główny komponent serwerowy strony
 export default async function HomePage() {
-  // Zapytanie GROQ do pobrania danych z jednego dokumentu typu 'homePage'
-  // Upewnij się, że masz DOKŁADNIE JEDEN opublikowany dokument tego typu w Sanity Studio
   const query = groq`*[_type == "homePage"][0]{
     heroSection,
     statsSection,
@@ -58,15 +27,27 @@ export default async function HomePage() {
     impactSection,
     timelineSection,
     ctaSection
-  }`
+  }`;
 
-  const data: HomePageData = await client.fetch(query);
+  // Strategia cache'owania danych (ISR)
+  const data: HomePageData = await client.fetch(query, {}, {
+    next: { revalidate: 3600 } 
+  });
 
-  // Zabezpieczenie na wypadek braku danych w CMS
   if (!data) {
     return <div>Nie znaleziono danych dla strony głównej. Sprawdź, czy dokument został opublikowany w Sanity Studio.</div>;
   }
-  
-  // Przekazanie pobranych danych jako 'props' do komponentu klienckiego
-  return <HomePageClient data={data} />;
+
+  return (
+    <>
+      <HeroSection heroData={data.heroSection} />
+      <main>
+        <StatsSection statsData={data.statsSection} />
+        <AboutSection aboutData={data.aboutSection} />
+        <ImpactSection impactData={data.impactSection} />
+        <TimelineSection timelineData={data.timelineSection} />
+        <CTASection ctaData={data.ctaSection} />
+      </main>
+    </>
+  );
 }

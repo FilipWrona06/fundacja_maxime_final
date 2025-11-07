@@ -1,6 +1,6 @@
 // sanity/schemaTypes/homePage.ts
-import {defineField, defineType} from 'sanity'
 import {HomeIcon} from '@sanity/icons'
+import {defineField, defineType} from 'sanity'
 
 export default defineType({
   name: 'homePage',
