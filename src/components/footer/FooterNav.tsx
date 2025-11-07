@@ -4,9 +4,9 @@ import { motion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { memo } from 'react';
 
-import type { NavLink } from '@/data/siteData';
 import { AnimatedNavLink } from '../ui/AnimatedNavLink';
 import { softSpring } from '@/lib/animations'; // ZMIANA: Import
+import type { NavLink } from '@/lib/types';
 
 interface FooterNavProps {
     links: readonly NavLink[];
