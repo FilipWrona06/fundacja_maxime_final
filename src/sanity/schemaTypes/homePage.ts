@@ -45,6 +45,37 @@ export default defineType({
           type: 'text',
           rows: 3,
         }),
+        // --- NOWE POLA WIDEO ---
+        defineField({
+          name: 'videoWebm',
+          title: 'Wideo w tle (WebM)',
+          type: 'file',
+          options: {
+            accept: 'video/webm',
+          },
+          description: 'Zalecane: wideo w formacie WebM dla nowoczesnych przeglądarek (np. Chrome, Firefox).',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'videoMp4',
+          title: 'Wideo w tle (MP4)',
+          type: 'file',
+          options: {
+            accept: 'video/mp4',
+          },
+          description: 'Zalecane: wideo w formacie MP4 jako fallback dla przeglądarek (np. Safari).',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+            name: 'poster',
+            title: 'Poster wideo',
+            type: 'image',
+            description: 'Obrazek, który będzie wyświetlany, zanim wideo się załaduje. Powinien mieć takie same wymiary jak wideo.',
+            options: {
+              hotspot: true,
+            },
+            validation: (Rule) => Rule.required(),
+          }),
       ],
     }),
     // --- Stats Section ---

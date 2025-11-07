@@ -26,6 +26,9 @@ export interface HomePageData {
     headingPart1: string;
     headingPart2: string;
     description: string;
+    videoWebmUrl: string;
+    videoMp4Url: string;
+    posterUrl: string; // Dodaj to
   };
   statsSection: { value: string; label: string }[];
   aboutSection: {

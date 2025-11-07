@@ -10,12 +10,13 @@ export const HeroSection = ({ heroData }: { heroData: HomePageData['heroSection'
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
 
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
   const heroOpacity = useTransform(smoothProgress, [0, 0.5], [1, 0]);
   const heroScale = useTransform(smoothProgress, [0, 0.5], [1, 1.2]);
   const heroY = useTransform(smoothProgress, [0, 1], [0, 300]);
 
   const scrollToContent = useCallback(() => {
+    // Upewnij się, że element docelowy istnieje w Twoim kodzie HTML, np. w kolejnej sekcji
     document.querySelector('#stats-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, []);
 
@@ -25,27 +26,25 @@ export const HeroSection = ({ heroData }: { heroData: HomePageData['heroSection'
       className="relative flex h-screen w-full items-center justify-center overflow-hidden"
       aria-labelledby="hero-heading"
     >
-      <motion.div
-        className="absolute inset-0 -z-10"
-        animate={{
-          background: [
-            "radial-gradient(circle at 20% 50%, rgba(244, 208, 111, 0.15) 0%, transparent 50%)",
-            "radial-gradient(circle at 80% 50%, rgba(244, 208, 111, 0.15) 0%, transparent 50%)",
-            "radial-gradient(circle at 20% 50%, rgba(244, 208, 111, 0.15) 0%, transparent 50%)"
-          ]
-        }}
-        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-      />
+      
+      {/* Wideo w tle z danymi z Sanity */}
       <motion.video
         style={{ scale: heroScale }}
-        poster="/home/images/video-poster.webp"
-        autoPlay loop muted playsInline
+        poster={heroData.posterUrl}
+        autoPlay 
+        loop 
+        muted 
+        playsInline
         className="absolute inset-0 -z-20 h-full w-full object-cover"
       >
-        <source src="/home/video/Background-Video.webm" type="video/webm" />
-        <source src="/home/video/Background-Video.mp4" type="video/mp4" />
+        <source src={heroData.videoWebmUrl} type="video/webm" />
+        <source src={heroData.videoMp4Url} type="video/mp4" />
       </motion.video>
+
+      {/* Przyciemniająca nakładka */}
       <div className="absolute inset-0 -z-10 bg-linear-to-b from-raisinBlack/50 via-raisinBlack/70 to-raisinBlack" />
+
+      {/* Główna treść sekcji */}
       <motion.div
         style={{ opacity: heroOpacity, y: heroY }}
         className="container relative z-10 mx-auto px-6 text-center"
@@ -64,6 +63,7 @@ export const HeroSection = ({ heroData }: { heroData: HomePageData['heroSection'
             <time dateTime="2022">{heroData.badgeText}</time>
           </span>
         </motion.div>
+        
         <h1 id="hero-heading" className="mb-12">
           <motion.span
             initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }}
@@ -78,12 +78,14 @@ export const HeroSection = ({ heroData }: { heroData: HomePageData['heroSection'
             {heroData.headingPart2}
           </motion.span>
         </h1>
+        
         <motion.p
           initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.8 }}
           className="mx-auto mb-12 max-w-2xl text-xl leading-relaxed text-white/80 md:text-2xl"
         >
           {heroData.description}
         </motion.p>
+        
         <motion.div
           initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 1 }}
           className="flex flex-col items-center justify-center gap-5 sm:flex-row"
@@ -101,10 +103,15 @@ export const HeroSection = ({ heroData }: { heroData: HomePageData['heroSection'
           </motion.div>
         </motion.div>
       </motion.div>
+      
+      {/* Przycisk przewijania w dół */}
       <motion.button
         onClick={scrollToContent}
-        initial={{ opacity: 0 }} animate={{ opacity: [0, 1, 0] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
-        className="absolute bottom-12 cursor-pointer" aria-label="Przewiń w dół do treści"
+        initial={{ opacity: 0 }} 
+        animate={{ opacity: [0, 1, 0] }} 
+        transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
+        className="absolute bottom-12 cursor-pointer" 
+        aria-label="Przewiń w dół do treści"
       >
         <FiArrowDown size={36} className="text-arylideYellow/80" aria-hidden="true" />
       </motion.button>

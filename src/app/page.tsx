@@ -6,10 +6,6 @@ import type { HomePageData } from '@/lib/types';
 import { client } from '@/sanity/lib/client';
 
 
-// Usunięto stąd definicje interfejsów SanityImage i HomePageData,
-// ponieważ znajdują się teraz w `@/lib/types.ts`.
-
-
 // Dynamiczne importowanie komponentów ("Lazy Loading")
 const StatsSection = dynamic(() => import('@/components/home/StatsSection').then(mod => mod.StatsSection));
 const AboutSection = dynamic(() => import('@/components/home/AboutSection').then(mod => mod.AboutSection));
@@ -20,8 +16,14 @@ const CTASection = dynamic(() => import('@/components/home/CtaSection').then(mod
 
 // Główny komponent serwerowy strony
 export default async function HomePage() {
+  // Zaktualizowane zapytanie GROQ, aby pobrać adresy URL dla wideo i postera
   const query = groq`*[_type == "homePage"][0]{
-    heroSection,
+    heroSection {
+      ...,
+      "videoWebmUrl": videoWebm.asset->url,
+      "videoMp4Url": videoMp4.asset->url,
+      "posterUrl": poster.asset->url
+    },
     statsSection,
     aboutSection,
     impactSection,
@@ -29,10 +31,8 @@ export default async function HomePage() {
     ctaSection
   }`;
 
-  // Strategia cache'owania danych (ISR)
-  const data: HomePageData = await client.fetch(query, {}, {
-    next: { revalidate: 3600 } 
-  });
+  // Usunięto opcję revalidate, aby strona renderowała się dynamicznie
+  const data: HomePageData = await client.fetch(query);
 
   if (!data) {
     return <div>Nie znaleziono danych dla strony głównej. Sprawdź, czy dokument został opublikowany w Sanity Studio.</div>;
