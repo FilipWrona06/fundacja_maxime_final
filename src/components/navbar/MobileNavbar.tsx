@@ -6,7 +6,7 @@ import { AnimatePresence, motion, type Variants } from 'framer-motion';
 import { useCallback, useEffect, useRef, useState, type RefObject, type ReactNode } from 'react';
 
 // Importy typów i danych
-import type { NavLink as LinkItem } from '@/data/siteData';
+import type { NavLink as LinkItem } from '@/lib/types';
 
 // Importy komponentów podrzędnych
 import { AnimatedNavLink } from '../ui/AnimatedNavLink';

@@ -7,7 +7,7 @@ import { useState, useEffect, type ReactNode } from 'react';
 
 // Importy animacji i komponentów
 import { motion } from 'framer-motion';
-import type { NavLink as LinkItem } from '@/data/siteData';
+import type { NavLink as LinkItem } from '@/lib/types';
 import { AnimatedNavLink } from '../ui/AnimatedNavLink';
 import { PatroniteLink } from './PatroniteLink';
 // ZMIANA: Usunięto import `Logo`

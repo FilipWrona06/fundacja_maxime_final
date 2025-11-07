@@ -6,9 +6,9 @@ import type { FC, SVGProps } from 'react';
 import { memo, useState } from 'react';
 import { FaFacebook, FaInstagram, FaYoutube } from 'react-icons/fa';
 
-import type { SocialLink } from '@/data/siteData';
 // ZMIANA: Importy animacji
 import { smoothSpring, hoverTransition, iconPopTransition, shineTransition } from '@/lib/animations';
+import type { SocialLink } from '@/lib/types';
 
 interface IconProps extends SVGProps<SVGSVGElement> {
     size?: string | number;
