@@ -80,7 +80,7 @@ export const AboutSection = ({ aboutData }: { aboutData: HomePageData['aboutSect
             <motion.div
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.3 }}
               whileHover={{ scale: 1.05, y: -10 }}
-              className="absolute -bottom-8 -left-8 rounded-2xl border border-white/10 glass-effect p-8 md:-left-16 shadow-2xl"
+              className="absolute -bottom-8 -left-5 rounded-2xl border border-white/10 glass-effect p-8 md:-left-16 shadow-2xl"
             >
               <p className="mb-2 font-youngest text-6xl text-arylideYellow">50+</p>
               <p className="text-sm font-semibold uppercase tracking-wide text-white/60">Zorganizowanych Koncertów</p>
