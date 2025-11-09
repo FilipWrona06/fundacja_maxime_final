@@ -1,38 +1,31 @@
-// Plik: components/navigation/DesktopNavbar.tsx
+// Plik: components/navbar/DesktopNavbar.tsx
 'use client';
 
 // Importy React i Next.js
 import { useState, useEffect, type ReactNode } from 'react';
-// ZMIANA: Usunięto import `usePathname`
+import { usePathname } from 'next/navigation';
 
 // Importy animacji i komponentów
 import { motion } from 'framer-motion';
 import type { NavLink as LinkItem } from '@/lib/types';
 import { AnimatedNavLink } from '../ui/AnimatedNavLink';
 import { PatroniteLink } from './PatroniteLink';
-// ZMIANA: Usunięto import `Logo`
 
 // --- Definicje typów i stałe ---
 const navTransition = { type: 'spring', stiffness: 260, damping: 30 } as const;
 const navBaseStyle = "flex items-center rounded-full py-5";
 
-// ZMIANA: Zaktualizowany interfejs propsów
-interface EnrichedLinkItem extends LinkItem {
-  isActive: boolean;
-}
 interface DesktopNavbarProps {
-  navLinks: readonly EnrichedLinkItem[];
+  navLinks: readonly LinkItem[];
   logo: ReactNode;
 }
 
 /**
- * Komponent kliencki ("wyspa") dla nawigacji desktopowej.
- * ZMIANY:
- * - Odbiera `logo` jako gotowy do wyrenderowania prop (ReactNode).
- * - Odbiera `navLinks` z już ustawioną flagą `isActive`.
- * - Usunięto hook `usePathname`, co zmniejsza bundle JS.
+ * Komponent kliencki dla nawigacji desktopowej.
+ * Samodzielnie określa aktywny link za pomocą hooka `usePathname`.
  */
 export const DesktopNavbar = ({ navLinks, logo }: DesktopNavbarProps) => {
+  const pathname = usePathname();
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
@@ -49,7 +42,8 @@ export const DesktopNavbar = ({ navLinks, logo }: DesktopNavbarProps) => {
 
   return (
     <motion.div
-      className="hidden lg:block"
+      // POPRAWKA: Dodano `rounded-full` i `overflow-hidden` aby przyciąć efekt rozmycia
+      className="hidden lg:block rounded-full overflow-hidden"
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: navbarY, opacity: 1 }}
       transition={navTransition}
@@ -57,30 +51,33 @@ export const DesktopNavbar = ({ navLinks, logo }: DesktopNavbarProps) => {
     >
       <nav aria-label="Główna nawigacja" className={`gap-x-5 xl:gap-x-6 px-10 ${navBaseStyle} glass-effect`} style={{ transformStyle: 'preserve-3d', perspective: '1000px' }}>
         <ul className="flex items-center gap-x-5 xl:gap-x-6">
-          {leftLinks.map((link) => (
-            <AnimatedNavLink
-              key={link.href}
-              {...link}
-              // ZMIANA: Używamy przekazanej flagi `isActive`
-              isActive={link.isActive}
-              className="text-sm"
-            />
-          ))}
+          {leftLinks.map((link) => {
+            const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
+            return (
+              <AnimatedNavLink
+                key={link.href}
+                {...link}
+                isActive={isActive}
+                className="text-sm"
+              />
+            );
+          })}
         </ul>
         
-        {/* ZMIANA: Renderujemy logo przekazane jako prop */}
         {logo}
         
         <ul className="flex items-center gap-x-5 xl:gap-x-6">
-          {rightLinks.map((link) => (
-            <AnimatedNavLink
-              key={link.href}
-              {...link}
-              // ZMIANA: Używamy przekazanej flagi `isActive`
-              isActive={link.isActive}
-              className="text-sm"
-            />
-          ))}
+          {rightLinks.map((link) => {
+            const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
+            return (
+              <AnimatedNavLink
+                key={link.href}
+                {...link}
+                isActive={isActive}
+                className="text-sm"
+              />
+            );
+          })}
           <li><PatroniteLink /></li>
         </ul>
       </nav>

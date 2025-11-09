@@ -1,6 +1,6 @@
 import { defineField, defineType } from 'sanity';
 
-export const galeriaPageSchema = defineType({
+export const galeriaPage = defineType({
   name: 'galeriaPage',
   title: 'Strona Galerii',
   type: 'document',

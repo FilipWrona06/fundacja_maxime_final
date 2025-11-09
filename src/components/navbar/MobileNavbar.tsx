@@ -1,9 +1,10 @@
-// Plik: components/navigation/MobileNavbar.tsx
+// Plik: components/navbar/MobileNavbar.tsx
 'use client';
 
 // Importy React, Next.js i Framer Motion
 import { AnimatePresence, motion, type Variants } from 'framer-motion';
 import { useCallback, useEffect, useRef, useState, type RefObject, type ReactNode } from 'react';
+import { usePathname } from 'next/navigation';
 
 // Importy typów i danych
 import type { NavLink as LinkItem } from '@/lib/types';
@@ -48,16 +49,13 @@ const useOnClickOutside = (refs: ReadonlyArray<RefObject<HTMLElement | null>>, h
 
 // --- Główny komponent ---
 
-// ZMIANA: Zaktualizowany interfejs propsów
-interface EnrichedLinkItem extends LinkItem {
-  isActive: boolean;
-}
 interface MobileNavbarProps {
-    navLinks: readonly EnrichedLinkItem[];
+    navLinks: readonly LinkItem[];
     logo: ReactNode;
 }
 
 export const MobileNavbar = ({ navLinks, logo }: MobileNavbarProps) => {
+    const pathname = usePathname();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [announceMessage, setAnnounceMessage] = useState('');
     const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -122,7 +120,8 @@ export const MobileNavbar = ({ navLinks, logo }: MobileNavbarProps) => {
 
             <motion.nav
                 aria-label="Główna nawigacja mobilna"
-                className="relative z-50 w-full justify-between px-5 md:px-10 flex items-center rounded-full py-5 glass-effect"
+                // POPRAWKA: Dodano `overflow-hidden` aby przyciąć efekt rozmycia do zaokrąglonych rogów
+                className="relative z-50 w-full justify-between px-5 md:px-10 flex items-center rounded-full py-5 glass-effect overflow-hidden"
                 initial={{ y: -100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={navTransition}
@@ -150,15 +149,18 @@ export const MobileNavbar = ({ navLinks, logo }: MobileNavbarProps) => {
                         <h2 id={MOBILE_MENU_HEADING_ID} className="sr-only">Nawigacja mobilna</h2>
                         
                         <ul className="flex flex-col items-center space-y-8 relative z-10">
-                            {navLinks.map((link) => (
-                                <AnimatedNavLink
-                                    key={link.href}
-                                    {...link}
-                                    isActive={link.isActive}
-                                    isMobile
-                                    onClick={closeMobileMenu}
-                                />
-                            ))}
+                            {navLinks.map((link) => {
+                                const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
+                                return (
+                                    <AnimatedNavLink
+                                        key={link.href}
+                                        {...link}
+                                        isActive={isActive}
+                                        isMobile
+                                        onClick={closeMobileMenu}
+                                    />
+                                );
+                            })}
                             <motion.li className="pt-8" variants={mobileLinkVariants}>
                                 <PatroniteLink isMobile onClick={closeMobileMenu} />
                             </motion.li>
