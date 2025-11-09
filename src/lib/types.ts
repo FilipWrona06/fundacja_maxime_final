@@ -96,3 +96,36 @@ export interface FaqItem {
   readonly question: string;
   readonly answer: string;
 }
+
+export interface GalleryImage {
+  asset: {
+    _ref: string;
+    _type: 'reference';
+  };
+  alt: string;
+  caption?: string;
+  _type: 'image';
+}
+
+export interface Gallery {
+  title: string;
+  date: string;
+  location: string;
+  slug: { current: string };
+  images: GalleryImage[];
+}
+
+export interface GaleriaPageData {
+  seo: {
+    title: string;
+    description: string;
+    ogImage?: SanityImage;
+  };
+  heroSection: {
+    badge: string;
+    headingLine1: string;
+    headingLine2: string;
+    description: string;
+  };
+  galleries: Gallery[];
+}
