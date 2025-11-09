@@ -1,30 +1,26 @@
 // app/layout.tsx
 
-// --- POPRAWIONE SORTOWANIE IMPORTÓW ---
+// --- IMPORTY GLOBALNE ---
 
-// 1. Importy z paczek zewnętrznych (np. Next.js, Vercel)
+// 1. Importy z paczek zewnętrznych
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import localFont from "next/font/local";
 
-// 2. Importy komponentów wewnętrznych (z aliasem @/)
-import Footer from "@/components/layout/Footer"; 
-import Navbar from "@/components/layout/Navbar"; 
-
-// 3. Importy stylów (często na końcu)
+// 2. Importy stylów (muszą być tutaj, aby działały globalnie)
 import "./globals.css";
 
 // -----------------------------------------
 
-
-// Poprawione metadane dla polskiej strony
+// Globalne metadane dla całej aplikacji
 export const metadata: Metadata = {
   title: "Fundacja Maxime - Strona Główna",
   description: "Oficjalna strona Fundacji Maxime. Dowiedz się więcej o naszych działaniach, wydarzeniach i możliwościach wsparcia.",
 };
 
+// Definicje czcionek, które będą dostępne w całej aplikacji jako zmienne CSS
 const montserrat = Montserrat({
   subsets: ["latin-ext"],
   variable: "--font-montserrat",
@@ -43,26 +39,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // Zmiana języka na polski dla lepszej dostępności i SEO
+    // Ustawienie języka dla całej witryny
     <html lang="pl">
+      {/* 
+        Body w głównym layoucie zawiera tylko to, co absolutnie globalne:
+        - definicje zmiennych CSS dla czcionek
+        - komponenty analityczne
+        - `children`, które w tym przypadku będzie renderować layout z grupy (user) lub stronę /studio
+      */}
       <body className={`${montserrat.variable} ${fontYoungest.variable}`}>
-        {/* Navbar jest renderowany tutaj, poza <main> */}
-        <Navbar />
+        {children}
 
-        {/* 
-          Główny kontener treści strony:
-          1. id="main-content" - pozwala na działanie linku "Przejdź do treści".
-          2. className="pt-28 md:pt-36" - dodaje margines od góry, aby treść
-             nie była zasłonięta przez stałą nawigację. Możesz dostosować te wartości.
-        */}
-        <main id="main-content">
-          {children}
-        </main>
-
-        {/* Stopka renderowana po głównej treści */}
-        <Footer />
-
-        {/* Komponenty analityczne Vercel */}
+        {/* Komponenty analityczne Vercel, działające globalnie */}
         <Analytics />
         <SpeedInsights />
       </body>
