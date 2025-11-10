@@ -24,9 +24,7 @@ export default function UserPagesLayout({
         Główny kontener treści strony:
         1. id="main-content" - pozwala na działanie linku "Przejdź do treści".
       */}
-      <main id="main-content">
-        {children}
-      </main>
+      <main id="main-content">{children}</main>
 
       {/* Stopka jest renderowana po głównej treści na stronach z tej grupy */}
       <Footer />

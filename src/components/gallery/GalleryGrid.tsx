@@ -1,7 +1,7 @@
-import { urlFor } from '@/sanity/lib/image';
-import type { Gallery } from '@/lib/types';
-import GalleryHeader from './GalleryHeader';
-import GalleryImageGrid from './GalleryImageGrid';
+import { urlFor } from "@/sanity/lib/image";
+import type { Gallery } from "@/lib/types";
+import GalleryHeader from "./GalleryHeader";
+import GalleryImageGrid from "./GalleryImageGrid";
 
 interface Props {
   gallery: Gallery;

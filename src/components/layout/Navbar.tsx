@@ -1,9 +1,9 @@
 // Plik: components/layout/Navbar.tsx
 
-import { navLinks } from '@/data/siteData';
-import { DesktopNavbar } from '../navbar/DesktopNavbar';
-import { MobileNavbar } from '../navbar/MobileNavbar';
-import { Logo } from '../ui/Logo';
+import { navLinks } from "@/data/siteData";
+import { DesktopNavbar } from "../navbar/DesktopNavbar";
+import { MobileNavbar } from "../navbar/MobileNavbar";
+import { Logo } from "../ui/Logo";
 
 /**
  * Główny komponent nawigacji (Server Component).
@@ -18,10 +18,7 @@ const Navbar = () => {
         navLinks={navLinks}
         logo={<Logo className="text-4xl shrink-0" />}
       />
-      <MobileNavbar
-        navLinks={navLinks}
-        logo={<Logo className="text-3xl" />}
-      />
+      <MobileNavbar navLinks={navLinks} logo={<Logo className="text-3xl" />} />
     </header>
   );
 };

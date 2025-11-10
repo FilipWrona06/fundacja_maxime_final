@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { gentleSpring } from '@/lib/animations';
+import { motion } from "framer-motion";
+import { gentleSpring } from "@/lib/animations";
 
 interface Props {
   id: string;
@@ -11,11 +11,17 @@ interface Props {
   index: number;
 }
 
-export default function GalleryHeader({ id, title, date, location, index }: Props) {
-  const formattedDate = new Date(date).toLocaleDateString('pl-PL', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
+export default function GalleryHeader({
+  id,
+  title,
+  date,
+  location,
+  index,
+}: Props) {
+  const formattedDate = new Date(date).toLocaleDateString("pl-PL", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
   });
 
   return (
@@ -31,11 +37,17 @@ export default function GalleryHeader({ id, title, date, location, index }: Prop
       </h2>
       <div className="flex flex-wrap gap-4 text-sm text-white/60">
         <span className="flex items-center gap-2">
-          <span className="h-1 w-1 rounded-full bg-arylideYellow" aria-hidden="true" />
+          <span
+            className="h-1 w-1 rounded-full bg-arylideYellow"
+            aria-hidden="true"
+          />
           <time dateTime={date}>{formattedDate}</time>
         </span>
         <span className="flex items-center gap-2">
-          <span className="h-1 w-1 rounded-full bg-arylideYellow" aria-hidden="true" />
+          <span
+            className="h-1 w-1 rounded-full bg-arylideYellow"
+            aria-hidden="true"
+          />
           {location}
         </span>
       </div>

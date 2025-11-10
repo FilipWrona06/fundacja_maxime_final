@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useEffect, useCallback } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import Image from 'next/image';
-import { FiChevronLeft, FiChevronRight, FiX } from 'react-icons/fi';
-import { smoothSpring } from '@/lib/animations';
+import { useEffect, useCallback } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
+import { FiChevronLeft, FiChevronRight, FiX } from "react-icons/fi";
+import { smoothSpring } from "@/lib/animations";
 
 interface ImageData {
   src: string;
@@ -20,7 +20,12 @@ interface Props {
   onNavigate: (index: number) => void;
 }
 
-export default function Lightbox({ images, currentIndex, onClose, onNavigate }: Props) {
+export default function Lightbox({
+  images,
+  currentIndex,
+  onClose,
+  onNavigate,
+}: Props) {
   const currentImage = images[currentIndex];
 
   const handleNext = useCallback(() => {
@@ -34,17 +39,17 @@ export default function Lightbox({ images, currentIndex, onClose, onNavigate }: 
   // Obsługa klawiatury
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-      if (e.key === 'ArrowRight') handleNext();
-      if (e.key === 'ArrowLeft') handlePrev();
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowRight") handleNext();
+      if (e.key === "ArrowLeft") handlePrev();
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    document.body.style.overflow = 'hidden'; // Zapobiega scrollowaniu w tle
+    window.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden"; // Zapobiega scrollowaniu w tle
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
     };
   }, [handleNext, handlePrev, onClose]);
 
@@ -76,7 +81,7 @@ export default function Lightbox({ images, currentIndex, onClose, onNavigate }: 
               <FiChevronLeft size={24} />
             </button>
           )}
-          
+
           <button
             type="button"
             onClick={onClose}

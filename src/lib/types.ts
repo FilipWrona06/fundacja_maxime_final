@@ -9,11 +9,16 @@
  * Używany w helperze `urlFor` do generowania URL-i obrazów.
  */
 export interface SanityImage {
-  _type: 'image';
+  _type: "image";
   asset: {
     _ref: string;
-    _type: 'reference';
+    _type: "reference";
   };
+}
+
+export interface SanitySlug {
+  _type: "slug";
+  current: string;
 }
 
 /**
@@ -44,11 +49,11 @@ export interface HomePageData {
   impactSection: {
     heading: string;
     subheading: string;
-    impactCards: { 
-      title: string; 
-      desc: string; 
-      image: SanityImage; 
-      alt: string 
+    impactCards: {
+      title: string;
+      desc: string;
+      image: SanityImage;
+      alt: string;
     }[];
   };
   timelineSection: {
@@ -100,11 +105,11 @@ export interface FaqItem {
 export interface GalleryImage {
   asset: {
     _ref: string;
-    _type: 'reference';
+    _type: "reference";
   };
   alt: string;
   caption?: string;
-  _type: 'image';
+  _type: "image";
 }
 
 export interface Gallery {
@@ -128,4 +133,35 @@ export interface GaleriaPageData {
     description: string;
   };
   galleries: Gallery[];
+}
+
+export interface EventType {
+  _id: string;
+  slug: SanitySlug;
+  title: string;
+  subtitle: string;
+  date: string;
+  dateDisplay: string;
+  time: string;
+  location: string;
+  address: string;
+  artist: string;
+  artistRole: string;
+  description: string;
+  image: SanityImage;
+  price: string;
+}
+
+export interface NewsArticleType {
+  _id: string;
+  slug: SanitySlug;
+  title: string;
+  excerpt: string;
+  content: string;
+  image: SanityImage;
+  date: string;
+  dateDisplay: string;
+  category: string;
+  author: string;
+  featured: boolean;
 }

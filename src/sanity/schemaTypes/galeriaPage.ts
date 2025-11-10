@@ -1,54 +1,68 @@
-import { defineField, defineType } from 'sanity';
+import { defineField, defineType } from "sanity";
 
 export const galeriaPage = defineType({
-  name: 'galeriaPage',
-  title: 'Strona Galerii',
-  type: 'document',
+  name: "galeriaPage",
+  title: "Strona Galerii",
+  type: "document",
   fields: [
     defineField({
-      name: 'seo',
-      title: 'SEO',
-      type: 'object',
+      name: "seo",
+      title: "SEO",
+      type: "object",
       fields: [
-        { name: 'title', type: 'string', title: 'Meta Title' },
-        { name: 'description', type: 'text', title: 'Meta Description' },
-        { name: 'ogImage', type: 'image', title: 'OG Image' },
+        { name: "title", type: "string", title: "Meta Title" },
+        { name: "description", type: "text", title: "Meta Description" },
+        { name: "ogImage", type: "image", title: "OG Image" },
       ],
     }),
     defineField({
-      name: 'heroSection',
-      title: 'Sekcja Hero',
-      type: 'object',
+      name: "heroSection",
+      title: "Sekcja Hero",
+      type: "object",
       fields: [
-        { name: 'badge', type: 'string', title: 'Badge' },
-        { name: 'headingLine1', type: 'string', title: 'Nagłówek - Linia 1' },
-        { name: 'headingLine2', type: 'string', title: 'Nagłówek - Linia 2' },
-        { name: 'description', type: 'text', title: 'Opis' },
+        { name: "badge", type: "string", title: "Badge" },
+        { name: "headingLine1", type: "string", title: "Nagłówek - Linia 1" },
+        { name: "headingLine2", type: "string", title: "Nagłówek - Linia 2" },
+        { name: "description", type: "text", title: "Opis" },
       ],
     }),
     defineField({
-      name: 'galleries',
-      title: 'Galerie',
-      type: 'array',
+      name: "galleries",
+      title: "Galerie",
+      type: "array",
       of: [
         {
-          type: 'object',
+          type: "object",
           fields: [
-            { name: 'title', type: 'string', title: 'Tytuł' },
-            { name: 'date', type: 'date', title: 'Data' },
-            { name: 'location', type: 'string', title: 'Lokalizacja' },
-            { name: 'slug', type: 'slug', title: 'Slug', options: { source: 'title' } },
+            { name: "title", type: "string", title: "Tytuł" },
+            { name: "date", type: "date", title: "Data" },
+            { name: "location", type: "string", title: "Lokalizacja" },
             {
-              name: 'images',
-              type: 'array',
-              title: 'Zdjęcia',
+              name: "slug",
+              type: "slug",
+              title: "Slug",
+              options: { source: "title" },
+            },
+            {
+              name: "images",
+              type: "array",
+              title: "Zdjęcia",
               of: [
                 {
-                  type: 'image',
+                  type: "image",
                   options: { hotspot: true },
                   fields: [
-                    { name: 'alt', type: 'string', title: 'Alt Text', validation: (Rule) => Rule.required() },
-                    { name: 'caption', type: 'string', title: 'Podpis (opcjonalnie)' },
+                    {
+                      name: "alt",
+                      type: "string",
+                      title: "Alt Text",
+                      validation: (Rule) => Rule.required(),
+                    },
+                    {
+                      name: "caption",
+                      type: "string",
+                      title: "Podpis (opcjonalnie)",
+                    },
                   ],
                 },
               ],
@@ -56,14 +70,16 @@ export const galeriaPage = defineType({
           ],
           preview: {
             select: {
-              title: 'title',
-              date: 'date',
-              media: 'images.0',
+              title: "title",
+              date: "date",
+              media: "images.0",
             },
             prepare({ title, date, media }) {
               return {
-                title: title || 'Bez tytułu',
-                subtitle: date ? new Date(date).toLocaleDateString('pl-PL') : 'Brak daty',
+                title: title || "Bez tytułu",
+                subtitle: date
+                  ? new Date(date).toLocaleDateString("pl-PL")
+                  : "Brak daty",
                 media,
               };
             },

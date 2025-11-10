@@ -17,7 +17,8 @@ import "./globals.css";
 // Globalne metadane dla całej aplikacji
 export const metadata: Metadata = {
   title: "Fundacja Maxime - Strona Główna",
-  description: "Oficjalna strona Fundacji Maxime. Dowiedz się więcej o naszych działaniach, wydarzeniach i możliwościach wsparcia.",
+  description:
+    "Oficjalna strona Fundacji Maxime. Dowiedz się więcej o naszych działaniach, wydarzeniach i możliwościach wsparcia.",
 };
 
 // Definicje czcionek, które będą dostępne w całej aplikacji jako zmienne CSS

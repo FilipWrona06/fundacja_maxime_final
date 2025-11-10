@@ -1,75 +1,80 @@
 // src/components/layout/Footer.tsx
 
-import { contactData, navLinks } from '@/data/siteData';
-import { CreditLink } from '../footer/CreditLink';
-import { FooterAnimator } from '../footer/FooterAnimator';
-import { FooterNav } from '../footer/FooterNav';
-import { Logo } from '../ui/Logo';
-import { NewsletterForm } from '../footer/NewsletterForm';
-import { SocialLinksGroup } from '../footer/SocialLinksGroup';
+import { contactData, navLinks } from "@/data/siteData";
+import { CreditLink } from "../footer/CreditLink";
+import { FooterAnimator } from "../footer/FooterAnimator";
+import { FooterNav } from "../footer/FooterNav";
+import { Logo } from "../ui/Logo";
+import { NewsletterForm } from "../footer/NewsletterForm";
+import { SocialLinksGroup } from "../footer/SocialLinksGroup";
 
 const Footer = () => {
-    return (
-        <FooterAnimator>
-            <div className="container relative z-10 mx-auto px-6 py-12">
-                {/* ZMIANA: Wyrównanie do lewej tekstu jest teraz opóźnione do `lg` */}
-                <div className="grid grid-cols-1 gap-10 text-center md:grid-cols-2 lg:text-left lg:grid-cols-[1.5fr_1fr_1fr_1.5fr]">
-                    
-                    {/* Kolumna 1: Logo */}
-                    {/* ZMIANA: Wyrównanie do lewej itemów flexboxa opóźnione do `lg` */}
-                    <div className="flex flex-col items-center md:col-span-2 lg:col-span-1 lg:items-start">
-                        <Logo className='text-4xl' />
-                        <p className="mt-4 max-w-xs text-sm text-philippineSilver/80">
-                            Inspirujemy, wspieramy i działamy na rzecz rozwoju talentów i pasji.
-                        </p>
-                    </div>
+  return (
+    <FooterAnimator>
+      <div className="container relative z-10 mx-auto px-6 py-12">
+        {/* ZMIANA: Wyrównanie do lewej tekstu jest teraz opóźnione do `lg` */}
+        <div className="grid grid-cols-1 gap-10 text-center md:grid-cols-2 lg:text-left lg:grid-cols-[1.5fr_1fr_1fr_1.5fr]">
+          {/* Kolumna 1: Logo */}
+          {/* ZMIANA: Wyrównanie do lewej itemów flexboxa opóźnione do `lg` */}
+          <div className="flex flex-col items-center md:col-span-2 lg:col-span-1 lg:items-start">
+            <Logo className="text-4xl" />
+            <p className="mt-4 max-w-xs text-sm text-philippineSilver/80">
+              Inspirujemy, wspieramy i działamy na rzecz rozwoju talentów i
+              pasji.
+            </p>
+          </div>
 
-                    {/* Kolumna 2: Nawigacja */}
-                    {/* ZMIANA: Wyrównanie do lewej itemów flexboxa opóźnione do `lg` */}
-                    <div className="flex flex-col items-center md:col-span-2 lg:col-span-1 lg:items-start">
-                        <h3 className="text-lg font-bold text-arylideYellow">Nawigacja</h3>
-                        <FooterNav links={navLinks} />
-                    </div>
+          {/* Kolumna 2: Nawigacja */}
+          {/* ZMIANA: Wyrównanie do lewej itemów flexboxa opóźnione do `lg` */}
+          <div className="flex flex-col items-center md:col-span-2 lg:col-span-1 lg:items-start">
+            <h3 className="text-lg font-bold text-arylideYellow">Nawigacja</h3>
+            <FooterNav links={navLinks} />
+          </div>
 
-                    {/* Kolumna 3: Kontakt */}
-                    {/* ZMIANA: Wyrównanie do lewej itemów flexboxa opóźnione do `lg` */}
-                    <div className="flex flex-col items-center lg:items-start">
-                        <h3 className="text-lg font-bold text-arylideYellow">Bądź w kontakcie</h3>
-                        <div className="mt-6 space-y-2 text-sm text-philippineSilver/80">
-                            <p>{contactData.address}</p>
-                            <p>{contactData.email}</p>
-                        </div>
-                        <SocialLinksGroup />
-                    </div>
-
-                    {/* Kolumna 4: Newsletter */}
-                    {/* ZMIANA: Wyrównanie do lewej itemów flexboxa opóźnione do `lg` */}
-                    <div className="flex flex-col items-center lg:items-start">
-                        <h3 className="text-lg font-bold text-arylideYellow">Newsletter</h3>
-                        <p className="mt-6 text-sm text-philippineSilver/80">
-                            Zapisz się, aby otrzymywać informacje o naszych wydarzeniach.
-                        </p>
-                        <NewsletterForm />
-                    </div>
-                </div>
-
-                <hr className="my-8 border-philippineSilver/10" />
-
-                <div className="flex flex-col items-center justify-center gap-y-2 text-center text-sm text-philippineSilver/70 md:flex-row md:gap-x-4">
-                    <p>&copy; {new Date().getFullYear()} Fundacja Maxime. Wszelkie prawa zastrzeżone.</p>
-                    <span className="hidden md:block">|</span>
-                    <p>
-                        Strona wykonana przez{' '}
-                        <CreditLink href="https://www.instagram.com/filip_wrona/">
-                            Filip Wrona
-                        </CreditLink>
-                    </p>
-                </div>
+          {/* Kolumna 3: Kontakt */}
+          {/* ZMIANA: Wyrównanie do lewej itemów flexboxa opóźnione do `lg` */}
+          <div className="flex flex-col items-center lg:items-start">
+            <h3 className="text-lg font-bold text-arylideYellow">
+              Bądź w kontakcie
+            </h3>
+            <div className="mt-6 space-y-2 text-sm text-philippineSilver/80">
+              <p>{contactData.address}</p>
+              <p>{contactData.email}</p>
             </div>
-        </FooterAnimator>
-    );
+            <SocialLinksGroup />
+          </div>
+
+          {/* Kolumna 4: Newsletter */}
+          {/* ZMIANA: Wyrównanie do lewej itemów flexboxa opóźnione do `lg` */}
+          <div className="flex flex-col items-center lg:items-start">
+            <h3 className="text-lg font-bold text-arylideYellow">Newsletter</h3>
+            <p className="mt-6 text-sm text-philippineSilver/80">
+              Zapisz się, aby otrzymywać informacje o naszych wydarzeniach.
+            </p>
+            <NewsletterForm />
+          </div>
+        </div>
+
+        <hr className="my-8 border-philippineSilver/10" />
+
+        <div className="flex flex-col items-center justify-center gap-y-2 text-center text-sm text-philippineSilver/70 md:flex-row md:gap-x-4">
+          <p>
+            &copy; {new Date().getFullYear()} Fundacja Maxime. Wszelkie prawa
+            zastrzeżone.
+          </p>
+          <span className="hidden md:block">|</span>
+          <p>
+            Strona wykonana przez{" "}
+            <CreditLink href="https://www.instagram.com/filip_wrona/">
+              Filip Wrona
+            </CreditLink>
+          </p>
+        </div>
+      </div>
+    </FooterAnimator>
+  );
 };
 
-Footer.displayName = 'Footer';
+Footer.displayName = "Footer";
 
 export default Footer;

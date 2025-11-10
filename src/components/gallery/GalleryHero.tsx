@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import type { GaleriaPageData } from '@/lib/types';
+import { motion } from "framer-motion";
+import type { GaleriaPageData } from "@/lib/types";
 
 interface Props {
-  hero: GaleriaPageData['heroSection'];
+  hero: GaleriaPageData["heroSection"];
 }
 
 export default function GalleryHero({ hero }: Props) {
@@ -18,17 +18,19 @@ export default function GalleryHero({ hero }: Props) {
       >
         {hero.badge}
       </motion.span>
-      
+
       <motion.h1
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
         className="mb-6 text-6xl font-bold leading-tight md:text-7xl lg:text-8xl"
       >
-        <span className="font-youngest text-arylideYellow block">{hero.headingLine1}</span>
+        <span className="font-youngest text-arylideYellow block">
+          {hero.headingLine1}
+        </span>
         <span className="block">{hero.headingLine2}</span>
       </motion.h1>
-      
+
       <motion.p
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
