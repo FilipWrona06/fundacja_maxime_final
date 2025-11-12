@@ -5,7 +5,7 @@ import { HeroSection } from "@/components/home/HeroSection";
 import type { HomePageData } from "@/lib/types";
 import { client } from "@/sanity/lib/client";
 
-// Dynamiczne importowanie komponentów ("Lazy Loading")
+// Dynamiczne importowanie komponentów ("Lazy Loading") - bez zmian
 const StatsSection = dynamic(() =>
   import("@/components/home/StatsSection").then((mod) => mod.StatsSection),
 );
@@ -26,7 +26,7 @@ const CTASection = dynamic(() =>
 
 // Główny komponent serwerowy strony
 export default async function HomePage() {
-  // Zaktualizowane zapytanie GROQ, aby pobrać adresy URL dla wideo i postera
+  // Zapytanie GROQ - bez zmian
   const query = groq`*[_type == "homePage"][0]{
     heroSection {
       ...,
@@ -41,8 +41,18 @@ export default async function HomePage() {
     ctaSection
   }`;
 
-  // Usunięto opcję revalidate, aby strona renderowała się dynamicznie
-  const data: HomePageData = await client.fetch(query);
+  // --- POCZĄTEK KLUCZOWEJ ZMIANY ---
+
+  // Dodajemy tagowanie do zapytania, aby Next.js mógł cachować te dane.
+  // Webhook będzie unieważniał ten cache, używając tagu 'homePage'.
+  const data: HomePageData = await client.fetch(query, {}, {
+    next: {
+      tags: ['homePage'],
+    }
+  });
+
+  // --- KONIEC KLUCZOWEJ ZMIANY ---
+
 
   if (!data) {
     return (
@@ -53,6 +63,7 @@ export default async function HomePage() {
     );
   }
 
+  // Zwracany JSX - bez zmian
   return (
     <>
       <HeroSection heroData={data.heroSection} />
