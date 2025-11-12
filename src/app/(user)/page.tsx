@@ -1,78 +1,72 @@
-import dynamic from "next/dynamic";
-import { groq } from "next-sanity";
+// src/app/(user)/page.tsx
 
+import { groq } from "next-sanity";
+import { Suspense } from "react";
+
+import { AboutSection } from "@/components/home/AboutSection";
+import { CTASection } from "@/components/home/CtaSection";
 import { HeroSection } from "@/components/home/HeroSection";
+import { ImpactSection } from "@/components/home/ImpactSection";
+import { StatsSection } from "@/components/home/StatsSection";
+import { TimelineSection } from "@/components/home/TimelineSection";
 import type { HomePageData } from "@/lib/types";
 import { client } from "@/sanity/lib/client";
 
-// Dynamiczne importowanie komponentów ("Lazy Loading") - bez zmian
-const StatsSection = dynamic(() =>
-  import("@/components/home/StatsSection").then((mod) => mod.StatsSection),
-);
-const AboutSection = dynamic(() =>
-  import("@/components/home/AboutSection").then((mod) => mod.AboutSection),
-);
-const ImpactSection = dynamic(() =>
-  import("@/components/home/ImpactSection").then((mod) => mod.ImpactSection),
-);
-const TimelineSection = dynamic(() =>
-  import("@/components/home/TimelineSection").then(
-    (mod) => mod.TimelineSection,
-  ),
-);
-const CTASection = dynamic(() =>
-  import("@/components/home/CtaSection").then((mod) => mod.CTASection),
+const SectionSkeleton = () => (
+  <div
+    className="container mx-auto my-16 h-96 animate-pulse rounded-2xl bg-white/5"
+    aria-hidden="true"
+  />
 );
 
-// Główny komponent serwerowy strony
 export default async function HomePage() {
-  // Zapytanie GROQ - bez zmian
-  const query = groq`*[_type == "homePage"][0]{
-    heroSection {
-      ...,
-      "videoWebmUrl": videoWebm.asset->url,
-      "videoMp4Url": videoMp4.asset->url,
-      "posterUrl": poster.asset->url
-    },
-    statsSection,
-    aboutSection,
-    impactSection,
-    timelineSection,
-    ctaSection
-  }`;
+  // --- POCZĄTEK POPRAWKI ---
+  // Przywracamy pełne zapytanie dla HeroSection, które zamienia referencje do plików na adresy URL.
+  const data = await client.fetch<{ heroSection: HomePageData["heroSection"] }>(
+    groq`*[_type == "homePage"][0]{
+      heroSection {
+        ...,
+        "videoWebmUrl": videoWebm.asset->url,
+        "videoMp4Url": videoMp4.asset->url,
+        "posterUrl": poster.asset->url
+      }
+    }`,
+    {},
+    { next: { tags: ["homePage"] } },
+  );
+  // --- KONIEC POPRAWKI ---
 
-  // --- POCZĄTEK KLUCZOWEJ ZMIANY ---
-
-  // Dodajemy tagowanie do zapytania, aby Next.js mógł cachować te dane.
-  // Webhook będzie unieważniał ten cache, używając tagu 'homePage'.
-  const data: HomePageData = await client.fetch(query, {}, {
-    next: {
-      tags: ['homePage'],
-    }
-  });
-
-  // --- KONIEC KLUCZOWEJ ZMIANY ---
-
-
-  if (!data) {
-    return (
-      <div>
-        Nie znaleziono danych dla strony głównej. Sprawdź, czy dokument został
-        opublikowany w Sanity Studio.
-      </div>
-    );
+  // Jeśli nie ma danych dla Hero, możemy wyświetlić fallback lub nic nie robić,
+  // bo Suspense obsłuży resztę strony.
+  if (!data?.heroSection) {
+    // Można tu dodać jakiś fallback dla Hero, jeśli jest taka potrzeba
+    return <main>{/* reszta sekcji w Suspense i tak się załaduje */}</main>;
   }
 
-  // Zwracany JSX - bez zmian
   return (
     <>
       <HeroSection heroData={data.heroSection} />
+
       <main>
-        <StatsSection statsData={data.statsSection} />
-        <AboutSection aboutData={data.aboutSection} />
-        <ImpactSection impactData={data.impactSection} />
-        <TimelineSection timelineData={data.timelineSection} />
-        <CTASection ctaData={data.ctaSection} />
+        <Suspense fallback={<SectionSkeleton />}>
+          <StatsSection />
+        </Suspense>
+
+        <Suspense fallback={<SectionSkeleton />}>
+          <AboutSection />
+        </Suspense>
+
+        <Suspense fallback={<SectionSkeleton />}>
+          <ImpactSection />
+        </Suspense>
+
+        <Suspense fallback={<SectionSkeleton />}>
+          <TimelineSection />
+        </Suspense>
+
+        <Suspense fallback={<SectionSkeleton />}>
+          <CTASection />
+        </Suspense>
       </main>
     </>
   );

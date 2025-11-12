@@ -1,3 +1,5 @@
+// src/lib/types.ts
+
 /**
  * @file Centralne definicje typów TypeScript dla projektu.
  * Używane do zapewnienia spójności i bezpieczeństwa typów danych,
@@ -21,6 +23,19 @@ export interface SanitySlug {
   current: string;
 }
 
+// --- NOWOŚĆ: Wyodrębniony i wyeksportowany typ dla pojedynczego wydarzenia ---
+/**
+ * Reprezentuje pojedynczy element na osi czasu na stronie głównej.
+ */
+export interface TimelineEvent {
+  year: string;
+  fullYear: string;
+  title: string;
+  text: string;
+  image: SanityImage;
+  alt: string;
+}
+
 /**
  * Definiuje pełną strukturę danych dla strony głównej,
  * pobieraną z dokumentu 'homePage' w Sanity.
@@ -33,7 +48,7 @@ export interface HomePageData {
     description: string;
     videoWebmUrl: string;
     videoMp4Url: string;
-    posterUrl: string; // Dodaj to
+    posterUrl: string;
   };
   statsSection: { value: string; label: string }[];
   aboutSection: {
@@ -56,17 +71,11 @@ export interface HomePageData {
       alt: string;
     }[];
   };
+  // --- ZMIANA: Używamy teraz nowo zdefiniowanego, reużywalnego typu ---
   timelineSection: {
     heading: string;
     subheading: string;
-    timelineEvents: {
-      year: string;
-      fullYear: string;
-      title: string;
-      text: string;
-      image: SanityImage;
-      alt: string;
-    }[];
+    timelineEvents: TimelineEvent[]; // <-- Używamy TimelineEvent[]
   };
   ctaSection: {
     heading: string;

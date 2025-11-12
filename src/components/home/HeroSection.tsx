@@ -1,3 +1,4 @@
+// src/components/home/HeroSection.tsx
 "use client";
 
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
@@ -6,6 +7,9 @@ import { useCallback, useRef } from "react";
 import { FiArrowDown, FiArrowRight } from "react-icons/fi";
 import type { HomePageData } from "@/lib/types";
 
+// Ten komponent pozostaje w całości po stronie klienta,
+// ponieważ jego logika (scroll, animacje) jest nierozerwalnie związana z jego strukturą.
+// Jest to nasza główna, interaktywna "wyspa".
 export const HeroSection = ({
   heroData,
 }: {
@@ -27,7 +31,6 @@ export const HeroSection = ({
   const heroY = useTransform(smoothProgress, [0, 1], [0, 300]);
 
   const scrollToContent = useCallback(() => {
-    // Upewnij się, że element docelowy istnieje w Twoim kodzie HTML, np. w kolejnej sekcji
     document
       .querySelector("#stats-section")
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
