@@ -1,26 +1,25 @@
-// src/components/home/CtaSection.tsx
-
-import { groq } from "next-sanity";
-
-import type { HomePageData } from "@/lib/types";
-import { client } from "@/sanity/lib/client";
-
+import { getCTASectionData } from "@/sanity/lib/get-data";
 import { CTASectionClient } from "./CtaSection.client";
 
-// Publiczny, asynchroniczny Komponent Serwerowy.
+/**
+ * Asynchroniczny Komponent Serwerowy (RSC) dla sekcji Call-to-Action.
+ * 
+ * Odpowiedzialności:
+ * 1. Pobieranie danych z Sanity za pomocą z-cache-owanej funkcji.
+ * 2. Renderowanie statycznej treści (nagłówek, tekst) do czystego HTML.
+ * 3. Przekazanie statycznej treści do Komponentu Klienckiego,
+ *    który zajmie się resztą (layout, animacje, przyciski).
+ */
 export async function CTASection() {
-  // Pobieramy dane potrzebne tylko dla tej sekcji.
-  const data = await client.fetch<{ ctaSection: HomePageData["ctaSection"] }>(
-    groq`*[_type == "homePage"][0]{ ctaSection }`,
-    {},
-    { next: { tags: ["homePage"] } },
-  );
+  // Krok 1: Używamy naszej scentralizowanej i z-cache-owanej funkcji.
+  const ctaData = await getCTASectionData();
 
-  if (!data?.ctaSection) {
+  // Jeśli nie ma danych, nic nie renderujemy.
+  if (!ctaData) {
     return null;
   }
 
-  // Zwracamy komponent kliencki, a w środku (jako children) renderujemy statyczną treść.
+  // Krok 2: Zwracamy komponent kliencki, a w środku (jako children) renderujemy statyczną treść.
   return (
     <CTASectionClient>
       {/* Poniższy kod jest renderowany na serwerze. */}
@@ -30,10 +29,10 @@ export async function CTASection() {
         id="cta-heading"
         className="mb-6 font-youngest text-6xl leading-tight text-arylideYellow md:text-7xl lg:text-8xl"
       >
-        {data.ctaSection.heading}
+        {ctaData.heading}
       </h2>
       <p className="mx-auto mb-12 max-w-2xl text-xl leading-relaxed text-white/70 md:text-2xl">
-        {data.ctaSection.text}
+        {ctaData.text}
       </p>
     </CTASectionClient>
   );

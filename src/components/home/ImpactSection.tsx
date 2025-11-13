@@ -1,29 +1,28 @@
-// src/components/home/ImpactSection.tsx
-
-import { groq } from "next-sanity";
-
-import type { HomePageData } from "@/lib/types";
-import { client } from "@/sanity/lib/client";
-
+import { getImpactSectionData } from "@/sanity/lib/get-data";
 import { ImpactSectionClient } from "./ImpactSection.client";
 
-// Publiczny, asynchroniczny Komponent Serwerowy.
+/**
+ * Asynchroniczny Komponent Serwerowy (RSC) dla sekcji "Impact".
+ * 
+ * Odpowiedzialności:
+ * 1. Pobieranie danych z Sanity za pomocą z-cache-owanej funkcji.
+ * 2. Renderowanie statycznej części nagłówkowej do czystego HTML.
+ * 3. Przekazanie pełnych danych sekcji oraz statycznego nagłówka (jako `children`) 
+ *    do Komponentu Klienckiego, który zajmie się resztą.
+ */
 export async function ImpactSection() {
-  // Pobieramy dane potrzebne tylko dla tej sekcji.
-  const data = await client.fetch<{ impactSection: HomePageData["impactSection"] }>(
-    groq`*[_type == "homePage"][0]{ impactSection }`,
-    {},
-    { next: { tags: ["homePage"] } },
-  );
+  // Krok 1: Używamy naszej scentralizowanej i z-cache-owanej funkcji.
+  const impactData = await getImpactSectionData();
 
-  if (!data?.impactSection) {
+  // Jeśli nie ma danych, nic nie renderujemy.
+  if (!impactData) {
     return null;
   }
 
-  // Zwracamy komponent kliencki, przekazując mu zarówno dane,
+  // Krok 2: Zwracamy komponent kliencki, przekazując mu zarówno dane,
   // jak i wyrenderowaną na serwerze, statyczną część JSX jako `children`.
   return (
-    <ImpactSectionClient impactData={data.impactSection}>
+    <ImpactSectionClient impactData={impactData}>
       {/* Poniższy kod jest renderowany na serwerze do czystego HTML. */}
       
       <h2
@@ -32,11 +31,11 @@ export async function ImpactSection() {
       >
         Nasz{" "}
         <span className="font-youngest text-arylideYellow">
-          {data.impactSection.heading}
+          {impactData.heading}
         </span>
       </h2>
       <p className="mx-auto max-w-2xl text-xl text-white/60">
-        {data.impactSection.subheading}
+        {impactData.subheading}
       </p>
     </ImpactSectionClient>
   );

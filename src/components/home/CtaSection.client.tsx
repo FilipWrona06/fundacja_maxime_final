@@ -1,12 +1,9 @@
-// src/components/home/CtaSection.client.tsx
 "use client";
 
-// KROK 1: Zmieniamy importy, aby używać LazyMotion
 import { LazyMotion, domAnimation, m, type Variants } from "framer-motion";
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 
-// Definicja animacji bez zmian
 const fadeInUpVariant: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
@@ -21,12 +18,10 @@ export const CTASectionClient = ({
 }: {
   children: React.ReactNode;
 }) => {
-  // KROK 2: Owijamy cały zwracany JSX w <LazyMotion>
   return (
     <LazyMotion features={domAnimation}>
       <section className="relative py-32" aria-labelledby="cta-heading">
         <div className="container mx-auto px-6">
-          {/* KROK 3: Zamieniamy wszystkie 'motion.' na 'm.' */}
           <m.div
             initial="hidden"
             whileInView="visible"
@@ -46,7 +41,7 @@ export const CTASectionClient = ({
               transition={{ duration: 4, repeat: Infinity }}
             />
             <div className="relative">
-              {/* Statyczny HTML z serwera */}
+              {/* Statyczny HTML z serwera jest renderowany tutaj */}
               {children}
 
               {/* Interaktywne przyciski */}

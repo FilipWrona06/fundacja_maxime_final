@@ -1,7 +1,5 @@
-// src/components/home/AboutSection.client.tsx
 "use client";
 
-// KROK 1: Zmieniamy importy, aby używać LazyMotion
 import { LazyMotion, domAnimation, m, type Variants } from "framer-motion";
 import Image from "next/image";
 import { useCallback } from "react";
@@ -11,7 +9,6 @@ import { gentleSpring, smoothSpring } from "@/lib/animations";
 import type { HomePageData } from "@/lib/types";
 import { urlFor } from "@/sanity/lib/image";
 
-// Definicje animacji pozostają bez zmian
 const fadeInUpVariant: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
@@ -42,8 +39,6 @@ export const AboutSectionClient = ({
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
-  // KROK 2: Owijamy cały zwracany JSX w <LazyMotion>,
-  // przekazując mu zestaw funkcji 'domAnimation', których potrzebujemy.
   return (
     <LazyMotion features={domAnimation}>
       <section
@@ -53,14 +48,14 @@ export const AboutSectionClient = ({
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2 lg:gap-24">
             
-            {/* Lewa kolumna z animacjami */}
-            {/* KROK 3: Zamieniamy wszystkie 'motion.' na 'm.' */}
+            {/* Lewa kolumna z animacjami i treścią statyczną z serwera */}
             <m.div
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
               variants={staggerContainerVariant}
             >
+              {/* Tutaj renderowana jest statyczna treść (nagłówki, paragrafy) z Komponentu Serwerowego */}
               {children}
 
               <m.button

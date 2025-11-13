@@ -1,6 +1,3 @@
-// src/app/(user)/page.tsx
-
-import { groq } from "next-sanity";
 import { Suspense } from "react";
 
 import { AboutSection } from "@/components/home/AboutSection";
@@ -9,9 +6,9 @@ import { HeroSection } from "@/components/home/HeroSection";
 import { ImpactSection } from "@/components/home/ImpactSection";
 import { StatsSection } from "@/components/home/StatsSection";
 import { TimelineSection } from "@/components/home/TimelineSection";
-import type { HomePageData } from "@/lib/types";
-import { client } from "@/sanity/lib/client";
 
+// Komponent szkieletu (skeleton) do wyświetlania podczas ładowania danych.
+// Pozostaje bez zmian.
 const SectionSkeleton = () => (
   <div
     className="container mx-auto my-16 h-96 animate-pulse rounded-2xl bg-white/5"
@@ -19,35 +16,19 @@ const SectionSkeleton = () => (
   />
 );
 
-export default async function HomePage() {
-  // --- POCZĄTEK POPRAWKI ---
-  // Przywracamy pełne zapytanie dla HeroSection, które zamienia referencje do plików na adresy URL.
-  const data = await client.fetch<{ heroSection: HomePageData["heroSection"] }>(
-    groq`*[_type == "homePage"][0]{
-      heroSection {
-        ...,
-        "videoWebmUrl": videoWebm.asset->url,
-        "videoMp4Url": videoMp4.asset->url,
-        "posterUrl": poster.asset->url
-      }
-    }`,
-    {},
-    { next: { tags: ["homePage"] } },
-  );
-  // --- KONIEC POPRAWKI ---
-
-  // Jeśli nie ma danych dla Hero, możemy wyświetlić fallback lub nic nie robić,
-  // bo Suspense obsłuży resztę strony.
-  if (!data?.heroSection) {
-    // Można tu dodać jakiś fallback dla Hero, jeśli jest taka potrzeba
-    return <main>{/* reszta sekcji w Suspense i tak się załaduje */}</main>;
-  }
-
+// Komponent strony jest teraz znacznie prostszy.
+// Jego głównym zadaniem jest zdefiniowanie układu i granic Suspense.
+export default function HomePage() {
   return (
     <>
-      <HeroSection heroData={data.heroSection} />
+      {/* HeroSection jest renderowana natychmiast. Strona poczeka na jej dane,
+          ponieważ jest to kluczowy element widoczny "above the fold". */}
+      <HeroSection />
 
       <main>
+        {/* Każda kolejna sekcja jest owinięta w Suspense. Oznacza to, że
+            będą one renderowane równolegle i strumieniowane do przeglądarki,
+            gdy tylko ich dane będą gotowe, nie blokując siebie nawzajem. */}
         <Suspense fallback={<SectionSkeleton />}>
           <StatsSection />
         </Suspense>

@@ -1,26 +1,25 @@
-// src/components/home/StatsSection.tsx
-
-import { groq } from "next-sanity";
-
-import type { HomePageData } from "@/lib/types";
-import { client } from "@/sanity/lib/client";
-
+import { getStatsSectionData } from "@/sanity/lib/get-data";
 import { StatsSectionClient } from "./StatsSection.client";
 
-// Publiczny, asynchroniczny Komponent Serwerowy.
+/**
+ * Asynchroniczny Komponent Serwerowy (RSC) dla sekcji ze statystykami.
+ * 
+ * Odpowiedzialności:
+ * 1. Pobranie danych (tablicy statystyk) z Sanity za pomocą z-cache-owanej funkcji.
+ * 2. Przekazanie tych danych do Komponentu Klienckiego, który zajmie się ich
+ *    wyrenderowaniem, animacją i mapowaniem ikon.
+ */
 export async function StatsSection() {
-  // Pobieramy dane potrzebne tylko dla tej sekcji.
-  const data = await client.fetch<{ statsSection: HomePageData["statsSection"] }>(
-    groq`*[_type == "homePage"][0]{ statsSection }`,
-    {},
-    { next: { tags: ["homePage"] } },
-  );
+  // Krok 1: Używamy naszej scentralizowanej i z-cache-owanej funkcji.
+  const statsData = await getStatsSectionData();
 
-  if (!data?.statsSection) {
+  // Jeśli nie ma danych, nic nie renderujemy.
+  if (!statsData) {
     return null;
   }
 
-  // Zwracamy komponent kliencki, przekazując mu pobrane dane.
-  // W tym przypadku nie przekazujemy `children`, ponieważ cała sekcja jest dynamiczna.
-  return <StatsSectionClient statsData={data.statsSection} />;
+  // Krok 2: Zwracamy komponent kliencki, przekazując mu pobrane dane.
+  // W tym przypadku nie przekazujemy `children`, ponieważ cała zawartość tej sekcji
+  // jest dynamicznie generowana na podstawie danych.
+  return <StatsSectionClient statsData={statsData} />;
 }

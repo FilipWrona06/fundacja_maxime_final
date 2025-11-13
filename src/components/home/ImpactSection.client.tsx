@@ -1,16 +1,12 @@
-// src/components/home/ImpactSection.client.tsx
 "use client";
 
-// KROK 1: Zmieniamy importy, aby używać LazyMotion
 import { LazyMotion, domAnimation, m, type Variants } from "framer-motion";
 import Image from "next/image";
 
 import { smoothSpring } from "@/lib/animations";
-// POPRAWKA: Importujemy typ dla pojedynczej karty, aby uniknąć błędów
 import type { HomePageData, ImpactCard } from "@/lib/types";
 import { urlFor } from "@/sanity/lib/image";
 
-// Definicje animacji bez zmian
 const fadeInUpVariant: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
@@ -35,12 +31,10 @@ export const ImpactSectionClient = ({
   impactData: HomePageData["impactSection"];
   children: React.ReactNode;
 }) => {
-  // KROK 2: Owijamy cały zwracany JSX w <LazyMotion>
   return (
     <LazyMotion features={domAnimation}>
       <section className="py-32" aria-labelledby="impact-heading">
         <div className="container mx-auto px-6">
-          {/* KROK 3: Zamieniamy wszystkie 'motion.' na 'm.' */}
           <m.div
             initial="hidden"
             whileInView="visible"
@@ -48,6 +42,7 @@ export const ImpactSectionClient = ({
             variants={staggerContainerVariant}
             className="mb-20 text-center"
           >
+            {/* Statyczny nagłówek z serwera jest renderowany tutaj */}
             {children}
           </m.div>
 
@@ -58,7 +53,7 @@ export const ImpactSectionClient = ({
             variants={staggerContainerVariant}
             className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
           >
-            {impactData.impactCards.map((card: ImpactCard, index) => ( // Dodano typ 'ImpactCard'
+            {impactData.impactCards.map((card: ImpactCard, index) => (
               <m.article
                 key={card.title}
                 variants={fadeInUpVariant}

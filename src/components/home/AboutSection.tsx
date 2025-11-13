@@ -1,50 +1,47 @@
-// src/components/home/AboutSection.tsx
-
-import { groq } from "next-sanity";
-
-import type { HomePageData } from "@/lib/types";
-import { client } from "@/sanity/lib/client";
-
+import { getAboutSectionData } from "@/sanity/lib/get-data";
 import { AboutSectionClient } from "./AboutSection.client";
 
-// To jest teraz asynchroniczny Komponent Serwerowy.
-// Jest on "publiczny" - to jego importujemy w page.tsx.
+/**
+ * Asynchroniczny Komponent Serwerowy (RSC) dla sekcji "O nas".
+ * 
+ * Odpowiedzialności:
+ * 1. Pobieranie danych z Sanity za pomocą z-cache-owanej funkcji.
+ * 2. Renderowanie statycznej treści (nagłówki, paragrafy) do czystego HTML.
+ * 3. Przekazanie danych i statycznej treści do Komponentu Klienckiego,
+ *    który zajmie się animacjami i interaktywnością.
+ */
 export async function AboutSection() {
-  // Krok 1: Pobieramy dane potrzebne tylko dla tej sekcji.
-  const data = await client.fetch<{ aboutSection: HomePageData["aboutSection"] }>(
-    groq`*[_type == "homePage"][0]{ aboutSection }`,
-    {},
-    { next: { tags: ["homePage"] } }, // Pamiętamy o tagowaniu dla webhooka!
-  );
+  // Krok 1: Używamy naszej scentralizowanej i z-cache-owanej funkcji.
+  const aboutData = await getAboutSectionData();
 
-  // Jeśli nie ma danych, nic nie renderujemy.
-  if (!data?.aboutSection) {
+  // Jeśli nie ma danych, nic nie renderujemy, aby uniknąć błędów.
+  if (!aboutData) {
     return null;
   }
 
   // Krok 2: Zwracamy komponent kliencki jako "otoczkę",
   // a w środku (jako children) renderujemy całą statyczną treść.
   return (
-    <AboutSectionClient aboutData={data.aboutSection}>
+    <AboutSectionClient aboutData={aboutData}>
       {/* Poniższy kod jest renderowany na serwerze do czystego HTML. */}
       {/* Do przeglądarki nie jest wysyłany żaden JS odpowiedzialny za renderowanie tych tagów. */}
       
       <span className="mb-6 inline-block text-sm font-semibold uppercase tracking-widest text-arylideYellow">
-        {data.aboutSection.smallHeading}
+        {aboutData.smallHeading}
       </span>
       <h2
         id="about-heading"
         className="mb-8 text-5xl font-bold leading-tight md:text-6xl lg:text-7xl"
       >
-        <span className="block">{data.aboutSection.headingPart1}</span>
+        <span className="block">{aboutData.headingPart1}</span>
         <span className="block font-youngest text-arylideYellow">
-          {data.aboutSection.headingPart2}
+          {aboutData.headingPart2}
         </span>
-        <span className="block">{data.aboutSection.headingPart3}</span>
+        <span className="block">{aboutData.headingPart3}</span>
       </h2>
       <div className="space-y-6 text-lg leading-relaxed text-white/70">
-        <p>{data.aboutSection.paragraph1}</p>
-        <p>{data.aboutSection.paragraph2}</p>
+        <p>{aboutData.paragraph1}</p>
+        <p>{aboutData.paragraph2}</p>
       </div>
     </AboutSectionClient>
   );
