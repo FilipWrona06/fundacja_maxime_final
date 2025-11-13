@@ -6,10 +6,6 @@
  * zwłaszcza tych pochodzących z CMS Sanity.
  */
 
-/**
- * Reprezentuje podstawową strukturę obiektu obrazka zwracanego przez Sanity CMS.
- * Używany w helperze `urlFor` do generowania URL-i obrazów.
- */
 export interface SanityImage {
   _type: "image";
   asset: {
@@ -23,7 +19,8 @@ export interface SanitySlug {
   current: string;
 }
 
-// --- NOWOŚĆ: Wyodrębniony i wyeksportowany typ dla pojedynczego wydarzenia ---
+// --- WYODRĘBNIONE, REUŻYWALNE TYPY DLA STRONY GŁÓWNEJ ---
+
 /**
  * Reprezentuje pojedynczy element na osi czasu na stronie głównej.
  */
@@ -35,6 +32,25 @@ export interface TimelineEvent {
   image: SanityImage;
   alt: string;
 }
+
+/**
+ * Reprezentuje pojedynczą kartę w sekcji "Nasz Wpływ".
+ */
+export interface ImpactCard {
+  title: string;
+  desc: string;
+  image: SanityImage;
+  alt: string;
+}
+
+/**
+ * Reprezentuje pojedynczy element w sekcji statystyk.
+ */
+export interface Stat {
+  value: string;
+  label: string;
+}
+
 
 /**
  * Definiuje pełną strukturę danych dla strony głównej,
@@ -50,7 +66,8 @@ export interface HomePageData {
     videoMp4Url: string;
     posterUrl: string;
   };
-  statsSection: { value: string; label: string }[];
+  // ZMIANA: Używamy teraz nowo zdefiniowanego typu Stat[]
+  statsSection: Stat[];
   aboutSection: {
     smallHeading: string;
     headingPart1: string;
@@ -61,21 +78,16 @@ export interface HomePageData {
     image: SanityImage;
     imageAlt: string;
   };
+  // ZMIANA: Używamy teraz nowo zdefiniowanego typu ImpactCard[]
   impactSection: {
     heading: string;
     subheading: string;
-    impactCards: {
-      title: string;
-      desc: string;
-      image: SanityImage;
-      alt: string;
-    }[];
+    impactCards: ImpactCard[];
   };
-  // --- ZMIANA: Używamy teraz nowo zdefiniowanego, reużywalnego typu ---
   timelineSection: {
     heading: string;
     subheading: string;
-    timelineEvents: TimelineEvent[]; // <-- Używamy TimelineEvent[]
+    timelineEvents: TimelineEvent[];
   };
   ctaSection: {
     heading: string;
@@ -83,7 +95,7 @@ export interface HomePageData {
   };
 }
 
-// --- TYPY DANYCH STATYCZNYCH STRONY ---
+// --- TYPY DANYCH STATYCZNYCH STRONY (bez zmian) ---
 export interface NavLink {
   readonly name: string;
   readonly href: string;

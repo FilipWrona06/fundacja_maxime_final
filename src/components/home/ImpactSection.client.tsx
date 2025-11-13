@@ -1,11 +1,13 @@
 // src/components/home/ImpactSection.client.tsx
 "use client";
 
-import { motion, type Variants } from "framer-motion";
+// KROK 1: Zmieniamy importy, aby używać LazyMotion
+import { LazyMotion, domAnimation, m, type Variants } from "framer-motion";
 import Image from "next/image";
 
 import { smoothSpring } from "@/lib/animations";
-import type { HomePageData } from "@/lib/types";
+// POPRAWKA: Importujemy typ dla pojedynczej karty, aby uniknąć błędów
+import type { HomePageData, ImpactCard } from "@/lib/types";
 import { urlFor } from "@/sanity/lib/image";
 
 // Definicje animacji bez zmian
@@ -26,74 +28,73 @@ const staggerContainerVariant: Variants = {
   },
 };
 
-// Prywatny komponent kliencki - otoczka na interaktywność.
 export const ImpactSectionClient = ({
   impactData,
-  children, // Krok 1: Akceptujemy `children` i `impactData`
+  children,
 }: {
   impactData: HomePageData["impactSection"];
   children: React.ReactNode;
 }) => {
+  // KROK 2: Owijamy cały zwracany JSX w <LazyMotion>
   return (
-    <section className="py-32" aria-labelledby="impact-heading">
-      <div className="container mx-auto px-6">
-        {/* Ta część jest interaktywna, bo ma animacje "stagger" i "fadeInUp" */}
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={staggerContainerVariant}
-          className="mb-20 text-center"
-        >
-          {/* Krok 2: Wstrzykujemy tu gotowy, statyczny HTML z serwera. */}
-          {/* Nawet jeśli jest wewnątrz motion.div, sam HTML nie jest częścią paczki JS. */}
-          {children}
-        </motion.div>
+    <LazyMotion features={domAnimation}>
+      <section className="py-32" aria-labelledby="impact-heading">
+        <div className="container mx-auto px-6">
+          {/* KROK 3: Zamieniamy wszystkie 'motion.' na 'm.' */}
+          <m.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            variants={staggerContainerVariant}
+            className="mb-20 text-center"
+          >
+            {children}
+          </m.div>
 
-        {/* Siatka kart jest w pełni interaktywna, więc pozostaje bez zmian. */}
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          variants={staggerContainerVariant}
-          className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
-        >
-          {impactData.impactCards.map((card, index) => (
-            <motion.article
-              key={card.title}
-              variants={fadeInUpVariant}
-              whileHover={{ y: -10 }}
-              transition={smoothSpring}
-              className={`group relative overflow-hidden rounded-3xl ${
-                index === 2 ? "md:col-span-2 lg:col-span-1" : ""
-              }`}
-            >
-              <div className="relative aspect-3/4">
-                {card.image && (
-                  <Image
-                    src={urlFor(card.image).width(400).height(533).url()}
-                    alt={card.alt}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 400px"
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    loading="lazy"
-                  />
-                )}
-                <div className="absolute inset-0 bg-linear-to-t from-raisinBlack via-raisinBlack/40 to-transparent" />
-                <motion.div className="absolute inset-0 bg-arylideYellow/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 p-8">
-                <h3 className="mb-2 text-2xl font-bold group-hover:text-arylideYellow transition-colors duration-300">
-                  {card.title}
-                </h3>
-                <p className="text-white/70 group-hover:text-white transition-colors duration-300">
-                  {card.desc}
-                </p>
-              </div>
-            </motion.article>
-          ))}
-        </motion.div>
-      </div>
-    </section>
+          <m.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={staggerContainerVariant}
+            className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+          >
+            {impactData.impactCards.map((card: ImpactCard, index) => ( // Dodano typ 'ImpactCard'
+              <m.article
+                key={card.title}
+                variants={fadeInUpVariant}
+                whileHover={{ y: -10 }}
+                transition={smoothSpring}
+                className={`group relative overflow-hidden rounded-3xl ${
+                  index === 2 ? "md:col-span-2 lg:col-span-1" : ""
+                }`}
+              >
+                <div className="relative aspect-3/4">
+                  {card.image && (
+                    <Image
+                      src={urlFor(card.image).width(400).height(533).url()}
+                      alt={card.alt}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 400px"
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      loading="lazy"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-linear-to-t from-raisinBlack via-raisinBlack/40 to-transparent" />
+                  <m.div className="absolute inset-0 bg-arylideYellow/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 p-8">
+                  <h3 className="mb-2 text-2xl font-bold group-hover:text-arylideYellow transition-colors duration-300">
+                    {card.title}
+                  </h3>
+                  <p className="text-white/70 group-hover:text-white transition-colors duration-300">
+                    {card.desc}
+                  </p>
+                </div>
+              </m.article>
+            ))}
+          </m.div>
+        </div>
+      </section>
+    </LazyMotion>
   );
 };
