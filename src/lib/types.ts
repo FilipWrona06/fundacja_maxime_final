@@ -1,5 +1,3 @@
-// src/lib/types.ts
-
 /**
  * @file Centralne definicje typów TypeScript dla projektu.
  * Używane do zapewnienia spójności i bezpieczeństwa typów danych,
@@ -18,6 +16,24 @@ export interface SanitySlug {
   _type: "slug";
   current: string;
 }
+
+// --- NOWY, REUŻYWALNY TYP DLA DANYCH SEO ---
+/**
+ * Definiuje strukturę danych SEO, która może być używana
+ * na każdej podstronie (strona główna, artykuły, galerie itp.).
+ * Odpowiada schematowi 'seo.ts' w Sanity.
+ */
+export interface SeoData {
+  metaTitle: string;
+  metaDescription: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: SanityImage;
+  noIndex?: boolean;
+  noFollow?: boolean;
+  canonicalUrl?: string;
+}
+
 
 // --- WYODRĘBNIONE, REUŻYWALNE TYPY DLA STRONY GŁÓWNEJ ---
 
@@ -57,6 +73,9 @@ export interface Stat {
  * pobieraną z dokumentu 'homePage' w Sanity.
  */
 export interface HomePageData {
+  // --- DODANO POLE SEO ---
+  seo: SeoData;
+
   heroSection: {
     badgeText: string;
     headingPart1: string;
@@ -66,7 +85,6 @@ export interface HomePageData {
     videoMp4Url: string;
     posterUrl: string;
   };
-  // ZMIANA: Używamy teraz nowo zdefiniowanego typu Stat[]
   statsSection: Stat[];
   aboutSection: {
     smallHeading: string;
@@ -78,7 +96,6 @@ export interface HomePageData {
     image: SanityImage;
     imageAlt: string;
   };
-  // ZMIANA: Używamy teraz nowo zdefiniowanego typu ImpactCard[]
   impactSection: {
     heading: string;
     subheading: string;

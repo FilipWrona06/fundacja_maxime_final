@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { groq } from "next-sanity";
 
-import type { HomePageData } from "@/lib/types"; // Upewnij się, że ścieżka do typów jest poprawna
+import type { HomePageData } from "@/lib/types"; // Upewnij się, że ten typ zawiera teraz pole `seo`
 import { client } from "./client";
 
 /**
@@ -9,6 +9,25 @@ import { client } from "./client";
  * Każda funkcja jest opakowana w `React.cache`, aby zapobiec duplikowaniu
  * tych samych zapytań w trakcie jednego cyklu renderowania na serwerze.
  */
+
+// --- NOWA FUNKCJA DO POBIERANIA DANYCH SEO ---
+/**
+ * Pobiera tylko i wyłącznie dane SEO dla strony głównej.
+ * Jest to zoptymalizowane do użycia w funkcji `generateMetadata` w `page.tsx`,
+ * ponieważ nie pobiera niepotrzebnie danych z innych sekcji.
+ */
+export const getHomePageSeoData = cache(
+  async (): Promise<HomePageData["seo"] | null> => {
+    const data = await client.fetch<{ seo: HomePageData["seo"] }>(
+      groq`*[_type == "homePage"][0]{ seo }`, // Pobieramy tylko obiekt 'seo'
+      {},
+      { next: { tags: ["homePage"] } }, // Tagujemy tak samo, bo to część tej samej strony
+    );
+    return data?.seo ?? null;
+  },
+);
+
+// --- ISTNIEJĄCE FUNKCJE (BEZ ZMIAN) ---
 
 export const getHeroSectionData = cache(
   async (): Promise<HomePageData["heroSection"] | null> => {
