@@ -58,6 +58,7 @@ export const HeroSection = ({
           loop
           muted
           playsInline
+          preload="metadata"
           className="absolute inset-0 -z-20 h-full w-full object-cover"
         >
           <source src={heroData.videoWebmUrl} type="video/webm" />

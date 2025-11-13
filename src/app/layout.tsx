@@ -26,12 +26,14 @@ const montserrat = Montserrat({
   subsets: ["latin-ext"],
   variable: "--font-montserrat",
   display: "swap",
+  preload: true,
 });
 
 const fontYoungest = localFont({
   src: "../fonts/the-youngest-script.woff2",
   variable: "--font-youngest",
   display: "swap",
+  preload: true,
 });
 
 export default function RootLayout({
