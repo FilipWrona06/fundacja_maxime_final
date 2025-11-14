@@ -1,7 +1,5 @@
-// src/components/home/TimelineSection.client.tsx
 "use client";
 
-// KROK 1: Zmieniamy importy, aby używać LazyMotion
 import { LazyMotion, domAnimation, m, type Variants } from "framer-motion";
 import Image from "next/image";
 
@@ -9,7 +7,6 @@ import { gentleSpring, smoothSpring } from "@/lib/animations";
 import type { HomePageData, TimelineEvent } from "@/lib/types";
 import { urlFor } from "@/sanity/lib/image";
 
-// Definicje animacji bez zmian
 const fadeInUpVariant: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
@@ -20,7 +17,10 @@ const fadeInUpVariant: Variants = {
 };
 
 const staggerContainerVariant: Variants = {
+  // ZMIANA: Dodano dla płynniejszego wejścia
+  hidden: { opacity: 0 },
   visible: {
+    opacity: 1,
     transition: {
       staggerChildren: 0.1,
     },
@@ -34,51 +34,57 @@ export const TimelineSectionClient = ({
   timelineData: HomePageData["timelineSection"];
   children: React.ReactNode;
 }) => {
-  // KROK 2: Owijamy cały zwracany JSX w <LazyMotion>
   return (
     <LazyMotion features={domAnimation}>
       <section
         id="historia-section"
-        className="relative py-32 overflow-hidden"
+        // ZMIANA (RWD): Zmniejszono padding na małych ekranach
+        className="relative overflow-hidden py-24 md:py-32"
         aria-labelledby="timeline-heading"
       >
         <div className="absolute inset-0 bg-linear-to-b from-transparent via-oxfordBlue/10 to-transparent" />
         <div className="container relative mx-auto px-6">
-          {/* KROK 3: Zamieniamy wszystkie 'motion.' na 'm.' */}
           <m.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
             variants={staggerContainerVariant}
-            className="mb-20 text-center"
+            // ZMIANA (RWD): Zmniejszono margines na małych ekranach
+            className="mb-16 text-center md:mb-20"
           >
             {children}
           </m.div>
 
           <div className="relative mx-auto max-w-5xl">
-            <div className="absolute left-8 top-0 hidden h-full w-0.5 bg-linear-to-b from-arylideYellow/50 via-arylideYellow/20 to-transparent md:block" />
-            <div className="space-y-16">
+            {/* ZMIANA (RWD): Dopasowano pozycję linii na małych ekranach */}
+            <div className="absolute left-4 top-0 hidden h-full w-0.5 bg-linear-to-b from-arylideYellow/50 via-arylideYellow/20 to-transparent md:left-8 md:block" />
+            {/* ZMIANA (RWD): Zmniejszono odstępy na małych ekranach */}
+            <div className="space-y-12 md:space-y-16">
               {timelineData.timelineEvents.map((item: TimelineEvent) => (
                 <m.article
                   key={item.year}
                   initial="hidden"
                   whileInView="visible"
-                  viewport={{ once: true, amount: 0.3 }}
+                  // ZMIANA: Zmniejszono `amount` dla szybszego startu animacji
+                  viewport={{ once: true, amount: 0.2 }}
                   variants={staggerContainerVariant}
-                  className="relative grid grid-cols-1 gap-8 md:grid-cols-[auto_1fr] md:gap-12"
+                  className="relative grid grid-cols-1 gap-6 md:grid-cols-[auto_1fr] md:gap-12"
                 >
-                  <div className="flex items-start gap-6">
+                  {/* Kolumna z rokiem (tylko desktop) */}
+                  <div className="hidden items-start pt-1 md:flex">
                     <m.div
                       variants={fadeInUpVariant}
                       whileHover={{ scale: 1.2, rotate: 360 }}
                       transition={smoothSpring}
-                      className="hidden h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-arylideYellow bg-raisinBlack md:flex"
+                      className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-arylideYellow bg-raisinBlack"
                     >
                       <span className="font-youngest text-2xl text-arylideYellow">
                         {item.year}
                       </span>
                     </m.div>
                   </div>
+
+                  {/* Kolumna z treścią */}
                   <div>
                     <time
                       dateTime={item.fullYear}
@@ -94,7 +100,8 @@ export const TimelineSectionClient = ({
                     </m.h3>
                     <m.p
                       variants={fadeInUpVariant}
-                      className="mb-6 text-lg leading-relaxed text-white/70"
+                      // ZMIANA (RWD): Zmniejszono tekst na małych ekranach
+                      className="mb-6 text-base leading-relaxed text-white/70 md:text-lg"
                     >
                       {item.text}
                     </m.p>

@@ -3,6 +3,10 @@
 import { LazyMotion, domAnimation, m, type Variants } from "framer-motion";
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
+import { smoothSpring } from "@/lib/animations"; // Dodano import dla spójności
+
+// ZMIANA: Tworzymy animowany komponent Link raz, aby go reużywać.
+const MotionLink = m(Link);
 
 const fadeInUpVariant: Variants = {
   hidden: { opacity: 0, y: 30 },
@@ -13,6 +17,12 @@ const fadeInUpVariant: Variants = {
   },
 };
 
+// ZMIANA: Warianty dla animacji strzałki, aby używać Framer Motion
+const arrowVariants: Variants = {
+  initial: { x: 0 },
+  hover: { x: 8 },
+};
+
 export const CTASectionClient = ({
   children,
 }: {
@@ -20,58 +30,56 @@ export const CTASectionClient = ({
 }) => {
   return (
     <LazyMotion features={domAnimation}>
-      <section className="relative py-32" aria-labelledby="cta-heading">
+      {/* ZMIANA (RWD): Zmniejszono padding na małych ekranach */}
+      <section className="relative py-24 md:py-32" aria-labelledby="cta-heading">
         <div className="container mx-auto px-6">
           <m.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
             variants={fadeInUpVariant}
-            className="relative overflow-hidden rounded-3xl border border-white/10 bg-linear-to-br from-arylideYellow/10 via-transparent to-oxfordBlue/20 p-12 text-center backdrop-blur-sm md:p-20"
+            // ZMIANA (RWD): Zmniejszono padding na małych ekranach
+            className="relative overflow-hidden rounded-3xl border border-white/10 bg-linear-to-br from-arylideYellow/10 via-transparent to-oxfordBlue/20 p-8 text-center backdrop-blur-sm sm:p-12 md:p-20"
           >
             {/* Animowane tła */}
             <m.div
               className="absolute -left-32 -top-32 h-64 w-64 rounded-full bg-arylideYellow/10 blur-3xl"
               animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-              transition={{ duration: 4, repeat: Infinity }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             />
             <m.div
               className="absolute -bottom-32 -right-32 h-64 w-64 rounded-full bg-arylideYellow/10 blur-3xl"
               animate={{ scale: [1.2, 1, 1.2], opacity: [0.5, 0.3, 0.5] }}
-              transition={{ duration: 4, repeat: Infinity }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             />
             <div className="relative">
-              {/* Statyczny HTML z serwera jest renderowany tutaj */}
               {children}
 
-              {/* Interaktywne przyciski */}
               <div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
-                <m.div
+                <MotionLink
+                  href="/wydarzenia"
+                  initial="initial"
+                  whileHover="hover"
+                  whileTap={{ scale: 0.95 }}
+                  transition={smoothSpring}
+                  // ZMIANA (RWD i a11y): Dostosowano padding i dodano focus-visible
+                  className="inline-flex items-center gap-3 rounded-full bg-arylideYellow px-8 py-4 text-base font-bold text-raisinBlack shadow-2xl shadow-arylideYellow/30 transition-shadow duration-300 hover:shadow-arylideYellow/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-arylideYellow md:px-10 md:py-5 md:text-lg"
+                >
+                  Dołącz do nas
+                  <m.span variants={arrowVariants} aria-hidden="true">
+                    <FiArrowRight />
+                  </m.span>
+                </MotionLink>
+
+                <MotionLink
+                  href="/kontakt"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  transition={smoothSpring}
+                  className="inline-flex items-center gap-3 rounded-full border-2 border-arylideYellow/50 bg-transparent px-8 py-4 text-base font-bold text-arylideYellow transition-all duration-300 hover:border-arylideYellow hover:bg-arylideYellow/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-arylideYellow md:px-10 md:py-5 md:text-lg"
                 >
-                  <Link
-                    href="/wydarzenia"
-                    className="group inline-flex items-center gap-3 rounded-full bg-arylideYellow px-10 py-5 text-lg font-bold text-raisinBlack shadow-2xl shadow-arylideYellow/30 transition-all duration-500 hover:shadow-arylideYellow/50"
-                  >
-                    Dołącz do nas
-                    <FiArrowRight
-                      className="transition-transform duration-300 group-hover:translate-x-2"
-                      aria-hidden="true"
-                    />
-                  </Link>
-                </m.div>
-                <m.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Link
-                    href="/kontakt"
-                    className="inline-flex items-center gap-3 rounded-full border-2 border-arylideYellow/50 bg-transparent px-10 py-5 text-lg font-bold text-arylideYellow transition-all duration-500 hover:border-arylideYellow hover:bg-arylideYellow/10"
-                  >
-                    Skontaktuj się z nami
-                  </Link>
-                </m.div>
+                  Skontaktuj się z nami
+                </MotionLink>
               </div>
             </div>
           </m.div>

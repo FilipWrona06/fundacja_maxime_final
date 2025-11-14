@@ -1,12 +1,11 @@
 "use client";
 
 import { LazyMotion, domAnimation, m, type Variants } from "framer-motion";
-import { type ReactNode } from "react";
-
-// Usunięto import 'smoothSpring', ponieważ był używany tylko przez przycisk.
+import type { ReactNode } from "react";
 import { gentleSpring } from "@/lib/animations";
 
-// Warianty animacji pozostają bez zmian.
+// --- Warianty animacji ---
+
 const fadeInUpVariant: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
@@ -17,20 +16,26 @@ const fadeInUpVariant: Variants = {
 };
 
 const staggerContainerVariant: Variants = {
+  hidden: { opacity: 0 },
   visible: {
+    opacity: 1,
     transition: {
       staggerChildren: 0.1,
     },
   },
 };
 
-/**
- * Lekki Komponent Kliencki dla sekcji "O nas".
- * 
- * Odpowiedzialności:
- * 1. Otrzymanie statycznego, prerenderowanego JSX z Komponentu Serwerowego.
- * 2. Owinięcie otrzymanych elementów w komponenty `framer-motion` w celu animacji.
- */
+// ZMIANA: Definiujemy warianty dla "dymka", aby jego animacja "whileInView"
+// miała własną, specyficzną definicję przejścia (transition).
+const statsBubbleVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, delay: 0.3, ease: "easeOut" },
+  },
+};
+
 export const AboutSectionClient = ({
   staticContent,
   staticImage,
@@ -40,58 +45,49 @@ export const AboutSectionClient = ({
   staticImage: ReactNode;
   staticStatsBubble: ReactNode;
 }) => {
-  // Usunięto całą logikę związaną ze `scrollToHistory` i `useCallback`.
-
   return (
     <LazyMotion features={domAnimation}>
       <section
-        className="relative min-h-screen py-32"
+        className="relative min-h-screen py-24 md:py-32"
         aria-labelledby="about-heading"
       >
         <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2 lg:gap-24">
-            
-            {/* Lewa kolumna: otoczka animacji dla samej treści */}
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-24">
             <m.div
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, amount: 0.3 }}
+              viewport={{ once: true, amount: 0.2 }}
               variants={staggerContainerVariant}
             >
               {staticContent}
-
-              {/* --- POCZĄTEK ZMIANY --- */}
-              {/* Usunięto cały element <m.button> */}
-              {/* --- KONIEC ZMIANY --- */}
-              
             </m.div>
 
-            {/* Prawa kolumna: otoczka animacji dla obrazka i "dymka" */}
             <m.div
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, amount: 0.3 }}
+              viewport={{ once: true, amount: 0.2 }}
               variants={fadeInUpVariant}
               className="relative"
             >
-              <m.div
-                whileHover={{ scale: 1.02 }}
-                transition={gentleSpring}
-              >
+              <m.div whileHover={{ scale: 1.02 }} transition={gentleSpring}>
                 {staticImage}
               </m.div>
-              
+
+              {/* --- POCZĄTEK POPRAWKI --- */}
               <m.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                variants={statsBubbleVariants}
+                initial="hidden"
+                whileInView="visible"
                 viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.3 }}
                 whileHover={{ scale: 1.05, y: -10 }}
+                // Ta animacja (gentleSpring) zostanie użyta dla `whileHover`,
+                // ponieważ animacja `whileInView` ma swoją własną, zdefiniowaną w wariancie.
+                transition={gentleSpring}
               >
                 {staticStatsBubble}
               </m.div>
+              {/* --- KONIEC POPRAWKI --- */}
             </m.div>
-
           </div>
         </div>
       </section>
