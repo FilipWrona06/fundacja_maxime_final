@@ -1,31 +1,27 @@
 import { getAboutSectionData } from "@/sanity/lib/get-data";
+import Image from "next/image";
+import { urlFor } from "@/sanity/lib/image";
 import { AboutSectionClient } from "./AboutSection.client";
 
 /**
  * Asynchroniczny Komponent Serwerowy (RSC) dla sekcji "O nas".
  * 
  * Odpowiedzialności:
- * 1. Pobieranie danych z Sanity za pomocą z-cache-owanej funkcji.
- * 2. Renderowanie statycznej treści (nagłówki, paragrafy) do czystego HTML.
- * 3. Przekazanie danych i statycznej treści do Komponentu Klienckiego,
- *    który zajmie się animacjami i interaktywnością.
+ * 1. Pobieranie danych z Sanity.
+ * 2. Przygotowanie statycznych fragmentów JSX dla treści, obrazka i elementu statystyk.
+ * 3. Przekazanie przygotowanych fragmentów do lekkiego Komponentu Klienckiego,
+ *    który zajmie się wyłącznie warstwą interaktywną (animacje, eventy).
  */
 export async function AboutSection() {
-  // Krok 1: Używamy naszej scentralizowanej i z-cache-owanej funkcji.
   const aboutData = await getAboutSectionData();
 
-  // Jeśli nie ma danych, nic nie renderujemy, aby uniknąć błędów.
   if (!aboutData) {
     return null;
   }
 
-  // Krok 2: Zwracamy komponent kliencki jako "otoczkę",
-  // a w środku (jako children) renderujemy całą statyczną treść.
-  return (
-    <AboutSectionClient aboutData={aboutData}>
-      {/* Poniższy kod jest renderowany na serwerze do czystego HTML. */}
-      {/* Do przeglądarki nie jest wysyłany żaden JS odpowiedzialny za renderowanie tych tagów. */}
-      
+  // Krok 1: Przygotowujemy statyczną treść tekstową.
+  const staticContent = (
+    <>
       <span className="mb-6 inline-block text-sm font-semibold uppercase tracking-widest text-arylideYellow">
         {aboutData.smallHeading}
       </span>
@@ -43,6 +39,44 @@ export async function AboutSection() {
         <p>{aboutData.paragraph1}</p>
         <p>{aboutData.paragraph2}</p>
       </div>
-    </AboutSectionClient>
+    </>
+  );
+
+  // Krok 2: Przygotowujemy statyczną część obrazka.
+  const staticImage = (
+    <div className="relative aspect-4/5 overflow-hidden rounded-3xl">
+      {aboutData.image && (
+        <Image
+          src={urlFor(aboutData.image).width(600).height(750).url()}
+          alt={aboutData.imageAlt}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 600px"
+          className="object-cover"
+          loading="lazy"
+        />
+      )}
+      <div className="absolute inset-0 bg-linear-to-t from-raisinBlack/60 via-transparent to-transparent" />
+    </div>
+  );
+  
+  // Krok 3: Przygotowujemy statyczny "dymek" ze statystyką.
+  const staticStatsBubble = (
+     <div className="absolute -bottom-8 -left-5 rounded-2xl border border-white/10 glass-effect p-8 md:-left-16 shadow-2xl">
+        <p className="mb-2 font-youngest text-6xl text-arylideYellow">
+          50+
+        </p>
+        <p className="text-sm font-semibold uppercase tracking-wide text-white/60">
+          Zorganizowanych Koncertów
+        </p>
+      </div>
+  );
+
+  // Krok 4: Renderujemy komponent kliencki, przekazując mu gotowe "klocki" JSX.
+  return (
+    <AboutSectionClient 
+        staticContent={staticContent}
+        staticImage={staticImage}
+        staticStatsBubble={staticStatsBubble}
+    />
   );
 }
