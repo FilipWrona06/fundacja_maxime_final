@@ -11,7 +11,6 @@ export async function ImpactSection() {
   return (
     <ImpactSectionClient impactData={impactData}>
       <div className="space-y-4 sm:space-y-6">
-
         {/* Main heading */}
         <h2
           id="impact-heading"

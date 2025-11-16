@@ -34,7 +34,6 @@ export interface SeoData {
   canonicalUrl?: string;
 }
 
-
 // --- WYODRĘBNIONE, REUŻYWALNE TYPY DLA STRONY GŁÓWNEJ ---
 
 /**
@@ -66,7 +65,6 @@ export interface Stat {
   value: string;
   label: string;
 }
-
 
 /**
  * Definiuje pełną strukturę danych dla strony głównej,

@@ -3,10 +3,11 @@
  * Działa jako Komponent Serwerowy (RSC) - pobiera dane z Sanity
  * i przekazuje je do komponentu klienckiego do renderowania interfejsu.
  */
-import { client } from "@/sanity/lib/client";
+
 import { groq } from "next-sanity";
-import WydarzeniaClientPage from "./WydarzeniaClientPage";
 import type { EventType } from "@/lib/types";
+import { client } from "@/sanity/lib/client";
+import WydarzeniaClientPage from "./WydarzeniaClientPage";
 
 // Zapytanie GROQ do pobrania wszystkich dokumentów typu 'event'
 export const eventsQuery = groq`*[_type == "event"] | order(date asc)`;

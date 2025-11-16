@@ -1,9 +1,8 @@
 "use client";
 
-import type { HomePageData } from "@/lib/types";
 import {
-  LazyMotion,
   domAnimation,
+  LazyMotion,
   m,
   useScroll,
   useSpring,
@@ -12,6 +11,7 @@ import {
 import Link from "next/link";
 import { useCallback, useRef } from "react";
 import { FiArrowDown, FiArrowRight } from "react-icons/fi";
+import type { HomePageData } from "@/lib/types";
 
 const HeroButton = ({
   href,
@@ -28,8 +28,8 @@ const HeroButton = ({
     "border-2 border-white/20 bg-white/5 text-white backdrop-blur-sm transition-all duration-500 ease-out hover:border-arylideYellow/50 hover:bg-white/10 hover:backdrop-blur-md hover:shadow-lg hover:shadow-white/10";
 
   return (
-    <m.div 
-      whileHover={{ scale: 1.05 }} 
+    <m.div
+      whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       transition={{ type: "spring", stiffness: 400, damping: 17 }}
     >
@@ -61,45 +61,49 @@ export const HeroSectionClient = ({
   });
 
   // Bardziej płynne sprężyny
-  const smoothProgress = useSpring(scrollYProgress, { 
-    stiffness: 80, 
-    damping: 25, 
-    restDelta: 0.001 
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 80,
+    damping: 25,
+    restDelta: 0.001,
   });
-  
+
   // Subtelniejsze transformacje
   const videoScale = useTransform(smoothProgress, [0, 1], [1, 1.15]);
   const videoOpacity = useTransform(smoothProgress, [0, 0.5, 1], [1, 0.8, 0.6]);
-  const contentOpacity = useTransform(smoothProgress, [0, 0.3, 0.5], [1, 0.5, 0]);
+  const contentOpacity = useTransform(
+    smoothProgress,
+    [0, 0.3, 0.5],
+    [1, 0.5, 0],
+  );
   const contentY = useTransform(smoothProgress, [0, 1], [0, 150]);
   const contentScale = useTransform(smoothProgress, [0, 0.5], [1, 0.95]);
 
   const scrollToContent = useCallback(() => {
-    document.querySelector("#stats-section")?.scrollIntoView({ 
-      behavior: "smooth", 
-      block: "start" 
+    document.querySelector("#stats-section")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
     });
   }, []);
 
   const headingVariants = {
     hidden: { opacity: 0, y: 40, scale: 0.95 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
+    visible: {
+      opacity: 1,
+      y: 0,
       scale: 1,
-      transition: { 
-        duration: 0.8, 
-        ease: [0.22, 1, 0.36, 1] as const
-      } 
+      transition: {
+        duration: 0.8,
+        ease: [0.22, 1, 0.36, 1] as const,
+      },
     },
   };
 
   const fadeIn = {
     initial: { opacity: 0, y: 30, scale: 0.95 },
     animate: { opacity: 1, y: 0, scale: 1 },
-    transition: { 
+    transition: {
       duration: 0.8,
-      ease: [0.22, 1, 0.36, 1] as const
+      ease: [0.22, 1, 0.36, 1] as const,
     },
   };
 
@@ -111,18 +115,18 @@ export const HeroSectionClient = ({
         aria-labelledby="hero-heading"
       >
         {/* Video z ulepszonymi transformacjami */}
-        <m.video 
-          style={{ 
+        <m.video
+          style={{
             scale: videoScale,
             opacity: videoOpacity,
-            transform: 'translateZ(0)', // Force GPU acceleration
-          }} 
-          poster={heroData.posterUrl} 
-          autoPlay 
-          loop 
-          muted 
-          playsInline 
-          preload="metadata" 
+            transform: "translateZ(0)", // Force GPU acceleration
+          }}
+          poster={heroData.posterUrl}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
           className="absolute inset-0 -z-20 h-full w-full object-cover will-change-transform"
         >
           <source src={heroData.videoWebmUrl} type="video/webm" />
@@ -134,10 +138,10 @@ export const HeroSectionClient = ({
 
         {/* Content z wieloma transformacjami dla ultra smooth effect */}
         <m.div
-          style={{ 
-            opacity: contentOpacity, 
+          style={{
+            opacity: contentOpacity,
             y: contentY,
-            scale: contentScale
+            scale: contentScale,
           }}
           className="container relative z-10 mx-auto px-6 text-center lg:pt-24"
         >
@@ -150,7 +154,7 @@ export const HeroSectionClient = ({
               transition={{
                 duration: 0.8,
                 delay: 0.4,
-                ease: [0.22, 1, 0.36, 1] as const
+                ease: [0.22, 1, 0.36, 1] as const,
               }}
               className="mb-4 block font-youngest text-[clamp(4rem,12vw,10rem)] leading-[0.9] tracking-tight text-arylideYellow drop-shadow-2xl md:mb-6"
             >
@@ -164,7 +168,7 @@ export const HeroSectionClient = ({
               transition={{
                 duration: 0.8,
                 delay: 0.6,
-                ease: [0.22, 1, 0.36, 1] as const
+                ease: [0.22, 1, 0.36, 1] as const,
               }}
               className="block pb-4 font-youngest text-[clamp(4rem,12vw,10rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl"
             >
@@ -178,28 +182,28 @@ export const HeroSectionClient = ({
             transition={{
               duration: 0.8,
               delay: 0.8,
-              ease: [0.22, 1, 0.36, 1] as const
+              ease: [0.22, 1, 0.36, 1] as const,
             }}
             className="mx-auto mb-8 max-w-2xl text-base leading-relaxed text-white drop-shadow-lg md:mb-10 md:text-xl md:leading-relaxed lg:leading-loose"
           >
             {heroData.description}
           </m.p>
 
-          <m.div 
+          <m.div
             initial={fadeIn.initial}
             animate={fadeIn.animate}
             transition={{
               duration: 0.8,
               delay: 1,
-              ease: [0.22, 1, 0.36, 1] as const
+              ease: [0.22, 1, 0.36, 1] as const,
             }}
             className="flex flex-col items-center justify-center gap-4 sm:flex-row md:gap-5"
           >
             <HeroButton href="/wydarzenia" variant="primary">
               <span>Nadchodzące koncerty</span>
-              <FiArrowRight 
-                className="transition-transform duration-500 ease-out group-hover:translate-x-2" 
-                aria-hidden="true" 
+              <FiArrowRight
+                className="transition-transform duration-500 ease-out group-hover:translate-x-2"
+                aria-hidden="true"
               />
             </HeroButton>
             <HeroButton href="/kontakt" variant="secondary">
@@ -212,22 +216,22 @@ export const HeroSectionClient = ({
         <m.button
           onClick={scrollToContent}
           initial={{ opacity: 0, y: -10 }}
-          animate={{ 
+          animate={{
             opacity: [0, 1, 1, 0],
-            y: [0, 10, 10, 0]
+            y: [0, 10, 10, 0],
           }}
-          transition={{ 
-            duration: 3, 
+          transition={{
+            duration: 3,
             repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut"
+            ease: "easeInOut",
           }}
           className="absolute bottom-4.5 lg:bottom-8 rounded-full p-2 transition-transform duration-300 hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-arylideYellow md:bottom-12"
           aria-label="Przewiń w dół do treści"
         >
-          <FiArrowDown 
-            size={36} 
-            className="text-arylideYellow drop-shadow-lg" 
-            aria-hidden="true" 
+          <FiArrowDown
+            size={36}
+            className="text-arylideYellow drop-shadow-lg"
+            aria-hidden="true"
           />
         </m.button>
       </section>

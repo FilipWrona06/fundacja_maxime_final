@@ -4,8 +4,8 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { memo, useState } from "react";
-import { Underline } from "../ui/Underline";
 import { softSpring } from "@/lib/animations"; // ZMIANA: Import
+import { Underline } from "../ui/Underline";
 
 export const CreditLink = memo(
   ({ href, children }: { href: string; children: ReactNode }) => {

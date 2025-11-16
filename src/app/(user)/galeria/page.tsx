@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
+import GalleryGrid from "@/components/gallery/GalleryGrid";
+import GalleryHero from "@/components/gallery/GalleryHero";
+import type { GaleriaPageData } from "@/lib/types";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
-import type { GaleriaPageData } from "@/lib/types";
-import GalleryHero from "@/components/gallery/GalleryHero";
-import GalleryGrid from "@/components/gallery/GalleryGrid";
 
 // Generowanie metadanych SEO
 export async function generateMetadata(): Promise<Metadata> {

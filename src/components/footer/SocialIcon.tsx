@@ -8,10 +8,10 @@ import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
 
 // ZMIANA: Importy animacji
 import {
-  smoothSpring,
   hoverTransition,
   iconPopTransition,
   shineTransition,
+  smoothSpring,
 } from "@/lib/animations";
 import type { SocialLink } from "@/lib/types";
 

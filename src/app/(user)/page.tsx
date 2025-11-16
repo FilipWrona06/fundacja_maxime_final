@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
 import { Suspense } from "react";
 
 import { AboutSection } from "@/components/home/AboutSection";
@@ -22,8 +22,9 @@ export async function generateMetadata(): Promise<Metadata> {
   // 2. Jeśli z jakiegoś powodu danych SEO nie ma, zwracamy solidne wartości domyślne.
   if (!seoData) {
     return {
-      title: 'Fundacja Maxime | Z Pasji do Muzyki',
-      description: 'Odkryj historię naszej fundacji, sprawdź nadchodzące koncerty i dołącz do naszej muzycznej społeczności.',
+      title: "Fundacja Maxime | Z Pasji do Muzyki",
+      description:
+        "Odkryj historię naszej fundacji, sprawdź nadchodzące koncerty i dołącz do naszej muzycznej społeczności.",
     };
   }
 
@@ -31,16 +32,16 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: seoData.metaTitle,
     description: seoData.metaDescription,
-    
+
     // Ustawienia dla robotów wyszukiwarek
     robots: {
       index: !seoData.noIndex,
       follow: !seoData.noFollow,
     },
-    
+
     // Ustawienie kanonicznego URL-a, jeśli został zdefiniowany
     alternates: {
-      canonical: seoData.canonicalUrl || '/',
+      canonical: seoData.canonicalUrl || "/",
     },
 
     // Ustawienia dla udostępniania w social mediach (Open Graph)
@@ -61,7 +62,6 @@ export async function generateMetadata(): Promise<Metadata> {
     },
   };
 }
-
 
 // Komponent szkieletu (skeleton) do wyświetlania podczas ładowania danych.
 // Pozostaje bez zmian.

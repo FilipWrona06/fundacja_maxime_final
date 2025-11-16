@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
-import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
-import NewsDetailClient from "./NewsDetailClient";
 import type { NewsArticleType } from "@/lib/types";
+import { client } from "@/sanity/lib/client";
 import { newsQuery } from "../page";
+import NewsDetailClient from "./NewsDetailClient";
 
 const articleBySlugQuery = groq`*[_type == "newsArticle" && slug.current == $slug][0]`;
 const articleSlugsQuery = groq`*[_type == "newsArticle" && defined(slug.current)][].slug.current`;

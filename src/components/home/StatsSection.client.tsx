@@ -1,9 +1,9 @@
 // src/components/home/StatsSection.client.tsx
 "use client";
 
-import type { HomePageData, Stat } from "@/lib/types";
-import { LazyMotion, domAnimation, m, type Variants } from "framer-motion";
+import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
 import { FiAward, FiMusic, FiUsers } from "react-icons/fi";
+import type { HomePageData, Stat } from "@/lib/types";
 
 const ICONS_MAP: { [key: string]: React.ElementType } = {
   Koncertów: FiMusic,
@@ -17,9 +17,9 @@ const fadeInUpVariant: Variants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { 
-      duration: 0.7, 
-      ease: [0.22, 1, 0.36, 1] as const
+    transition: {
+      duration: 0.7,
+      ease: [0.22, 1, 0.36, 1] as const,
     },
   },
 };
@@ -89,26 +89,26 @@ export const StatsSectionClient = ({
                 <m.article
                   key={stat.label}
                   variants={fadeInUpVariant}
-                  whileHover={{ 
-                    scale: 1.05, 
+                  whileHover={{
+                    scale: 1.05,
                     y: -8,
                     transition: {
                       type: "spring",
                       stiffness: 400,
-                      damping: 17
-                    }
+                      damping: 17,
+                    },
                   }}
                   className="group relative flex flex-col items-center overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 text-center backdrop-blur-sm transition-all duration-500 hover:border-arylideYellow/40 hover:bg-white/10 hover:shadow-xl hover:shadow-arylideYellow/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-arylideYellow focus-visible:ring-offset-2 focus-visible:ring-offset-raisinBlack sm:p-8"
                 >
                   {/* Gradient glow effect on hover */}
                   <div className="absolute inset-0 -z-10 bg-linear-to-br from-arylideYellow/0 via-arylideYellow/0 to-arylideYellow/0 opacity-0 transition-opacity duration-500 group-hover:opacity-20" />
-                  
+
                   {/* Animated border shine */}
                   <div className="absolute inset-0 -z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
                     <div className="absolute inset-0 rounded-2xl bg-linear-to-r from-transparent via-arylideYellow/20 to-transparent blur-sm" />
                   </div>
 
-                  <m.div 
+                  <m.div
                     variants={iconVariant}
                     className="mb-4 flex items-center justify-center rounded-full border-2 border-arylideYellow/20 bg-arylideYellow/10 p-4 transition-all duration-500 group-hover:border-arylideYellow/40 group-hover:bg-arylideYellow/20 group-hover:shadow-lg group-hover:shadow-arylideYellow/30 sm:mb-6 sm:p-5"
                   >
@@ -119,14 +119,14 @@ export const StatsSectionClient = ({
                     />
                   </m.div>
 
-                  <m.p 
+                  <m.p
                     variants={numberVariant}
                     className="mb-2 bg-linear-to-br from-arylideYellow via-arylideYellow to-arylideYellow/80 bg-clip-text text-5xl font-bold text-transparent drop-shadow-lg transition-all duration-500 group-hover:scale-105 sm:mb-3 sm:text-6xl lg:text-7xl"
                   >
                     {stat.value}
                   </m.p>
 
-                  <m.p 
+                  <m.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.3 + index * 0.12 }}

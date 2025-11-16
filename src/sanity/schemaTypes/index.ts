@@ -1,23 +1,20 @@
-import type { SchemaTypeDefinition } from 'sanity'
-
+import type { SchemaTypeDefinition } from "sanity";
+import eventsPage from "./documents/eventsPage";
+import { galeriaPage } from "./documents/galeriaPage";
 // --- DOKUMENTY (Główne typy stron w Twoim Studio) ---
-import homePage from './documents/homePage'
-import { galeriaPage } from './documents/galeriaPage'
-import eventsPage from './documents/eventsPage'
-import newsPage from './documents/newsPage'
-
-// --- REUŻYWALNE OBIEKTY (Klocki do budowy schematów) ---
-// Importujemy schemat SEO, aby Sanity go "poznało".
-import seo from './objects/seo'
-
+import homePage from "./documents/homePage";
+import newsPage from "./documents/newsPage";
 // --- SEKCJE (Specjalistyczne obiekty dla strony głównej) ---
 // Importujemy WSZYSTKIE nowe, wydzielone schematy sekcji.
-import aboutSection from './home/aboutSection'
-import ctaSection from './home/ctaSection'
-import heroSection from './home/heroSection'
-import impactSection from './home/impactSection'
-import statsSection from './home/statsSection'
-import timelineSection from './home/timelineSection'
+import aboutSection from "./home/aboutSection";
+import ctaSection from "./home/ctaSection";
+import heroSection from "./home/heroSection";
+import impactSection from "./home/impactSection";
+import statsSection from "./home/statsSection";
+import timelineSection from "./home/timelineSection";
+// --- REUŻYWALNE OBIEKTY (Klocki do budowy schematów) ---
+// Importujemy schemat SEO, aby Sanity go "poznało".
+import seo from "./objects/seo";
 
 /**
  * Tutaj rejestrujemy WSZYSTKIE nasze typy schematów.
@@ -43,4 +40,4 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     timelineSection,
     ctaSection,
   ],
-}
+};

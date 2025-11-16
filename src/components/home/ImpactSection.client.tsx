@@ -1,8 +1,8 @@
 "use client";
 
-import type { HomePageData, ImpactCard } from "@/lib/types";
-import { LazyMotion, domAnimation, m, type Variants } from "framer-motion";
+import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
 import Image from "next/image";
+import type { HomePageData, ImpactCard } from "@/lib/types";
 import { urlFor } from "@/sanity/lib/image";
 
 // --- Warianty animacji ---
@@ -13,9 +13,9 @@ const fadeInUpVariant: Variants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { 
-      duration: 0.7, 
-      ease: [0.22, 1, 0.36, 1] as const 
+    transition: {
+      duration: 0.7,
+      ease: [0.22, 1, 0.36, 1] as const,
     },
   },
 };
@@ -46,35 +46,35 @@ const headingVariant: Variants = {
 
 const imageScaleVariant: Variants = {
   initial: { scale: 1 },
-  hover: { 
+  hover: {
     scale: 1.15,
     transition: {
       duration: 0.6,
       ease: [0.22, 1, 0.36, 1] as const,
-    }
+    },
   },
 };
 
 const overlayVariant: Variants = {
   initial: { opacity: 0 },
-  hover: { 
+  hover: {
     opacity: 1,
     transition: {
       duration: 0.4,
       ease: "easeOut",
-    }
+    },
   },
 };
 
 const contentVariant: Variants = {
   initial: { y: 0 },
-  hover: { 
+  hover: {
     y: -12,
     transition: {
       type: "spring",
       stiffness: 400,
       damping: 17,
-    }
+    },
   },
 };
 
@@ -87,8 +87,8 @@ export const ImpactSectionClient = ({
 }) => {
   return (
     <LazyMotion features={domAnimation}>
-      <section 
-        className="relative overflow-hidden py-16 sm:py-20 md:py-24 lg:py-32 xl:py-40" 
+      <section
+        className="relative overflow-hidden py-16 sm:py-20 md:py-24 lg:py-32 xl:py-40"
         aria-labelledby="impact-heading"
       >
         {/* Decorative background elements */}
@@ -104,9 +104,7 @@ export const ImpactSectionClient = ({
             variants={staggerContainerVariant}
             className="mb-12 text-center sm:mb-16 md:mb-20 lg:mb-24"
           >
-            <m.div variants={headingVariant}>
-              {children}
-            </m.div>
+            <m.div variants={headingVariant}>{children}</m.div>
           </m.div>
 
           {/* Cards Grid */}
@@ -130,20 +128,25 @@ export const ImpactSectionClient = ({
                 {/* Image Container */}
                 <div className="relative aspect-3/4 overflow-hidden">
                   {/* Animated Image */}
-                  <m.div
-                    variants={imageScaleVariant}
-                    className="h-full w-full"
-                  >
+                  <m.div variants={imageScaleVariant} className="h-full w-full">
                     {card.image && (
                       <Image
-                        src={urlFor(card.image).width(600).height(800).quality(90).url()}
+                        src={urlFor(card.image)
+                          .width(600)
+                          .height(800)
+                          .quality(90)
+                          .url()}
                         alt={card.alt}
                         fill
                         sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 50vw, 400px"
                         className="object-cover"
                         loading="lazy"
                         placeholder="blur"
-                        blurDataURL={urlFor(card.image).width(20).height(27).blur(10).url()}
+                        blurDataURL={urlFor(card.image)
+                          .width(20)
+                          .height(27)
+                          .blur(10)
+                          .url()}
                       />
                     )}
                   </m.div>
@@ -152,7 +155,7 @@ export const ImpactSectionClient = ({
                   <div className="absolute inset-0 bg-linear-to-t from-raisinBlack/90 via-raisinBlack/50 to-transparent" />
 
                   {/* Animated color overlay on hover */}
-                  <m.div 
+                  <m.div
                     variants={overlayVariant}
                     className="absolute inset-0 bg-linear-to-br from-arylideYellow/20 via-arylideYellow/10 to-transparent"
                   />
@@ -160,13 +163,13 @@ export const ImpactSectionClient = ({
                   {/* Animated shine effect */}
                   <m.div
                     initial={{ x: "-100%", opacity: 0 }}
-                    whileHover={{ 
-                      x: "100%", 
+                    whileHover={{
+                      x: "100%",
                       opacity: [0, 0.5, 0],
-                      transition: { 
+                      transition: {
                         duration: 0.8,
-                        ease: "easeInOut" 
-                      }
+                        ease: "easeInOut",
+                      },
                     }}
                     className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent"
                   />

@@ -1,5 +1,5 @@
-import { urlFor } from "@/sanity/lib/image";
 import type { Gallery } from "@/lib/types";
+import { urlFor } from "@/sanity/lib/image";
 import GalleryHeader from "./GalleryHeader";
 import GalleryImageGrid from "./GalleryImageGrid";
 

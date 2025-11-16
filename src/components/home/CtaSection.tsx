@@ -24,7 +24,9 @@ export async function CTASection() {
 
         {/* Subheading */}
         <p className="mx-auto mb-5 max-w-2xl text-base leading-relaxed text-white/80 sm:text-lg md:text-xl md:leading-relaxed lg:max-w-3xl">
-          Twoje wsparcie pozwala nam organizować bezpłatne koncerty i dawać szansę utalentowanym artystom. Zobacz efekty naszej pracy i dołącz do grona wspierających!
+          Twoje wsparcie pozwala nam organizować bezpłatne koncerty i dawać
+          szansę utalentowanym artystom. Zobacz efekty naszej pracy i dołącz do
+          grona wspierających!
         </p>
       </div>
     </CTASectionClient>

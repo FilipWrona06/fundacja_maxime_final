@@ -3,7 +3,7 @@ import { StatsSectionClient } from "./StatsSection.client";
 
 /**
  * Asynchroniczny Komponent Serwerowy (RSC) dla sekcji ze statystykami.
- * 
+ *
  * Odpowiedzialności:
  * 1. Pobranie danych (tablicy statystyk) z Sanity za pomocą z-cache-owanej funkcji.
  * 2. Przekazanie tych danych do Komponentu Klienckiego, który zajmie się ich

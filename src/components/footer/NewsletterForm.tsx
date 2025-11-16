@@ -6,10 +6,10 @@ import { memo, useCallback, useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
 // ZMIANA: Importy animacji
 import {
-  smoothSpring,
   hoverTransition,
   iconPopTransition,
   shineTransition,
+  smoothSpring,
 } from "@/lib/animations";
 
 export const NewsletterForm = memo(() => {

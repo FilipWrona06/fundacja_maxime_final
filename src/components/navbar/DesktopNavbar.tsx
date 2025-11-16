@@ -1,12 +1,11 @@
 // Plik: components/navbar/DesktopNavbar.tsx
 "use client";
 
-// Importy React i Next.js
-import { useState, useEffect, type ReactNode } from "react";
-import { usePathname } from "next/navigation";
-
 // Importy animacji i komponentów
 import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
+// Importy React i Next.js
+import { type ReactNode, useEffect, useState } from "react";
 import type { NavLink as LinkItem } from "@/lib/types";
 import { AnimatedNavLink } from "../ui/AnimatedNavLink";
 import { PatroniteLink } from "./PatroniteLink";

@@ -66,11 +66,11 @@ const createStaticImage = (data: {
         blurDataURL={urlFor(data.image).width(20).height(25).blur(10).url()}
       />
     )}
-    
+
     {/* Enhanced gradient overlays */}
     <div className="absolute inset-0 bg-linear-to-t from-raisinBlack/80 via-raisinBlack/20 to-transparent opacity-80 transition-opacity duration-700 group-hover/image:opacity-60" />
     <div className="absolute inset-0 bg-linear-to-br from-arylideYellow/0 to-arylideYellow/10 opacity-0 transition-opacity duration-700 group-hover/image:opacity-100" />
-    
+
     {/* Subtle noise texture overlay for depth */}
     <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGQ9Ik0wIDBoMzAwdjMwMEgweiIgZmlsdGVyPSJ1cmwoI2EpIiBvcGFjaXR5PSIuMDUiLz48L3N2Zz4=')] opacity-30 mix-blend-overlay" />
   </div>
@@ -82,10 +82,10 @@ const createStaticStatsBubble = () => (
     <div className="group/stats relative overflow-hidden rounded-xl border border-white/10 bg-white/5 p-5 shadow-2xl backdrop-blur-md transition-all duration-500 hover:border-arylideYellow/30 hover:bg-white/10 sm:rounded-2xl sm:p-6 md:p-8">
       {/* Animated background gradient */}
       <div className="absolute inset-0 bg-linear-to-br from-arylideYellow/10 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover/stats:opacity-100" />
-      
+
       {/* Shine effect */}
       <div className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/10 to-transparent transition-transform duration-1000 group-hover/stats:translate-x-full" />
-      
+
       {/* Content */}
       <div className="relative">
         <p className="mb-1 bg-linear-to-br from-arylideYellow via-arylideYellow to-arylideYellow/80 bg-clip-text font-youngest text-4xl font-bold text-transparent drop-shadow-lg transition-all duration-500 group-hover/stats:scale-110 sm:mb-2 sm:text-5xl md:text-6xl lg:text-7xl">

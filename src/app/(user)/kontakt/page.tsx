@@ -4,9 +4,9 @@ import { motion, type Transition } from "framer-motion";
 import Link from "next/link";
 // ZMIANA: Import FC i SVGProps do typowania ikon SVG
 import { type FC, type FormEvent, type SVGProps, useState } from "react";
-import { FiCheck, FiMail, FiMapPin, FiPhone, FiSend } from "react-icons/fi";
 // ZMIANA: Import konkretnych ikon z react-icons
 import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
+import { FiCheck, FiMail, FiMapPin, FiPhone, FiSend } from "react-icons/fi";
 
 // Import danych z scentralizowanego pliku
 import { contactData, faqItems, socialLinks } from "@/data/siteData";

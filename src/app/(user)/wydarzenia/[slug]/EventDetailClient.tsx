@@ -12,8 +12,8 @@ import {
   FiTag,
   FiUser,
 } from "react-icons/fi";
-import { urlFor } from "@/sanity/lib/image";
 import type { EventType } from "@/lib/types";
+import { urlFor } from "@/sanity/lib/image";
 
 export default function EventDetailClient({
   event,

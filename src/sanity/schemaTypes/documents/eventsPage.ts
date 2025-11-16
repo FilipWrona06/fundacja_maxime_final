@@ -1,5 +1,5 @@
-import { defineField, defineType } from "sanity";
 import { CalendarIcon } from "@sanity/icons";
+import { defineField, defineType } from "sanity";
 
 /**
  * Ten plik definiuje schemat dla pojedynczego dokumentu 'Wydarzenie' w Sanity CMS.

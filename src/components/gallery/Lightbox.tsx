@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
+import { useCallback, useEffect } from "react";
 import { FiChevronLeft, FiChevronRight, FiX } from "react-icons/fi";
 import { smoothSpring } from "@/lib/animations";
 

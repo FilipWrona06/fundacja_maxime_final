@@ -4,9 +4,9 @@ import { contactData, navLinks } from "@/data/siteData";
 import { CreditLink } from "../footer/CreditLink";
 import { FooterAnimator } from "../footer/FooterAnimator";
 import { FooterNav } from "../footer/FooterNav";
-import { Logo } from "../ui/Logo";
 import { NewsletterForm } from "../footer/NewsletterForm";
 import { SocialLinksGroup } from "../footer/SocialLinksGroup";
+import { Logo } from "../ui/Logo";
 
 const Footer = () => {
   return (

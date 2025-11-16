@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
-import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
-import EventDetailClient from "./EventDetailClient";
 import type { EventType } from "@/lib/types";
+import { client } from "@/sanity/lib/client";
 import { eventsQuery } from "../page";
+import EventDetailClient from "./EventDetailClient";
 
 const getEventFullDate = (event: EventType) =>
   new Date(`${event.date}T${event.time}:00`);

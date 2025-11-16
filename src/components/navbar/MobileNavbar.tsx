@@ -3,15 +3,15 @@
 
 // Importy React, Next.js i Framer Motion
 import { AnimatePresence, motion, type Variants } from "framer-motion";
+import { usePathname } from "next/navigation";
 import {
+  type ReactNode,
+  type RefObject,
   useCallback,
   useEffect,
   useRef,
   useState,
-  type RefObject,
-  type ReactNode,
 } from "react";
-import { usePathname } from "next/navigation";
 
 // Importy typów i danych
 import type { NavLink as LinkItem } from "@/lib/types";

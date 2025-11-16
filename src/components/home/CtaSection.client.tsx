@@ -1,8 +1,8 @@
 "use client";
 
-import { LazyMotion, domAnimation, m, type Variants } from "framer-motion";
-import { FiCamera, FiHeart } from "react-icons/fi";
+import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
 import Link from "next/link";
+import { FiCamera, FiHeart } from "react-icons/fi";
 
 const MotionLink = m(Link);
 
@@ -12,9 +12,9 @@ const fadeInUpVariant: Variants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { 
-      duration: 0.8, 
-      ease: [0.22, 1, 0.36, 1] as const 
+    transition: {
+      duration: 0.8,
+      ease: [0.22, 1, 0.36, 1] as const,
     },
   },
 };
@@ -32,13 +32,13 @@ const staggerContainerVariant: Variants = {
 
 const buttonVariant: Variants = {
   initial: { scale: 1 },
-  hover: { 
+  hover: {
     scale: 1.05,
     transition: {
       type: "spring",
       stiffness: 400,
       damping: 17,
-    }
+    },
   },
   tap: { scale: 0.95 },
 };
@@ -52,7 +52,7 @@ const shimmerVariant: Variants = {
       repeat: Number.POSITIVE_INFINITY,
       repeatDelay: 3,
       ease: "easeInOut",
-    }
+    },
   },
 };
 
@@ -67,8 +67,8 @@ export const CTASectionClient = ({
 }) => {
   return (
     <LazyMotion features={domAnimation}>
-      <section 
-        className="relative overflow-hidden py-16 sm:py-20 md:py-24 lg:py-32 xl:py-40" 
+      <section
+        className="relative overflow-hidden py-16 sm:py-20 md:py-24 lg:py-32 xl:py-40"
         aria-labelledby="cta-heading"
       >
         {/* Background decorative elements */}
@@ -86,29 +86,29 @@ export const CTASectionClient = ({
             {/* Animated background blobs */}
             <m.div
               className="absolute -left-32 -top-32 h-64 w-64 rounded-full bg-arylideYellow/10 blur-3xl sm:h-80 sm:w-80"
-              animate={{ 
-                scale: [1, 1.2, 1], 
+              animate={{
+                scale: [1, 1.2, 1],
                 opacity: [0.3, 0.5, 0.3],
                 x: [0, 20, 0],
                 y: [0, 20, 0],
               }}
-              transition={{ 
-                duration: 8, 
-                repeat: Number.POSITIVE_INFINITY, 
-                ease: "easeInOut" 
+              transition={{
+                duration: 8,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
               }}
             />
             <m.div
               className="absolute -bottom-32 -right-32 h-64 w-64 rounded-full bg-arylideYellow/10 blur-3xl sm:h-80 sm:w-80"
-              animate={{ 
-                scale: [1.2, 1, 1.2], 
+              animate={{
+                scale: [1.2, 1, 1.2],
                 opacity: [0.5, 0.3, 0.5],
                 x: [0, -20, 0],
                 y: [0, -20, 0],
               }}
-              transition={{ 
-                duration: 8, 
-                repeat: Number.POSITIVE_INFINITY, 
+              transition={{
+                duration: 8,
+                repeat: Number.POSITIVE_INFINITY,
                 ease: "easeInOut",
                 delay: 1,
               }}
@@ -116,26 +116,27 @@ export const CTASectionClient = ({
 
             {/* Animated grid pattern */}
             <div className="absolute inset-0 opacity-5">
-              <div className="h-full w-full" style={{
-                backgroundImage: `linear-gradient(rgba(236, 179, 101, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(236, 179, 101, 0.3) 1px, transparent 1px)`,
-                backgroundSize: '50px 50px'
-              }} />
+              <div
+                className="h-full w-full"
+                style={{
+                  backgroundImage: `linear-gradient(rgba(236, 179, 101, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(236, 179, 101, 0.3) 1px, transparent 1px)`,
+                  backgroundSize: "50px 50px",
+                }}
+              />
             </div>
 
             {/* Content */}
-            <m.div 
+            <m.div
               className="relative"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
               variants={staggerContainerVariant}
             >
-              <m.div variants={fadeInUpVariant}>
-                {children}
-              </m.div>
+              <m.div variants={fadeInUpVariant}>{children}</m.div>
 
               {/* Buttons */}
-              <m.div 
+              <m.div
                 variants={fadeInUpVariant}
                 className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4 md:gap-6"
               >
@@ -157,21 +158,21 @@ export const CTASectionClient = ({
                     animate="animate"
                     className="absolute inset-0 bg-linear-to-r from-transparent via-white/30 to-transparent"
                   />
-                  
+
                   <m.span
                     className="relative z-10"
-                    animate={{ 
+                    animate={{
                       scale: [1, 1.2, 1],
                     }}
                     transition={{
                       duration: 1.5,
                       repeat: Number.POSITIVE_INFINITY,
-                      ease: "easeInOut"
+                      ease: "easeInOut",
                     }}
                   >
                     <FiHeart className="h-4 w-4 sm:h-5 sm:w-5" />
                   </m.span>
-                  
+
                   <span className="relative z-10">Wesprzyj nas</span>
 
                   {/* Glow effect on hover */}
@@ -188,7 +189,9 @@ export const CTASectionClient = ({
                   className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full border-2 border-arylideYellow/40 bg-transparent px-6 py-3.5 text-sm font-bold text-arylideYellow backdrop-blur-sm transition-all duration-500 hover:border-arylideYellow hover:bg-arylideYellow/10 hover:shadow-lg hover:shadow-arylideYellow/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-arylideYellow focus-visible:ring-offset-2 focus-visible:ring-offset-raisinBlack sm:w-auto sm:gap-3 sm:px-8 sm:py-4 sm:text-base md:px-10 md:py-5 md:text-lg"
                 >
                   <FiCamera className="h-4 w-4 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12 sm:h-5 sm:w-5" />
-                  <span className="whitespace-nowrap">Zobacz naszą galerię</span>
+                  <span className="whitespace-nowrap">
+                    Zobacz naszą galerię
+                  </span>
 
                   {/* Background gradient on hover */}
                   <div className="absolute inset-0 rounded-full bg-linear-to-r from-arylideYellow/0 via-arylideYellow/10 to-arylideYellow/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
