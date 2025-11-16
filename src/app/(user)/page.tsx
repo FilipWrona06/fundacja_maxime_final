@@ -1,25 +1,18 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
+import dynamic from "next/dynamic";
 
-import { AboutSection } from "@/components/home/AboutSection";
-import { CTASection } from "@/components/home/CtaSection";
+// Statycznie importujemy tylko HeroSection, ponieważ jest widoczna od razu.
 import { HeroSection } from "@/components/home/HeroSection";
-import { ImpactSection } from "@/components/home/ImpactSection";
-import { StatsSection } from "@/components/home/StatsSection";
-import { TimelineSection } from "@/components/home/TimelineSection";
 import { getHomePageSeoData } from "@/sanity/lib/get-data";
 import { urlFor } from "@/sanity/lib/image";
 
-/**
- * Ta funkcja jest wykonywana na serwerze podczas budowania strony.
- * Pobiera dane SEO z Sanity i generuje metadane dla sekcji <head> dokumentu HTML.
- * Dzięki temu Twoja strona jest w pełni zoptymalizowana dla SEO od samego początku.
+/*
+ * Funkcja 'generateMetadata' pozostaje bez zmian.
+ * Jest już zoptymalizowana i wykonuje się po stronie serwera.
  */
 export async function generateMetadata(): Promise<Metadata> {
-  // 1. Pobieramy dane SEO za pomocą naszej dedykowanej, z-cache-owanej funkcji.
   const seoData = await getHomePageSeoData();
 
-  // 2. Jeśli z jakiegoś powodu danych SEO nie ma, zwracamy solidne wartości domyślne.
   if (!seoData) {
     return {
       title: "Fundacja Maxime | Z Pasji do Muzyki",
@@ -28,27 +21,19 @@ export async function generateMetadata(): Promise<Metadata> {
     };
   }
 
-  // 3. Budujemy kompletny obiekt metadanych na podstawie danych z Sanity.
   return {
     title: seoData.metaTitle,
     description: seoData.metaDescription,
-
-    // Ustawienia dla robotów wyszukiwarek
     robots: {
       index: !seoData.noIndex,
       follow: !seoData.noFollow,
     },
-
-    // Ustawienie kanonicznego URL-a, jeśli został zdefiniowany
     alternates: {
       canonical: seoData.canonicalUrl || "/",
     },
-
-    // Ustawienia dla udostępniania w social mediach (Open Graph)
     openGraph: {
       title: seoData.ogTitle || seoData.metaTitle,
       description: seoData.ogDescription || seoData.metaDescription,
-      // Jeśli obrazek OG istnieje, budujemy jego pełny URL
       images: seoData.ogImage
         ? [
             {
@@ -63,8 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-// Komponent szkieletu (skeleton) do wyświetlania podczas ładowania danych.
-// Pozostaje bez zmian.
+// Komponent szkieletu (skeleton) pozostaje bez zmian i będzie używany dla wszystkich dynamicznych sekcji.
 const SectionSkeleton = () => (
   <div
     className="container mx-auto my-16 h-96 animate-pulse rounded-2xl bg-white/5"
@@ -72,33 +56,50 @@ const SectionSkeleton = () => (
   />
 );
 
-// Komponent strony jest teraz kompletny. Next.js automatycznie połączy
-// wygenerowane metadane z tym komponentem.
+// 1. Dynamicznie importujemy WSZYSTKIE sekcje, które pojawiają się po przewinięciu.
+const DynamicStatsSection = dynamic(
+  () => import("@/components/home/StatsSection").then((mod) => mod.StatsSection),
+  { loading: () => <SectionSkeleton /> },
+);
+
+const DynamicAboutSection = dynamic(
+  () => import("@/components/home/AboutSection").then((mod) => mod.AboutSection),
+  { loading: () => <SectionSkeleton /> },
+);
+
+const DynamicImpactSection = dynamic(
+  () =>
+    import("@/components/home/ImpactSection").then((mod) => mod.ImpactSection),
+  { loading: () => <SectionSkeleton /> },
+);
+
+const DynamicTimelineSection = dynamic(
+  () =>
+    import("@/components/home/TimelineSection").then(
+      (mod) => mod.TimelineSection,
+    ),
+  { loading: () => <SectionSkeleton /> },
+);
+
+const DynamicCTASection = dynamic(
+  () => import("@/components/home/CtaSection").then((mod) => mod.CTASection),
+  { loading: () => <SectionSkeleton /> },
+);
+
 export default function HomePage() {
   return (
     <>
+      {/* HeroSection jest ładowana natychmiast, zapewniając szybkie pierwsze wrażenie. */}
       <HeroSection />
 
       <main>
-        <Suspense fallback={<SectionSkeleton />}>
-          <StatsSection />
-        </Suspense>
-
-        <Suspense fallback={<SectionSkeleton />}>
-          <AboutSection />
-        </Suspense>
-
-        <Suspense fallback={<SectionSkeleton />}>
-          <ImpactSection />
-        </Suspense>
-
-        <Suspense fallback={<SectionSkeleton />}>
-          <TimelineSection />
-        </Suspense>
-
-        <Suspense fallback={<SectionSkeleton />}>
-          <CTASection />
-        </Suspense>
+        {/* 2. Wszystkie poniższe komponenty zostaną załadowane dopiero, gdy użytkownik
+            przewinie stronę w ich pobliże. */}
+        <DynamicStatsSection />
+        <DynamicAboutSection />
+        <DynamicImpactSection />
+        <DynamicTimelineSection />
+        <DynamicCTASection />
       </main>
     </>
   );
