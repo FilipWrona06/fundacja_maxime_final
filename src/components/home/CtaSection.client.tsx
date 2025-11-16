@@ -4,7 +4,7 @@ import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
 import Link from "next/link";
 import { FiCamera, FiHeart } from "react-icons/fi";
 
-const MotionLink = m(Link);
+const MotionLink = m.create(Link);
 
 const fadeInUpVariant: Variants = {
   hidden: { opacity: 0, y: 40, scale: 0.95 },
