@@ -99,7 +99,7 @@ export const TimelineSectionClient = ({
         <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-arylideYellow/5 blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-arylideYellow/5 blur-3xl" />
 
-        <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container relative z-10 mx-auto px-6 lg:px-8">
           {/* Header */}
           <m.div
             initial="hidden"
@@ -172,7 +172,7 @@ export const TimelineSectionClient = ({
                       <m.time
                         variants={fadeInUpVariant}
                         dateTime={item.fullYear}
-                        className="mb-3 inline-block font-youngest text-3xl text-arylideYellow drop-shadow-lg sm:mb-4 sm:text-4xl md:hidden"
+                        className="mb-2 inline-block font-youngest  text-arylideYellow drop-shadow-lg sm:mb-4 text-3xl sm:text-4xl md:hidden"
                       >
                         {item.fullYear}
                       </m.time>
@@ -180,7 +180,7 @@ export const TimelineSectionClient = ({
                       {/* Title */}
                       <m.h3
                         variants={fadeInUpVariant}
-                        className="mb-3 text-2xl font-bold transition-colors duration-500 group-hover/content:text-arylideYellow sm:mb-4 sm:text-3xl lg:text-4xl"
+                        className="mb-2 text-[1.25rem] font-semibold transition-colors duration-500 group-hover/content:text-arylideYellow sm:mb-4 sm:text-3xl lg:text-4xl"
                       >
                         {item.title}
                       </m.h3>
@@ -188,7 +188,7 @@ export const TimelineSectionClient = ({
                       {/* Description */}
                       <m.p
                         variants={fadeInUpVariant}
-                        className="mb-5 text-base leading-relaxed text-white/70 transition-colors duration-500 group-hover/content:text-white/85 sm:mb-6 sm:text-lg md:leading-relaxed lg:text-xl"
+                        className="mb-2 text-[0.9rem] leading-relaxed text-white/90 transition-colors duration-500 group-hover/content:text-white/85 sm:mb-6 sm:text-lg md:leading-relaxed lg:text-xl"
                       >
                         {item.text}
                       </m.p>

@@ -145,7 +145,7 @@ export const HeroSectionClient = ({
           }}
           className="container relative z-10 mx-auto px-6 text-center lg:pt-24"
         >
-          <h1 id="hero-heading" className="mb-6 md:mb-10">
+          <h1 id="hero-heading" className="mb-6 mt-2 sm:mt-0 md:mb-10">
             <m.span
               variants={headingVariants}
               initial="hidden"
@@ -184,7 +184,7 @@ export const HeroSectionClient = ({
               delay: 0.8,
               ease: [0.22, 1, 0.36, 1] as const,
             }}
-            className="mx-auto mb-8 max-w-2xl text-base leading-relaxed text-white drop-shadow-lg md:mb-10 md:text-xl md:leading-relaxed lg:leading-loose"
+            className="mx-auto mb-4 sm:mb-8 max-w-2xl text-base leading-relaxed text-white drop-shadow-lg md:mb-10 md:text-xl md:leading-relaxed lg:leading-loose"
           >
             {heroData.description}
           </m.p>
@@ -197,7 +197,7 @@ export const HeroSectionClient = ({
               delay: 1,
               ease: [0.22, 1, 0.36, 1] as const,
             }}
-            className="flex flex-col items-center justify-center gap-4 sm:flex-row md:gap-5"
+            className="flex flex-col items-center justify-center gap-2 sm:gap-4 sm:flex-row md:gap-5"
           >
             <HeroButton href="/wydarzenia" variant="primary">
               <span>Nadchodzące koncerty</span>

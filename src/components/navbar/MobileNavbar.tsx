@@ -2,7 +2,13 @@
 "use client";
 
 // Importy React, Next.js i Framer Motion
-import { AnimatePresence, motion, type Variants } from "framer-motion";
+import {
+  AnimatePresence,
+  domAnimation,
+  LazyMotion,
+  m,
+  type Variants,
+} from "framer-motion"; // Zaktualizowany import
 import { usePathname } from "next/navigation";
 import {
   type ReactNode,
@@ -160,83 +166,84 @@ export const MobileNavbar = ({ navLinks, logo }: MobileNavbarProps) => {
   }, [isMobileMenuOpen, closeMobileMenu]);
 
   return (
-    <div className="lg:hidden w-full">
-      <a href="#main-content" className={skipLinkClasses}>
-        Przejdź do treści
-      </a>
-      <output aria-live="polite" aria-atomic="true" className="sr-only">
-        {announceMessage}
-      </output>
+    <LazyMotion features={domAnimation}>
+      <div className="lg:hidden w-full">
+        <a href="#main-content" className={skipLinkClasses}>
+          Przejdź do treści
+        </a>
+        <output aria-live="polite" aria-atomic="true" className="sr-only">
+          {announceMessage}
+        </output>
 
-      <motion.nav
-        aria-label="Główna nawigacja mobilna"
-        // POPRAWKA: Dodano `overflow-hidden` aby przyciąć efekt rozmycia do zaokrąglonych rogów
-        className="relative z-50 w-full justify-between px-5 md:px-10 flex items-center rounded-full py-5 glass-effect overflow-hidden"
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={navTransition}
-      >
-        {logo}
-        <AnimatedMenuButton
-          isOpen={isMobileMenuOpen}
-          onClick={toggleMobileMenu}
-          buttonRef={menuButtonRef}
-        />
-      </motion.nav>
+        <m.nav // Zmieniono na m.nav
+          aria-label="Główna nawigacja mobilna"
+          className="relative z-50 w-full justify-between px-4 sm:px-5 md:px-10 flex items-center rounded-full py-2 glass-effect overflow-hidden"
+          initial={{ y: -100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={navTransition}
+        >
+          {logo}
+          <AnimatedMenuButton
+            isOpen={isMobileMenuOpen}
+            onClick={toggleMobileMenu}
+            buttonRef={menuButtonRef}
+          />
+        </m.nav>
 
-      <AnimatePresence mode="wait">
-        {isMobileMenuOpen && (
-          <motion.div
-            key="mobile-menu"
-            ref={mobileMenuRef}
-            id={MOBILE_MENU_ID}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={MOBILE_MENU_HEADING_ID}
-            className="fixed inset-0 z-40 flex flex-col items-center justify-center lg:hidden glass-effect"
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            variants={mobileMenuVariants}
-            onAnimationComplete={(definition) => {
-              if (definition === "visible") {
-                const firstFocusable =
-                  mobileMenuRef.current?.querySelector<HTMLElement>(
-                    "a[href], button:not([disabled])",
+        <AnimatePresence mode="wait">
+          {isMobileMenuOpen && (
+            <m.div // Zmieniono na m.div
+              key="mobile-menu"
+              ref={mobileMenuRef}
+              id={MOBILE_MENU_ID}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby={MOBILE_MENU_HEADING_ID}
+              className="fixed inset-0 z-40 flex flex-col items-center justify-center lg:hidden glass-effect"
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={mobileMenuVariants}
+              onAnimationComplete={(definition) => {
+                if (definition === "visible") {
+                  const firstFocusable =
+                    mobileMenuRef.current?.querySelector<HTMLElement>(
+                      "a[href], button:not([disabled])",
+                    );
+                  setTimeout(() => {
+                    firstFocusable?.focus();
+                  }, 50);
+                }
+              }}
+            >
+              <h2 id={MOBILE_MENU_HEADING_ID} className="sr-only">
+                Nawigacja mobilna
+              </h2>
+
+              <ul className="flex flex-col items-center space-y-8 relative z-10">
+                {navLinks.map((link) => {
+                  const isActive =
+                    link.href === "/"
+                      ? pathname === "/"
+                      : pathname.startsWith(link.href);
+                  return (
+                    <AnimatedNavLink
+                      key={link.href}
+                      {...link}
+                      isActive={isActive}
+                      isMobile
+                      onClick={closeMobileMenu}
+                    />
                   );
-                setTimeout(() => {
-                  firstFocusable?.focus();
-                }, 50);
-              }
-            }}
-          >
-            <h2 id={MOBILE_MENU_HEADING_ID} className="sr-only">
-              Nawigacja mobilna
-            </h2>
-
-            <ul className="flex flex-col items-center space-y-8 relative z-10">
-              {navLinks.map((link) => {
-                const isActive =
-                  link.href === "/"
-                    ? pathname === "/"
-                    : pathname.startsWith(link.href);
-                return (
-                  <AnimatedNavLink
-                    key={link.href}
-                    {...link}
-                    isActive={isActive}
-                    isMobile
-                    onClick={closeMobileMenu}
-                  />
-                );
-              })}
-              <motion.li className="pt-8" variants={mobileLinkVariants}>
-                <PatroniteLink isMobile onClick={closeMobileMenu} />
-              </motion.li>
-            </ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+                })}
+                <m.li className="pt-8" variants={mobileLinkVariants}>
+                  <PatroniteLink isMobile onClick={closeMobileMenu} />
+                </m.li>
+              </ul>
+            </m.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </LazyMotion>
   );
 };

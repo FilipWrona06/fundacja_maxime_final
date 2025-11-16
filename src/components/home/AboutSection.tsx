@@ -23,7 +23,7 @@ const createStaticContent = (data: {
     {/* Main heading with better responsiveness */}
     <h2
       id="about-heading"
-      className="space-y-2 text-4xl font-bold leading-[1.1] sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem]"
+      className="space-y-2 text-[2rem] font-bold leading-[1.1] sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem]"
     >
       <span className="block text-white transition-colors duration-300 hover:text-white/90">
         {data.headingPart1}
@@ -78,8 +78,8 @@ const createStaticImage = (data: {
 
 // Helper function for stats bubble
 const createStaticStatsBubble = () => (
-  <div className="absolute -bottom-6 right-2 w-auto sm:-bottom-8 sm:right-4 md:-bottom-8 md:-left-12 md:right-auto lg:-left-16 xl:-left-20">
-    <div className="group/stats relative overflow-hidden rounded-xl border border-white/10 bg-white/5 p-5 shadow-2xl backdrop-blur-md transition-all duration-500 hover:border-arylideYellow/30 hover:bg-white/10 sm:rounded-2xl sm:p-6 md:p-8">
+  <div className="absolute -bottom-6 -left-2.5 w-auto sm:-bottom-8 sm:right-4 md:-bottom-8 md:-left-12 md:right-auto lg:-left-16 xl:-left-20">
+    <div className="group/stats relative overflow-hidden rounded-xl border border-white/10 bg-white/5 p-3 shadow-2xl backdrop-blur-md transition-all duration-500 hover:border-arylideYellow/30 hover:bg-white/10 sm:rounded-2xl sm:p-6 md:p-8">
       {/* Animated background gradient */}
       <div className="absolute inset-0 bg-linear-to-br from-arylideYellow/10 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover/stats:opacity-100" />
 
@@ -88,10 +88,10 @@ const createStaticStatsBubble = () => (
 
       {/* Content */}
       <div className="relative">
-        <p className="mb-1 bg-linear-to-br from-arylideYellow via-arylideYellow to-arylideYellow/80 bg-clip-text font-youngest text-4xl font-bold text-transparent drop-shadow-lg transition-all duration-500 group-hover/stats:scale-110 sm:mb-2 sm:text-5xl md:text-6xl lg:text-7xl">
+        <p className="bg-linear-to-br from-arylideYellow via-arylideYellow to-arylideYellow/80 bg-clip-text font-youngest text-[1.75rem] font-bold text-transparent drop-shadow-lg transition-all duration-500 group-hover/stats:scale-110 sm:mb-2 sm:text-5xl md:text-6xl lg:text-7xl">
           50+
         </p>
-        <p className="whitespace-nowrap text-xs font-bold uppercase tracking-wider text-white/60 transition-colors duration-500 group-hover/stats:text-white/80 sm:text-sm">
+        <p className="whitespace-nowrap text-xs font-semibold sm:font-bold uppercase tracking-wider text-white/60 transition-colors duration-500 group-hover/stats:text-white/80 sm:text-sm">
           Zorganizowanych Koncertów
         </p>
       </div>

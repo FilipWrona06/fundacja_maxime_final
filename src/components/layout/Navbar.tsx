@@ -18,7 +18,7 @@ const Navbar = () => {
         navLinks={navLinks}
         logo={<Logo className="text-4xl shrink-0" />}
       />
-      <MobileNavbar navLinks={navLinks} logo={<Logo className="text-3xl" />} />
+      <MobileNavbar navLinks={navLinks} logo={<Logo className="text-[1.59rem] sm:text-3xl" />} />
     </header>
   );
 };

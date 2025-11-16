@@ -2,7 +2,7 @@
 "use client";
 
 // Importy animacji i komponentów
-import { motion } from "framer-motion";
+import { domAnimation, LazyMotion, m } from "framer-motion"; // Zaktualizowany import
 import { usePathname } from "next/navigation";
 // Importy React i Next.js
 import { type ReactNode, useEffect, useState } from "react";
@@ -40,58 +40,60 @@ export const DesktopNavbar = ({ navLinks, logo }: DesktopNavbarProps) => {
   const navbarBlur = Math.min(12 + scrollY * 0.05, 24);
 
   return (
-    <motion.div
-      // POPRAWKA: Dodano `rounded-full` i `overflow-hidden` aby przyciąć efekt rozmycia
-      className="hidden lg:block rounded-full overflow-hidden"
-      initial={{ y: -100, opacity: 0 }}
-      animate={{ y: navbarY, opacity: 1 }}
-      transition={navTransition}
-      style={{ backdropFilter: `blur(${navbarBlur}px)` }}
-    >
-      <nav
-        aria-label="Główna nawigacja"
-        className={`gap-x-5 xl:gap-x-6 px-10 ${navBaseStyle} glass-effect`}
-        style={{ transformStyle: "preserve-3d", perspective: "1000px" }}
+    // Owijamy cały komponent w LazyMotion, aby zapewnić kontekst dla wszystkich animacji
+    <LazyMotion features={domAnimation}>
+      <m.div // Zmieniono motion.div na m.div
+        className="hidden lg:block rounded-full overflow-hidden"
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: navbarY, opacity: 1 }}
+        transition={navTransition}
+        style={{ backdropFilter: `blur(${navbarBlur}px)` }}
       >
-        <ul className="flex items-center gap-x-5 xl:gap-x-6">
-          {leftLinks.map((link) => {
-            const isActive =
-              link.href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(link.href);
-            return (
-              <AnimatedNavLink
-                key={link.href}
-                {...link}
-                isActive={isActive}
-                className="text-sm"
-              />
-            );
-          })}
-        </ul>
+        <nav
+          aria-label="Główna nawigacja"
+          className={`gap-x-5 xl:gap-x-6 px-10 ${navBaseStyle} glass-effect`}
+          style={{ transformStyle: "preserve-3d", perspective: "1000px" }}
+        >
+          <ul className="flex items-center gap-x-5 xl:gap-x-6">
+            {leftLinks.map((link) => {
+              const isActive =
+                link.href === "/"
+                  ? pathname === "/"
+                  : pathname.startsWith(link.href);
+              return (
+                <AnimatedNavLink
+                  key={link.href}
+                  {...link}
+                  isActive={isActive}
+                  className="text-sm"
+                />
+              );
+            })}
+          </ul>
 
-        {logo}
+          {logo}
 
-        <ul className="flex items-center gap-x-5 xl:gap-x-6">
-          {rightLinks.map((link) => {
-            const isActive =
-              link.href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(link.href);
-            return (
-              <AnimatedNavLink
-                key={link.href}
-                {...link}
-                isActive={isActive}
-                className="text-sm"
-              />
-            );
-          })}
-          <li>
-            <PatroniteLink />
-          </li>
-        </ul>
-      </nav>
-    </motion.div>
+          <ul className="flex items-center gap-x-5 xl:gap-x-6">
+            {rightLinks.map((link) => {
+              const isActive =
+                link.href === "/"
+                  ? pathname === "/"
+                  : pathname.startsWith(link.href);
+              return (
+                <AnimatedNavLink
+                  key={link.href}
+                  {...link}
+                  isActive={isActive}
+                  className="text-sm"
+                />
+              );
+            })}
+            <li>
+              <PatroniteLink />
+            </li>
+          </ul>
+        </nav>
+      </m.div>
+    </LazyMotion>
   );
 };

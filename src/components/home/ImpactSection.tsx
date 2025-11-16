@@ -16,7 +16,7 @@ export async function ImpactSection() {
           id="impact-heading"
           className="text-4xl font-bold leading-tight sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
         >
-          <span className="block text-white">Nasz</span>
+          
           <span className="block font-youngest text-arylideYellow drop-shadow-lg">
             {impactData.heading}
           </span>

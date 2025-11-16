@@ -16,14 +16,14 @@ export async function TimelineSection() {
           id="timeline-heading"
           className="text-4xl font-bold leading-tight sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
         >
-          <span className="block text-white">Nasza</span>
+
           <span className="block font-youngest text-arylideYellow drop-shadow-lg">
             {timelineData.heading}
           </span>
         </h2>
 
         {/* Subheading */}
-        <p className="mx-auto max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg md:text-xl md:leading-relaxed lg:max-w-3xl">
+        <p className="mx-auto max-w-2xl font-medium text-base leading-relaxed text-white/90 sm:text-lg md:text-xl md:leading-relaxed lg:max-w-3xl">
           {timelineData.subheading}
         </p>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import Link from "next/link";
 import { memo } from "react";
 
@@ -16,7 +16,7 @@ export const Logo = memo(({ className = "" }: LogoProps) => {
       // Łączymy domyślne klasy z przekazanymi, aby umożliwić personalizację
       className={`relative font-youngest text-arylideYellow transition-all duration-300 ${className}`}
     >
-      <motion.span
+      <m.span
         className="relative inline-block"
         whileHover={{
           filter: [
@@ -29,7 +29,7 @@ export const Logo = memo(({ className = "" }: LogoProps) => {
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
         Fundacja Maxime
-      </motion.span>
+      </m.span>
     </Link>
   );
 });

@@ -17,16 +17,15 @@ export async function CTASection() {
         {/* Main heading */}
         <h2
           id="cta-heading"
-          className="font-youngest text-4xl leading-tight text-arylideYellow drop-shadow-2xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
+          className="font-youngest text-[2rem] leading-tight text-arylideYellow drop-shadow-2xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
         >
-          Pomóż nam rozwijać skrzydła młodym talentom
+          Pomóż nam się rozwijać!
         </h2>
 
         {/* Subheading */}
-        <p className="mx-auto mb-5 max-w-2xl text-base leading-relaxed text-white/80 sm:text-lg md:text-xl md:leading-relaxed lg:max-w-3xl">
+        <p className="mx-auto mb-3 sm:mb-5 max-w-2xl text-[0.95rem] leading-relaxed text-white/80 sm:text-lg md:text-xl md:leading-relaxed lg:max-w-3xl">
           Twoje wsparcie pozwala nam organizować bezpłatne koncerty i dawać
-          szansę utalentowanym artystom. Zobacz efekty naszej pracy i dołącz do
-          grona wspierających!
+          szansę utalentowanym artystom.
         </p>
       </div>
     </CTASectionClient>

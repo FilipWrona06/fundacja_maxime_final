@@ -95,7 +95,7 @@ export const ImpactSectionClient = ({
         <div className="absolute right-0 top-1/3 h-96 w-96 rounded-full bg-arylideYellow/5 blur-3xl" />
         <div className="absolute bottom-1/3 left-0 h-96 w-96 rounded-full bg-arylideYellow/5 blur-3xl" />
 
-        <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container relative z-10 mx-auto px-6 lg:px-8">
           {/* Header Section */}
           <m.div
             initial="hidden"
@@ -113,7 +113,7 @@ export const ImpactSectionClient = ({
             whileInView="visible"
             viewport={{ once: true, amount: 0.1, margin: "0px 0px -100px 0px" }}
             variants={staggerContainerVariant}
-            className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3"
+            className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3"
           >
             {impactData.impactCards.map((card: ImpactCard, index: number) => (
               <m.article
@@ -186,11 +186,11 @@ export const ImpactSectionClient = ({
                   {/* Decorative line */}
                   <div className="mb-3 h-1 w-12 bg-arylideYellow/0 transition-all duration-500 group-hover:w-20 group-hover:bg-arylideYellow sm:mb-4" />
 
-                  <h3 className="mb-2 text-xl font-bold text-white transition-all duration-500 group-hover:text-arylideYellow sm:mb-3 sm:text-2xl md:text-3xl">
+                  <h3 className="mb-1 text-lg font-bold text-white transition-all duration-500 group-hover:text-arylideYellow sm:mb-3 sm:text-2xl md:text-3xl">
                     {card.title}
                   </h3>
 
-                  <p className="text-sm leading-relaxed text-white/70 transition-all duration-500 group-hover:text-white/90 sm:text-base md:leading-relaxed">
+                  <p className="text-sm leading-relaxed text-white/90 transition-all duration-500 group-hover:text-white/90 sm:text-base md:leading-relaxed">
                     {card.desc}
                   </p>
                 </m.div>

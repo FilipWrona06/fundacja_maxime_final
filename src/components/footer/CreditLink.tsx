@@ -1,10 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion"; // ZMIANA: Import
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { memo, useState } from "react";
-import { softSpring } from "@/lib/animations"; // ZMIANA: Import
+import { softSpring } from "@/lib/animations";
 import { Underline } from "../ui/Underline";
 
 export const CreditLink = memo(
@@ -20,13 +20,14 @@ export const CreditLink = memo(
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <motion.span
+        <m.span // ZMIANA: motion.span -> m.span
           className="inline-block"
           animate={isHovered ? { y: -2 } : { y: 0 }}
           transition={softSpring}
         >
           {children}
-        </motion.span>
+        </m.span>
+        {/* Komponent Underline już wcześniej został zoptymalizowany */}
         <Underline isHovered={isHovered} />
       </Link>
     );

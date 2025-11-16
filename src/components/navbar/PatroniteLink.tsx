@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion"; // Zaktualizowany import
 import Link from "next/link";
 import { useState } from "react";
 import { FaHeart } from "react-icons/fa";
@@ -31,7 +31,7 @@ export const PatroniteLink = ({
   const desktopClasses = "border px-4 py-2 text-sm shadow-md";
 
   return (
-    <motion.div
+    <m.div // Zmieniono motion.div na m.div
       whileHover={!isMobile ? { scale: 1.05 } : undefined}
       whileTap={{ scale: 0.95 }}
       transition={smoothSpring}
@@ -48,7 +48,7 @@ export const PatroniteLink = ({
         onMouseLeave={() => setIsHovered(false)}
       >
         {/* Animowane tło */}
-        <motion.span
+        <m.span // Zmieniono motion.span na m.span
           className="absolute inset-0 bg-linear-to-r from-arylideYellow via-arylideYellow/80 to-arylideYellow"
           initial={{ x: "-100%" }}
           animate={isHovered ? { x: "0%" } : { x: "-100%" }}
@@ -64,7 +64,7 @@ export const PatroniteLink = ({
         </span>
 
         {/* Animowana ikona serca */}
-        <motion.span
+        <m.span // Zmieniono motion.span na m.span
           className="relative z-10"
           animate={
             isHovered
@@ -75,17 +75,17 @@ export const PatroniteLink = ({
           style={{ color: isHovered ? "#1a1a2e" : undefined }}
         >
           <FaHeart aria-hidden="true" />
-        </motion.span>
+        </m.span>
 
         {/* Animacja połysku */}
-        <motion.span
+        <m.span // Zmieniono motion.span na m.span
           className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent"
           initial={{ x: "-100%", skewX: -20 }}
           animate={isHovered ? { x: "200%" } : { x: "-100%" }}
           transition={shineTransition}
         />
       </Link>
-    </motion.div>
+    </m.div>
   );
 };
 

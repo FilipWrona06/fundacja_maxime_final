@@ -1,10 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion"; // ZMIANA: Import
 import type { FormEvent } from "react";
 import { memo, useCallback, useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
-// ZMIANA: Importy animacji
 import {
   hoverTransition,
   iconPopTransition,
@@ -19,13 +18,14 @@ export const NewsletterForm = memo(() => {
 
   const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    // W przyszłości tutaj będzie logika wysyłki
     alert("Dziękujemy za zapisanie się do newslettera!");
     setEmail("");
   }, []);
 
   return (
     <form onSubmit={handleSubmit} className="mt-6 w-full max-w-sm">
-      <motion.div
+      <m.div // ZMIANA: motion.div -> m.div
         className="relative flex items-center border-b py-2 transition-colors duration-300"
         animate={{
           borderColor: isFocused
@@ -44,23 +44,23 @@ export const NewsletterForm = memo(() => {
           onBlur={() => setIsFocused(false)}
           className="w-full appearance-none border-none bg-transparent text-sm text-white placeholder:text-philippineSilver focus:outline-none focus:ring-0"
         />
-        <motion.button
+        <m.button // ZMIANA: motion.button -> m.button
           type="submit"
           aria-label="Zapisz się do newslettera"
           className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-arylideYellow bg-transparent"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          transition={smoothSpring} // ZMIANA
+          transition={smoothSpring}
           onMouseEnter={() => setIsButtonHovered(true)}
           onMouseLeave={() => setIsButtonHovered(false)}
         >
-          <motion.span
+          <m.span // ZMIANA: motion.span -> m.span
             className="absolute inset-0 bg-arylideYellow"
             initial={{ x: "-100%" }}
             animate={isButtonHovered ? { x: "0%" } : { x: "-100%" }}
-            transition={hoverTransition} // ZMIANA
+            transition={hoverTransition}
           />
-          <motion.span
+          <m.span // ZMIANA: motion.span -> m.span
             className="relative z-10"
             animate={
               isButtonHovered
@@ -71,18 +71,18 @@ export const NewsletterForm = memo(() => {
                   }
                 : { scale: 1, rotate: 0, color: "#E9D758" }
             }
-            transition={iconPopTransition} // ZMIANA
+            transition={iconPopTransition}
           >
             <FiArrowRight size={20} />
-          </motion.span>
-          <motion.span
+          </m.span>
+          <m.span // ZMIANA: motion.span -> m.span
             className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent"
             initial={{ x: "-100%", skewX: -20 }}
             animate={isButtonHovered ? { x: "200%" } : { x: "-100%" }}
-            transition={shineTransition} // ZMIANA
+            transition={shineTransition}
           />
-        </motion.button>
-      </motion.div>
+        </m.button>
+      </m.div>
     </form>
   );
 });

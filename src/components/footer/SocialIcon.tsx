@@ -1,12 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion"; // ZMIANA: Import
 import Link from "next/link";
 import type { FC, SVGProps } from "react";
 import { memo, useState } from "react";
 import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
 
-// ZMIANA: Importy animacji
 import {
   hoverTransition,
   iconPopTransition,
@@ -26,6 +25,7 @@ const PatroniteIcon: FC<IconProps> = ({ size, ...props }) => (
     fill="currentColor"
     width={size || "1em"}
     height={size || "1em"}
+    // Błąd z typowaniem rozwiązany w poprzednim kroku (np. przez overrides w package.json)
     {...props}
   >
     <title>Patronite</title>
@@ -45,10 +45,10 @@ export const SocialIcon = memo(({ social }: { social: SocialLink }) => {
   const IconComponent = ICON_MAP[social.icon] || null;
 
   return (
-    <motion.div
+    <m.div // ZMIANA: motion.div -> m.div
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      transition={smoothSpring} // ZMIANA
+      transition={smoothSpring}
     >
       <Link
         href={social.href}
@@ -59,13 +59,13 @@ export const SocialIcon = memo(({ social }: { social: SocialLink }) => {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <motion.span
+        <m.span // ZMIANA: motion.span -> m.span
           className={`absolute inset-0 ${social.colorClasses.background}`}
           initial={{ x: "-100%" }}
           animate={isHovered ? { x: "0%" } : { x: "-100%" }}
-          transition={hoverTransition} // ZMIANA
+          transition={hoverTransition}
         />
-        <motion.span
+        <m.span // ZMIANA: motion.span -> m.span
           className="relative z-10"
           animate={
             isHovered
@@ -76,18 +76,18 @@ export const SocialIcon = memo(({ social }: { social: SocialLink }) => {
                 }
               : { scale: 1, rotate: 0 }
           }
-          transition={iconPopTransition} // ZMIANA
+          transition={iconPopTransition}
         >
           {IconComponent && <IconComponent size={20} />}
-        </motion.span>
-        <motion.span
+        </m.span>
+        <m.span // ZMIANA: motion.span -> m.span
           className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent"
           initial={{ x: "-100%", skewX: -20 }}
           animate={isHovered ? { x: "200%" } : { x: "-100%" }}
-          transition={shineTransition} // ZMIANA
+          transition={shineTransition}
         />
       </Link>
-    </motion.div>
+    </m.div>
   );
 });
 

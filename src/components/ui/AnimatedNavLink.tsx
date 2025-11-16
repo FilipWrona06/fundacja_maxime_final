@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  motion,
+  m,
   useMotionValue,
   useSpring,
   useTransform,
@@ -75,24 +75,23 @@ export const AnimatedNavLink = memo(
 
     if (isMobile) {
       return (
-        <motion.li variants={mobileLinkVariants}>
+        <m.li variants={mobileLinkVariants}>
           <Link
             href={href}
             className={`relative text-2xl font-semibold transition-colors duration-300 ${className}`}
             onClick={onClick}
             aria-current={isActive ? "page" : undefined}
           >
-            <motion.span
+            <m.span
               className="inline-block"
               whileHover={{ x: 6 }}
               transition={softSpring}
             >
               {name}
-            </motion.span>
-            {/* W wersji mobilnej Underline jest poza spanem, co jest OK */}
+            </m.span>
             <Underline isActive={isActive} />
           </Link>
-        </motion.li>
+        </m.li>
       );
     }
 
@@ -106,19 +105,13 @@ export const AnimatedNavLink = memo(
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={handleMouseLeave}
         >
-          {/* --- POCZĄTEK POPRAWKI --- */}
-          <motion.span
-            // Ten span ma `position: relative` i idealnie otacza tekst
+          <m.span
             className="inline-block relative"
             style={{ rotateX, rotateY }}
           >
             {name}
-
-            {/* Przenosimy Underline tutaj! */}
-            {/* Teraz będzie on miał szerokość tego spana, a nie całego linku. */}
             <Underline isActive={isActive} isHovered={isHovered} />
-          </motion.span>
-          {/* --- KONIEC POPRAWKI --- */}
+          </m.span>
         </Link>
       </li>
     );

@@ -68,14 +68,14 @@ export const CTASectionClient = ({
   return (
     <LazyMotion features={domAnimation}>
       <section
-        className="relative overflow-hidden py-16 sm:py-20 md:py-24 lg:py-32 xl:py-40"
+        className="relative overflow-hidden py-12 sm:py-20 md:py-24 lg:py-32 xl:py-40"
         aria-labelledby="cta-heading"
       >
         {/* Background decorative elements */}
-        <div className="absolute left-1/4 top-0 h-96 w-96 rounded-full bg-arylideYellow/5 blur-3xl" />
+        <div className="absolute left-1/4 top-25 h-96 w-96 rounded-full bg-arylideYellow/5 blur-3xl" />
         <div className="absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-arylideYellow/5 blur-3xl" />
 
-        <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container relative z-10 mx-auto px-6 lg:px-8">
           <m.div
             initial="hidden"
             whileInView="visible"
@@ -149,7 +149,7 @@ export const CTASectionClient = ({
                   initial="initial"
                   whileHover="hover"
                   whileTap="tap"
-                  className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-arylideYellow px-6 py-3.5 text-sm font-bold text-raisinBlack shadow-lg shadow-arylideYellow/30 transition-shadow duration-500 hover:shadow-2xl hover:shadow-arylideYellow/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-arylideYellow focus-visible:ring-offset-2 focus-visible:ring-offset-raisinBlack sm:w-auto sm:gap-3 sm:px-8 sm:py-4 sm:text-base md:px-10 md:py-5 md:text-lg"
+                  className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-arylideYellow px-6 py-3 text-sm font-bold text-raisinBlack shadow-lg shadow-arylideYellow/30 transition-shadow duration-500 hover:shadow-2xl hover:shadow-arylideYellow/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-arylideYellow focus-visible:ring-offset-2 focus-visible:ring-offset-raisinBlack sm:w-auto sm:gap-3 sm:px-8 sm:py-4 sm:text-base md:px-10 md:py-5 md:text-lg"
                 >
                   {/* Shimmer effect */}
                   <m.span
@@ -186,7 +186,7 @@ export const CTASectionClient = ({
                   initial="initial"
                   whileHover="hover"
                   whileTap="tap"
-                  className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full border-2 border-arylideYellow/40 bg-transparent px-6 py-3.5 text-sm font-bold text-arylideYellow backdrop-blur-sm transition-all duration-500 hover:border-arylideYellow hover:bg-arylideYellow/10 hover:shadow-lg hover:shadow-arylideYellow/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-arylideYellow focus-visible:ring-offset-2 focus-visible:ring-offset-raisinBlack sm:w-auto sm:gap-3 sm:px-8 sm:py-4 sm:text-base md:px-10 md:py-5 md:text-lg"
+                  className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full border-2 border-arylideYellow/40 bg-transparent px-6 py-3 text-sm font-bold text-arylideYellow backdrop-blur-sm transition-all duration-500 hover:border-arylideYellow hover:bg-arylideYellow/10 hover:shadow-lg hover:shadow-arylideYellow/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-arylideYellow focus-visible:ring-offset-2 focus-visible:ring-offset-raisinBlack sm:w-auto sm:gap-3 sm:px-8 sm:py-4 sm:text-base md:px-10 md:py-5 md:text-lg"
                 >
                   <FiCamera className="h-4 w-4 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12 sm:h-5 sm:w-5" />
                   <span className="whitespace-nowrap">
