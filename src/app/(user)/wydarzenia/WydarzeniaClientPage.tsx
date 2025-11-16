@@ -367,7 +367,10 @@ export default function WydarzeniaClientPage({
                     <div className="grid grid-cols-7 gap-2 p-6 pt-3">
                       {[...Array(startingDayOfWeek)].map((_, index) => (
                         <div
-                          key={`empty-start-${index}`}
+                          key={`empty-start-${
+                            // biome-ignore lint/suspicious/noArrayIndexKey: Te elementy to statyczne wypełniacze, indeks jest jedynym stabilnym kluczem.
+                            index
+                          }`}
                           className="aspect-square"
                         />
                       ))}

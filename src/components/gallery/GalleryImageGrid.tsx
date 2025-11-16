@@ -18,7 +18,7 @@ interface Props {
   images: ImageData[];
 }
 
-export default function GalleryImageGrid({ galleryId, images }: Props) {
+export default function GalleryImageGrid({ images }: Props) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   return (
@@ -29,7 +29,7 @@ export default function GalleryImageGrid({ galleryId, images }: Props) {
 
           return (
             <motion.button
-              key={`${galleryId}-${index}`}
+              key={image.src} // <<< ZMIANA TUTAJ
               type="button"
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
