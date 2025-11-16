@@ -1,16 +1,12 @@
-// Plik: components/navbar/DesktopNavbar.tsx
 "use client";
 
-// Importy animacji i komponentów
-import { domAnimation, LazyMotion, m } from "framer-motion"; // Zaktualizowany import
+import { domAnimation, LazyMotion, m } from "framer-motion";
 import { usePathname } from "next/navigation";
-// Importy React i Next.js
 import { type ReactNode, useEffect, useState } from "react";
 import type { NavLink as LinkItem } from "@/lib/types";
 import { AnimatedNavLink } from "../ui/AnimatedNavLink";
 import { PatroniteLink } from "./PatroniteLink";
 
-// --- Definicje typów i stałe ---
 const navTransition = { type: "spring", stiffness: 260, damping: 30 } as const;
 const navBaseStyle = "flex items-center rounded-full py-5";
 
@@ -19,16 +15,23 @@ interface DesktopNavbarProps {
   logo: ReactNode;
 }
 
-/**
- * Komponent kliencki dla nawigacji desktopowej.
- * Samodzielnie określa aktywny link za pomocą hooka `usePathname`.
- */
 export const DesktopNavbar = ({ navLinks, logo }: DesktopNavbarProps) => {
   const pathname = usePathname();
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
+    let ticking = false;
+    
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrollY(window.scrollY);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -40,14 +43,16 @@ export const DesktopNavbar = ({ navLinks, logo }: DesktopNavbarProps) => {
   const navbarBlur = Math.min(12 + scrollY * 0.05, 24);
 
   return (
-    // Owijamy cały komponent w LazyMotion, aby zapewnić kontekst dla wszystkich animacji
     <LazyMotion features={domAnimation}>
-      <m.div // Zmieniono motion.div na m.div
-        className="hidden lg:block rounded-full overflow-hidden"
+      <m.div
+        className="hidden lg:block rounded-full overflow-hidden will-change-transform"
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: navbarY, opacity: 1 }}
         transition={navTransition}
-        style={{ backdropFilter: `blur(${navbarBlur}px)` }}
+        style={{ 
+          backdropFilter: `blur(${navbarBlur}px)`,
+          WebkitBackdropFilter: `blur(${navbarBlur}px)`,
+        }}
       >
         <nav
           aria-label="Główna nawigacja"

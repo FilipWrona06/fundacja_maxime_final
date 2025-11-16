@@ -1,14 +1,12 @@
-// Plik: components/navbar/MobileNavbar.tsx
 "use client";
 
-// Importy React, Next.js i Framer Motion
 import {
   AnimatePresence,
   domAnimation,
   LazyMotion,
   m,
   type Variants,
-} from "framer-motion"; // Zaktualizowany import
+} from "framer-motion";
 import { usePathname } from "next/navigation";
 import {
   type ReactNode,
@@ -19,47 +17,46 @@ import {
   useState,
 } from "react";
 
-// Importy typów i danych
 import type { NavLink as LinkItem } from "@/lib/types";
-
-// Importy komponentów podrzędnych
 import { AnimatedNavLink } from "../ui/AnimatedNavLink";
 import { AnimatedMenuButton } from "./AnimatedMenuButton";
 import { PatroniteLink } from "./PatroniteLink";
 
-// --- Stałe i Hooki ---
+const ultraSmoothTransition = { 
+  type: "spring", 
+  stiffness: 180, 
+  damping: 28,
+  mass: 0.9
+} as const;
 
-const navTransition = { type: "spring", stiffness: 260, damping: 30 } as const;
 const skipLinkClasses =
   "sr-only focus:not-sr-only focus:absolute focus:z-[9999] focus:top-4 focus:left-4 focus:px-4 focus:py-2 focus:bg-arylideYellow focus:text-raisinBlack focus:rounded-lg focus:shadow-lg focus:font-bold focus:outline-none focus:ring-2 focus:ring-arylideYellow/50";
 
 const mobileMenuVariants: Variants = {
   hidden: {
     opacity: 0,
-    scale: 0.95,
+    scale: 0.96,
+    filter: "blur(4px)",
     transition: {
-      staggerChildren: 0.03,
+      staggerChildren: 0.04,
       staggerDirection: -1,
       when: "afterChildren",
-      duration: 0.2,
+      duration: 0.3,
+      ease: [0.34, 1.56, 0.64, 1]
     },
   },
   visible: {
     opacity: 1,
     scale: 1,
+    filter: "blur(0px)",
     transition: {
-      staggerChildren: 0.06,
+      staggerChildren: 0.08,
       staggerDirection: 1,
       when: "beforeChildren",
-      duration: 0.3,
-      ease: [0.22, 1, 0.36, 1],
+      duration: 0.5,
+      ease: [0.34, 1.56, 0.64, 1]
     },
   },
-};
-
-const mobileLinkVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
 };
 
 const useOnClickOutside = (
@@ -85,8 +82,6 @@ const useOnClickOutside = (
     };
   }, [refs]);
 };
-
-// --- Główny komponent ---
 
 interface MobileNavbarProps {
   navLinks: readonly LinkItem[];
@@ -126,9 +121,11 @@ export const MobileNavbar = ({ navLinks, logo }: MobileNavbarProps) => {
     const footer = document.querySelector<HTMLElement>("footer");
     if (mainContent) mainContent.setAttribute("inert", "");
     if (footer) footer.setAttribute("inert", "");
+    
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         closeMobileMenu();
+        setTimeout(() => menuButtonRef.current?.focus(), 100);
         return;
       }
       if (event.key === "Tab") {
@@ -155,6 +152,7 @@ export const MobileNavbar = ({ navLinks, logo }: MobileNavbarProps) => {
         }
       }
     };
+    
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.body.style.overflow = "";
@@ -175,12 +173,12 @@ export const MobileNavbar = ({ navLinks, logo }: MobileNavbarProps) => {
           {announceMessage}
         </output>
 
-        <m.nav // Zmieniono na m.nav
+        <m.nav
           aria-label="Główna nawigacja mobilna"
-          className="relative z-50 w-full justify-between px-4 sm:px-5 md:px-10 flex items-center rounded-full py-2 glass-effect overflow-hidden"
-          initial={{ y: -100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={navTransition}
+          className="relative z-50 w-full justify-between px-4 sm:px-6 md:px-10 flex items-center rounded-full py-2.5 glass-effect overflow-hidden"
+          initial={{ y: -100, opacity: 0, filter: "blur(4px)" }}
+          animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+          transition={ultraSmoothTransition}
         >
           {logo}
           <AnimatedMenuButton
@@ -192,14 +190,14 @@ export const MobileNavbar = ({ navLinks, logo }: MobileNavbarProps) => {
 
         <AnimatePresence mode="wait">
           {isMobileMenuOpen && (
-            <m.div // Zmieniono na m.div
+            <m.div
               key="mobile-menu"
               ref={mobileMenuRef}
               id={MOBILE_MENU_ID}
               role="dialog"
               aria-modal="true"
               aria-labelledby={MOBILE_MENU_HEADING_ID}
-              className="fixed inset-0 z-40 flex flex-col items-center justify-center lg:hidden glass-effect"
+              className="fixed inset-0 z-40 flex flex-col items-center justify-center lg:hidden glass-effect backdrop-blur-xl"
               initial="hidden"
               animate="visible"
               exit="hidden"
@@ -220,7 +218,7 @@ export const MobileNavbar = ({ navLinks, logo }: MobileNavbarProps) => {
                 Nawigacja mobilna
               </h2>
 
-              <ul className="flex flex-col items-center space-y-8 relative z-10">
+              <ul className="flex flex-col items-center space-y-5 sm:space-y-7 relative z-10 px-6">
                 {navLinks.map((link) => {
                   const isActive =
                     link.href === "/"
@@ -236,9 +234,18 @@ export const MobileNavbar = ({ navLinks, logo }: MobileNavbarProps) => {
                     />
                   );
                 })}
-                <m.li className="pt-8" variants={mobileLinkVariants}>
+                <m.div
+                  className="pt-5 sm:pt-7"
+                  initial={{ opacity: 0, y: 25, filter: "blur(4px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  transition={{ 
+                    delay: navLinks.length * 0.08 + 0.15, 
+                    duration: 0.6,
+                    ease: [0.34, 1.56, 0.64, 1]
+                  }}
+                >
                   <PatroniteLink isMobile onClick={closeMobileMenu} />
-                </m.li>
+                </m.div>
               </ul>
             </m.div>
           )}
