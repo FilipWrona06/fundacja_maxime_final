@@ -6,12 +6,7 @@ import { useRef, useState } from "react";
 import { FaHeart } from "react-icons/fa";
 import {
   ultraSmoothSpring,
-  hoverTransition,
-  iconPopTransition,
-  shineTransition,
-  hoverScales,
   tapScales,
-  glowIntensities,
 } from "@/lib/animations";
 
 const patroniteUrl = "https://patronite.pl/stowarzyszeniemaxime";
@@ -41,19 +36,15 @@ export const PatroniteLink = ({
   };
 
   const baseClasses =
-    "relative flex items-center gap-x-2.5 rounded-full font-semibold overflow-hidden transition-all duration-500 ease-out";
+    "relative flex items-center gap-x-2.5 rounded-full font-semibold overflow-hidden transition-all duration-300 ease-out";
   const mobileClasses =
-    "border-2 border-arylideYellow/50 px-7 py-3.5 text-xl";
+    "border-2 border-arylideYellow/50 px-7 py-3.5 text-xl hover:border-arylideYellow hover:bg-arylideYellow/10";
   const desktopClasses =
-    "border border-arylideYellow/40 px-5 py-2.5 text-sm";
-
-  const glowIntensity = isMobile
-    ? glowIntensities.prominent
-    : glowIntensities.normal;
+    "border border-arylideYellow/40 px-5 py-2.5 text-sm hover:border-arylideYellow hover:bg-arylideYellow/10";
 
   return (
     <m.div
-      whileHover={!isMobile ? { scale: hoverScales.normal } : undefined}
+      whileHover={!isMobile ? { scale: 1.02, y: -2 } : undefined}
       whileTap={{ scale: tapScales.normal }}
       transition={ultraSmoothSpring}
       className="will-change-transform"
@@ -68,61 +59,31 @@ export const PatroniteLink = ({
         prefetch={false}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={() => setIsHovered(false)}
-        style={{
-          boxShadow: isHovered ? glowIntensity : "none",
-          transition: "box-shadow 0.5s ease-out",
-        }}
       >
-        {/* Animated background */}
-        <m.span
-          className="absolute inset-0 bg-linear-to-r from-arylideYellow/95 via-arylideYellow to-arylideYellow/95 will-change-transform"
-          initial={{ x: "-100%" }}
-          animate={isHovered ? { x: "0%" } : { x: "-100%" }}
-          transition={hoverTransition}
-        />
-
         {/* Link text */}
-        <m.span
-          className="relative z-10"
-          animate={{
-            color: isHovered ? "#1a1a2e" : "#e9d758",
-          }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-        >
+        <span className="relative z-10 text-arylideYellow">
           Wesprzyj nas
-        </m.span>
+        </span>
 
-        {/* Animated heart icon */}
+        {/* Heart icon */}
         <m.span
-          className="relative z-10"
+          className="relative z-10 text-arylideYellow"
           animate={
             isHovered
               ? {
-                  scale: [1, 1.15, 1.05],
-                  rotate: [0, -8, 8, -5, 0],
-                  color: "#1a1a2e",
+                  scale: [1, 1.15, 1],
                 }
               : {
                   scale: 1,
-                  rotate: 0,
-                  color: "#e9d758",
                 }
           }
           transition={{
-            ...iconPopTransition,
-            color: { duration: 0.4, ease: "easeOut" },
+            duration: 0.6,
+            ease: "easeOut",
           }}
         >
           <FaHeart aria-hidden="true" />
         </m.span>
-
-        {/* Shine animation */}
-        <m.span
-          className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent will-change-transform"
-          initial={{ x: "-150%", skewX: -15 }}
-          animate={isHovered ? { x: "250%" } : { x: "-150%" }}
-          transition={shineTransition}
-        />
       </Link>
     </m.div>
   );

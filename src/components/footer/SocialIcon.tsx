@@ -6,11 +6,7 @@ import type { FC, SVGProps } from "react";
 import { memo, useState } from "react";
 import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
 import {
-  hoverTransition,
-  iconPopTransition,
-  shineTransition,
   ultraSmoothSpring,
-  hoverScales,
   tapScales,
 } from "@/lib/animations";
 import type { SocialLink } from "@/lib/types";
@@ -46,7 +42,7 @@ export const SocialIcon = memo(({ social }: { social: SocialLink }) => {
 
   return (
     <m.div
-      whileHover={{ scale: hoverScales.normal }}
+      whileHover={{ scale: 1.05, y: -2 }}
       whileTap={{ scale: tapScales.normal }}
       transition={ultraSmoothSpring}
     >
@@ -55,42 +51,23 @@ export const SocialIcon = memo(({ social }: { social: SocialLink }) => {
         target="_blank"
         rel="noopener noreferrer"
         aria-label={social.name}
-        className={`relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-philippineSilver/50 text-philippineSilver transition-colors duration-300 ${social.colorClasses.hover}`}
+        className={`relative flex h-10 w-10 items-center justify-center rounded-full border border-philippineSilver/50 text-philippineSilver transition-all duration-300 ${social.colorClasses.hover}`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        {/* Background animation */}
-        <m.span
-          className={`absolute inset-0 ${social.colorClasses.background}`}
-          initial={{ x: "-100%" }}
-          animate={isHovered ? { x: "0%" } : { x: "-100%" }}
-          transition={hoverTransition}
-        />
-
         {/* Icon */}
         <m.span
-          className="relative z-10"
           animate={
             isHovered
               ? {
-                  scale: [1, 1.2, 1],
-                  rotate: [0, -10, 10, -10, 0],
-                  color: "#FFFFFF",
+                  scale: 1.1,
                 }
-              : { scale: 1, rotate: 0 }
+              : { scale: 1 }
           }
-          transition={iconPopTransition}
+          transition={{ duration: 0.3 }}
         >
           {IconComponent && <IconComponent size={20} />}
         </m.span>
-
-        {/* Shine effect */}
-        <m.span
-          className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent"
-          initial={{ x: "-100%", skewX: -20 }}
-          animate={isHovered ? { x: "200%" } : { x: "-100%" }}
-          transition={shineTransition}
-        />
       </Link>
     </m.div>
   );

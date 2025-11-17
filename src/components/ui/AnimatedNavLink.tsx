@@ -2,24 +2,20 @@
 
 import {
   m,
-  useMotionValue,
-  useSpring,
-  useTransform,
   type Variants,
 } from "framer-motion";
 import Link from "next/link";
-import { memo, useCallback, useState } from "react";
-import { ultraSmoothSpring, premiumEase, hoverScales, tapScales } from "@/lib/animations";
+import { memo } from "react";
+import { ultraSmoothSpring, premiumEase, tapScales } from "@/lib/animations";
 import { Underline } from "./Underline";
 
 const mobileLinkVariants: Variants = {
-  hidden: { opacity: 0, y: -20, filter: "blur(4px)" },
+  hidden: { opacity: 0, y: -20 },
   visible: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
     transition: {
-      duration: 0.6,
+      duration: 0.5,
       ease: premiumEase,
     },
   },
@@ -43,48 +39,19 @@ export const AnimatedNavLink = memo(
     className = "",
     onClick,
   }: AnimatedNavLinkProps) => {
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
-    const [isHovered, setIsHovered] = useState(false);
-
-    const springX = useSpring(mouseX, ultraSmoothSpring);
-    const springY = useSpring(mouseY, ultraSmoothSpring);
-
-    const rotateX = useTransform(springY, [-0.5, 0.5], [6, -6]);
-    const rotateY = useTransform(springX, [-0.5, 0.5], [-6, 6]);
-
-    const handleMouseMove = useCallback(
-      (e: React.MouseEvent<HTMLAnchorElement>) => {
-        if (isMobile) return;
-        const rect = e.currentTarget.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        mouseX.set((e.clientX - centerX) / rect.width);
-        mouseY.set((e.clientY - centerY) / rect.height);
-      },
-      [isMobile, mouseX, mouseY]
-    );
-
-    const handleMouseLeave = useCallback(() => {
-      mouseX.set(0);
-      mouseY.set(0);
-      setIsHovered(false);
-    }, [mouseX, mouseY]);
-
     if (isMobile) {
       return (
         <m.li variants={mobileLinkVariants}>
           <Link
             href={href}
-            className={`relative block text-xl sm:text-2xl font-semibold transition-all duration-500 ease-out ${className}`}
+            className={`relative block text-xl sm:text-2xl font-semibold transition-all duration-300 ease-out ${className}`}
             onClick={onClick}
             aria-current={isActive ? "page" : undefined}
           >
             <m.span
               className="inline-block"
               whileHover={{ 
-                x: 6, 
-                scale: hoverScales.subtle,
+                x: 6,
               }}
               whileTap={{ scale: tapScales.normal }}
               transition={ultraSmoothSpring}
@@ -98,29 +65,37 @@ export const AnimatedNavLink = memo(
     }
 
     return (
-      <li className="perspective-distant">
-        <Link
-          href={href}
-          className={`group block py-1 relative transition-all duration-500 ease-out ${
-            isActive
-              ? "font-semibold"
-              : "font-normal text-white/85 hover:text-white/95"
-          } ${className}`}
-          aria-current={isActive ? "page" : undefined}
-          onMouseMove={handleMouseMove}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={handleMouseLeave}
-        >
-          <m.span
-            className="inline-block relative will-change-transform"
-            style={{ rotateX, rotateY }}
-            animate={isHovered ? { scale: hoverScales.subtle } : { scale: 1 }}
-            transition={{ duration: 0.4, ease: premiumEase }}
+      <li>
+        <m.div whileHover="hovered" initial="initial">
+          <Link
+            href={href}
+            className={`group block py-1 relative transition-all duration-300 ease-out ${
+              isActive
+                ? "font-semibold"
+                : "font-normal text-white/85 hover:text-white"
+            } ${className}`}
+            aria-current={isActive ? "page" : undefined}
           >
-            {name}
-            <Underline isActive={isActive} isHovered={isHovered} />
-          </m.span>
-        </Link>
+            <span className="inline-block relative">
+              {name}
+              <m.span
+                className="absolute -bottom-0.5 left-0 h-0.5 w-full rounded-full bg-linear-to-r from-transparent via-arylideYellow to-transparent"
+                initial={{ scaleX: isActive ? 1 : 0, opacity: isActive ? 1 : 0 }}
+                variants={{
+                  initial: { scaleX: isActive ? 1 : 0, opacity: isActive ? 1 : 0 },
+                  hovered: { scaleX: 1, opacity: 1 }
+                }}
+                transition={{
+                  duration: 0.5,
+                  ease: premiumEase,
+                }}
+                style={{
+                  transformOrigin: "center",
+                }}
+              />
+            </span>
+          </Link>
+        </m.div>
       </li>
     );
   }

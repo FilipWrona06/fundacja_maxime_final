@@ -2,11 +2,8 @@
 
 import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
 import Image from "next/image";
-import { useState } from "react";
 import {
-  glowIntensities,
   premiumEase,
-  smoothEase,
   staggerConfig,
   ultraSmoothSpring,
   viewportConfig,
@@ -15,13 +12,12 @@ import type { HomePageData, ImpactCard } from "@/lib/types";
 import { urlFor } from "@/sanity/lib/image";
 
 const fadeInUpVariant: Variants = {
-  hidden: { opacity: 0, y: 40, scale: 0.95 },
+  hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
     y: 0,
-    scale: 1,
     transition: {
-      duration: 0.7,
+      duration: 0.6,
       ease: premiumEase,
     },
   },
@@ -39,13 +35,12 @@ const staggerContainerVariant: Variants = {
 };
 
 const headingVariant: Variants = {
-  hidden: { opacity: 0, y: 30, scale: 0.95 },
+  hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    scale: 1,
     transition: {
-      duration: 0.8,
+      duration: 0.7,
       ease: premiumEase,
     },
   },
@@ -98,7 +93,6 @@ export const ImpactSectionClient = ({
   );
 };
 
-// Separate ImpactCard component with hover state
 const ImpactCardComponent = ({
   card,
   index,
@@ -106,99 +100,55 @@ const ImpactCardComponent = ({
   card: ImpactCard;
   index: number;
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
     <m.article
       variants={fadeInUpVariant}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      className={`group relative overflow-hidden rounded-2xl shadow-xl transition-all duration-500 sm:rounded-3xl ${
+      whileHover={{
+        y: -8,
+        transition: ultraSmoothSpring,
+      }}
+      className={`group relative overflow-hidden rounded-2xl shadow-xl transition-all duration-300 sm:rounded-3xl ${
         index === 2 ? "md:col-span-2 lg:col-span-1" : ""
       }`}
-      style={{
-        boxShadow: isHovered
-          ? glowIntensities.normal
-          : "0 10px 30px rgba(0,0,0,0.3)",
-      }}
     >
       {/* Image Container */}
       <div className="relative aspect-3/4 overflow-hidden">
         {/* Image */}
-        <m.div
-          animate={{
-            scale: isHovered ? 1.15 : 1,
-          }}
-          transition={{
-            duration: 0.6,
-            ease: premiumEase,
-          }}
-          className="h-full w-full"
-        >
+        <div className="h-full w-full">
           {card.image && (
             <Image
               src={urlFor(card.image).width(600).height(800).quality(90).url()}
               alt={card.alt}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 50vw, 400px"
-              className="object-cover"
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
               loading="lazy"
               placeholder="blur"
               blurDataURL={urlFor(card.image).width(20).height(27).blur(10).url()}
             />
           )}
-        </m.div>
+        </div>
 
-        {/* Static gradient */}
+        {/* Gradient overlay */}
         <div className="absolute inset-0 bg-linear-to-t from-raisinBlack/90 via-raisinBlack/50 to-transparent" />
 
-        {/* Hover color overlay */}
-        <m.div
-          animate={{ opacity: isHovered ? 1 : 0 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-          className="absolute inset-0 bg-linear-to-br from-arylideYellow/20 via-arylideYellow/10 to-transparent"
-        />
-
-        {/* Shine effect */}
-        <m.div
-          animate={{
-            x: isHovered ? "100%" : "-100%",
-            opacity: isHovered ? [0, 0.5, 0] : 0,
-          }}
-          transition={{
-            duration: 0.8,
-            ease: smoothEase,
-          }}
-          className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent"
-        />
-
-        {/* Border glow */}
-        <div className="absolute inset-0 border-2 border-arylideYellow/0 transition-all duration-500 group-hover:border-arylideYellow/30" />
+        {/* Hover overlay */}
+        <div className="absolute inset-0 bg-arylideYellow/0 transition-colors duration-300 group-hover:bg-arylideYellow/10" />
       </div>
 
       {/* Content */}
-      <m.div
-        animate={{
-          y: isHovered ? -12 : 0,
-        }}
-        transition={ultraSmoothSpring}
-        className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 md:p-8"
-      >
+      <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 md:p-8">
         {/* Decorative line */}
-        <div className="mb-3 h-1 w-12 bg-arylideYellow/0 transition-all duration-500 group-hover:w-20 group-hover:bg-arylideYellow sm:mb-4" />
+        <div className="mb-3 h-1 w-12 bg-arylideYellow/50 transition-all duration-300 group-hover:w-20 group-hover:bg-arylideYellow sm:mb-4" />
 
-        <h3 className="mb-1 text-lg font-bold text-white transition-all duration-500 group-hover:text-arylideYellow sm:mb-3 sm:text-2xl md:text-3xl">
+        <h3 className="mb-1 text-lg font-bold text-white transition-colors duration-300 group-hover:text-arylideYellow sm:mb-3 sm:text-2xl md:text-3xl">
           {card.title}
         </h3>
 
-        <p className="text-sm leading-relaxed text-white/90 transition-all duration-500 sm:text-base md:leading-relaxed">
+        <p className="text-sm leading-relaxed text-white/90 sm:text-base md:leading-relaxed">
           {card.desc}
         </p>
-      </m.div>
-
-      {/* Corner accents */}
-      <div className="absolute right-0 top-0 h-12 w-12 border-r-2 border-t-2 border-arylideYellow/0 transition-all duration-500 group-hover:border-arylideYellow/40 sm:h-16 sm:w-16" />
-      <div className="absolute bottom-0 left-0 h-12 w-12 border-b-2 border-l-2 border-arylideYellow/0 transition-all duration-500 group-hover:border-arylideYellow/40 sm:h-16 sm:w-16" />
+      </div>
     </m.article>
   );
 };

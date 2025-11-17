@@ -5,11 +5,7 @@ import type { FormEvent } from "react";
 import { memo, useCallback, useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
 import {
-  hoverTransition,
-  iconPopTransition,
-  shineTransition,
   ultraSmoothSpring,
-  hoverScales,
   tapScales,
 } from "@/lib/animations";
 
@@ -48,45 +44,23 @@ export const NewsletterForm = memo(() => {
         <m.button
           type="submit"
           aria-label="Zapisz się do newslettera"
-          className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-arylideYellow bg-transparent"
-          whileHover={{ scale: hoverScales.normal }}
+          className="relative flex h-8 w-8 items-center justify-center rounded-full border border-arylideYellow bg-transparent text-arylideYellow transition-colors duration-300 hover:bg-arylideYellow hover:text-raisinBlack"
+          whileHover={{ scale: 1.05 }}
           whileTap={{ scale: tapScales.normal }}
           transition={ultraSmoothSpring}
           onMouseEnter={() => setIsButtonHovered(true)}
           onMouseLeave={() => setIsButtonHovered(false)}
         >
-          {/* Background fill */}
           <m.span
-            className="absolute inset-0 bg-arylideYellow"
-            initial={{ x: "-100%" }}
-            animate={isButtonHovered ? { x: "0%" } : { x: "-100%" }}
-            transition={hoverTransition}
-          />
-
-          {/* Icon */}
-          <m.span
-            className="relative z-10"
             animate={
               isButtonHovered
-                ? {
-                    scale: [1, 1.2, 1],
-                    rotate: [0, -10, 10, -10, 0],
-                    color: "#1a1a2e",
-                  }
-                : { scale: 1, rotate: 0, color: "#E9D758" }
+                ? { x: 2 }
+                : { x: 0 }
             }
-            transition={iconPopTransition}
+            transition={{ duration: 0.3 }}
           >
             <FiArrowRight size={20} />
           </m.span>
-
-          {/* Shine effect */}
-          <m.span
-            className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent"
-            initial={{ x: "-100%", skewX: -20 }}
-            animate={isButtonHovered ? { x: "200%" } : { x: "-100%" }}
-            transition={shineTransition}
-          />
         </m.button>
       </m.div>
     </form>

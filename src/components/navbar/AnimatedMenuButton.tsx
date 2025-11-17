@@ -3,7 +3,7 @@
 import { m, type Transition } from "framer-motion";
 import type { Ref } from "react";
 import { memo } from "react";
-import { premiumEase, tapScales, glowIntensities } from "@/lib/animations";
+import { premiumEase, tapScales } from "@/lib/animations";
 
 const menuButtonVariants = {
   top: {
@@ -37,21 +37,13 @@ export const AnimatedMenuButton = memo(
       ref={buttonRef}
       type="button"
       onClick={onClick}
-      className="z-50 p-3 relative rounded-xl transition-all duration-300 ease-out"
+      className="z-50 p-3 relative rounded-xl transition-colors duration-300 hover:bg-arylideYellow/10"
       aria-label={isOpen ? "Zamknij menu" : "Otwórz menu"}
       aria-expanded={isOpen}
       aria-controls="mobile-menu"
       whileTap={{ scale: tapScales.normal }}
       transition={{ duration: 0.2, ease: premiumEase }}
     >
-      {/* Unified hover glow */}
-      <m.div
-        className="absolute inset-0 rounded-xl"
-        initial={{ backgroundColor: "rgba(233, 215, 88, 0)" }}
-        whileHover={{ backgroundColor: "rgba(233, 215, 88, 0.12)" }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
-      />
-
       <m.div
         className="flex flex-col justify-around w-6 h-6 relative z-10"
         animate={isOpen ? "open" : "closed"}
@@ -62,9 +54,6 @@ export const AnimatedMenuButton = memo(
           className="block h-0.5 w-full bg-white origin-center will-change-transform rounded-full"
           variants={menuButtonVariants.top}
           transition={menuTransition}
-          style={{
-            boxShadow: isOpen ? glowIntensities.subtle : "none",
-          }}
         />
         <m.span
           className="block h-0.5 w-full bg-white will-change-transform rounded-full"
@@ -75,9 +64,6 @@ export const AnimatedMenuButton = memo(
           className="block h-0.5 w-full bg-white origin-center will-change-transform rounded-full"
           variants={menuButtonVariants.bottom}
           transition={menuTransition}
-          style={{
-            boxShadow: isOpen ? glowIntensities.subtle : "none",
-          }}
         />
       </m.div>
     </m.button>

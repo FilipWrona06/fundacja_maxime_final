@@ -4,7 +4,7 @@ import { m } from "framer-motion";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { memo, useState } from "react";
-import { textLiftTransition, liftDistances } from "@/lib/animations";
+import { ultraSmoothSpring } from "@/lib/animations";
 import { Underline } from "@/components/ui/Underline";
 
 export const CreditLink = memo(
@@ -22,8 +22,8 @@ export const CreditLink = memo(
       >
         <m.span
           className="inline-block"
-          animate={isHovered ? { y: liftDistances.normal } : { y: 0 }}
-          transition={textLiftTransition}
+          animate={isHovered ? { y: -2 } : { y: 0 }}
+          transition={ultraSmoothSpring}
         >
           {children}
         </m.span>

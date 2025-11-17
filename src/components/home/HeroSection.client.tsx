@@ -9,16 +9,12 @@ import {
   useTransform,
 } from "framer-motion";
 import Link from "next/link";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 import { FiArrowDown } from "react-icons/fi";
 import {
   ultraSmoothSpring,
   premiumEase,
   smoothEase,
-  hoverScales,
-  tapScales,
-  glowIntensities,
-  shineTransition,
 } from "@/lib/animations";
 import type { HomePageData } from "@/lib/types";
 
@@ -31,54 +27,23 @@ const HeroButton = ({
   variant?: "primary" | "secondary";
   children: React.ReactNode;
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
   const primaryClasses =
-    "bg-arylideYellow text-raisinBlack shadow-lg shadow-arylideYellow/20";
+    "bg-arylideYellow text-raisinBlack shadow-lg hover:shadow-arylideYellow/30";
   const secondaryClasses =
-    "border-2 border-white/20 bg-white/5 text-white backdrop-blur-sm";
+    "border-2 border-white/20 bg-white/5 text-white backdrop-blur-sm hover:border-arylideYellow/50 hover:bg-white/10";
 
   return (
     <m.div
-      whileHover={{ scale: hoverScales.normal }}
-      whileTap={{ scale: tapScales.normal }}
+      whileHover={{ scale: 1.02, y: -2 }}
+      whileTap={{ scale: 0.98 }}
       transition={ultraSmoothSpring}
     >
       <Link
         href={href}
-        className={`group relative inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-arylideYellow focus-visible:ring-offset-2 focus-visible:ring-offset-raisinBlack sm:gap-3 sm:px-8 sm:py-4 sm:text-base md:px-10 md:py-5 transition-all duration-500 ease-out ${
+        className={`group relative inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold overflow-hidden transition-all duration-300 sm:gap-3 sm:px-8 sm:py-4 sm:text-base md:px-10 md:py-5 ${
           variant === "primary" ? primaryClasses : secondaryClasses
         }`}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        style={{
-          boxShadow: isHovered
-            ? variant === "primary"
-              ? glowIntensities.prominent
-              : glowIntensities.normal
-            : variant === "primary"
-            ? "0 0 16px rgba(233,215,88,0.2)"
-            : "none",
-        }}
       >
-        {/* Shine effect */}
-        <m.span
-          className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent"
-          initial={{ x: "-150%", skewX: -15 }}
-          animate={isHovered ? { x: "250%" } : { x: "-150%" }}
-          transition={shineTransition}
-        />
-
-        {/* Hover background for secondary */}
-        {variant === "secondary" && (
-          <m.span
-            className="absolute inset-0 bg-linear-to-r from-arylideYellow/0 via-arylideYellow/10 to-arylideYellow/0"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isHovered ? 1 : 0 }}
-            transition={{ duration: 0.4 }}
-          />
-        )}
-
         <span className="relative z-10">{children}</span>
       </Link>
     </m.div>
@@ -106,7 +71,6 @@ export const HeroSectionClient = ({
   const videoOpacity = useTransform(smoothProgress, [0, 0.5, 1], [1, 0.8, 0.6]);
   const contentOpacity = useTransform(smoothProgress, [0, 0.3, 0.5], [1, 0.5, 0]);
   const contentY = useTransform(smoothProgress, [0, 1], [0, 150]);
-  const contentScale = useTransform(smoothProgress, [0, 0.5], [1, 0.95]);
 
   const scrollToContent = useCallback(() => {
     document.querySelector("#stats-section")?.scrollIntoView({
@@ -149,30 +113,28 @@ export const HeroSectionClient = ({
           style={{
             opacity: contentOpacity,
             y: contentY,
-            scale: contentScale,
           }}
           className="container relative z-10 mx-auto px-6 text-center lg:pt-24"
         >
           <h1 id="hero-heading" className="mb-6 mt-2 sm:mt-0 md:mb-10">
             <m.span
-              initial={{ opacity: 0, y: 40, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{
-                duration: 0.8,
-                delay: 0.4,
+                duration: 0.7,
+                delay: 0.3,
                 ease: premiumEase,
               }}
               className="mb-4 block font-youngest text-[clamp(4rem,12vw,10rem)] leading-[0.9] tracking-tight text-arylideYellow drop-shadow-2xl md:mb-6"
-              style={{ textShadow: glowIntensities.subtle }}
             >
               {heroData.headingPart1}
             </m.span>
             <m.span
-              initial={{ opacity: 0, y: 40, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{
-                duration: 0.8,
-                delay: 0.6,
+                duration: 0.7,
+                delay: 0.5,
                 ease: premiumEase,
               }}
               className="block pb-4 font-youngest text-[clamp(4rem,12vw,10rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl"
@@ -182,11 +144,11 @@ export const HeroSectionClient = ({
           </h1>
 
           <m.p
-            initial={{ opacity: 0, y: 30, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{
-              duration: 0.8,
-              delay: 0.8,
+              duration: 0.7,
+              delay: 0.7,
               ease: premiumEase,
             }}
             className="mx-auto mb-4 sm:mb-8 max-w-2xl text-base leading-relaxed text-white drop-shadow-lg md:mb-10 md:text-xl md:leading-relaxed lg:leading-loose"
@@ -195,11 +157,11 @@ export const HeroSectionClient = ({
           </m.p>
 
           <m.div
-            initial={{ opacity: 0, y: 30, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{
-              duration: 0.8,
-              delay: 1,
+              duration: 0.7,
+              delay: 0.9,
               ease: premiumEase,
             }}
             className="flex flex-col items-center justify-center gap-2 sm:gap-4 sm:flex-row md:gap-5"
@@ -227,14 +189,13 @@ export const HeroSectionClient = ({
             ease: smoothEase,
           }}
           whileHover={{ scale: 1.1 }}
-          className="absolute bottom-4.5 lg:bottom-8 rounded-full p-2 transition-transform duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-arylideYellow md:bottom-12"
+          className="absolute bottom-4.5 lg:bottom-8 rounded-full p-2 transition-transform duration-300 md:bottom-12"
           aria-label="Przewiń w dół do treści"
         >
           <FiArrowDown
             size={36}
             className="text-arylideYellow drop-shadow-lg"
             aria-hidden="true"
-            style={{ filter: `drop-shadow(${glowIntensities.subtle})` }}
           />
         </m.button>
       </section>

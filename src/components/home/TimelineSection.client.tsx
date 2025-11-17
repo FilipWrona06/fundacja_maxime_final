@@ -2,10 +2,7 @@
 
 import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
 import Image from "next/image";
-import { useState } from "react";
 import {
-  glowIntensities,
-  hoverScales,
   premiumEase,
   staggerConfig,
   ultraSmoothSpring,
@@ -15,13 +12,12 @@ import type { HomePageData, TimelineEvent } from "@/lib/types";
 import { urlFor } from "@/sanity/lib/image";
 
 const fadeInUpVariant: Variants = {
-  hidden: { opacity: 0, y: 40, scale: 0.95 },
+  hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
     y: 0,
-    scale: 1,
     transition: {
-      duration: 0.7,
+      duration: 0.6,
       ease: premiumEase,
     },
   },
@@ -39,40 +35,24 @@ const staggerContainerVariant: Variants = {
 };
 
 const headingVariant: Variants = {
-  hidden: { opacity: 0, y: 30, scale: 0.95 },
+  hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    scale: 1,
     transition: {
-      duration: 0.8,
+      duration: 0.7,
       ease: premiumEase,
     },
   },
 };
 
 const yearBadgeVariant: Variants = {
-  hidden: { opacity: 0, scale: 0, rotate: -180 },
+  hidden: { opacity: 0, scale: 0.8 },
   visible: {
     opacity: 1,
     scale: 1,
-    rotate: 0,
     transition: {
-      type: "spring",
-      stiffness: 200,
-      damping: 15,
-    },
-  },
-};
-
-const imageRevealVariant: Variants = {
-  hidden: { opacity: 0, scale: 0.9, rotateX: -10 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    rotateX: 0,
-    transition: {
-      duration: 0.8,
+      duration: 0.5,
       ease: premiumEase,
     },
   },
@@ -84,7 +64,7 @@ const lineDrawVariant: Variants = {
     scaleY: 1,
     opacity: 1,
     transition: {
-      duration: 1.5,
+      duration: 1.2,
       ease: premiumEase,
     },
   },
@@ -151,7 +131,6 @@ export const TimelineSectionClient = ({
   );
 };
 
-// Separate TimelineEvent component with hover state
 const TimelineEventComponent = ({
   item,
   isLast,
@@ -159,9 +138,6 @@ const TimelineEventComponent = ({
   item: TimelineEvent;
   isLast: boolean;
 }) => {
-  const [isBadgeHovered, setIsBadgeHovered] = useState(false);
-  const [isImageHovered, setIsImageHovered] = useState(false);
-
   return (
     <m.article
       initial="hidden"
@@ -175,22 +151,11 @@ const TimelineEventComponent = ({
         <m.div
           variants={yearBadgeVariant}
           whileHover={{
-            scale: 1.15,
-            rotate: 360,
+            scale: 1.1,
             transition: ultraSmoothSpring,
           }}
-          onHoverStart={() => setIsBadgeHovered(true)}
-          onHoverEnd={() => setIsBadgeHovered(false)}
-          className="group/badge relative flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-arylideYellow bg-raisinBlack shadow-lg transition-shadow duration-500 lg:h-20 lg:w-20"
-          style={{
-            boxShadow: isBadgeHovered
-              ? glowIntensities.prominent
-              : glowIntensities.normal,
-          }}
+          className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-arylideYellow bg-raisinBlack shadow-lg transition-shadow duration-300 hover:shadow-arylideYellow/30 lg:h-20 lg:w-20"
         >
-          {/* Pulse ring */}
-          <div className="absolute inset-0 rounded-full bg-arylideYellow/20 opacity-0 transition-opacity duration-500 group-hover/badge:opacity-100 group-hover/badge:animate-ping" />
-
           <span className="relative z-10 font-youngest text-2xl text-arylideYellow lg:text-3xl">
             {item.year}
           </span>
@@ -203,8 +168,7 @@ const TimelineEventComponent = ({
         <m.time
           variants={fadeInUpVariant}
           dateTime={item.fullYear}
-          className="mb-2 inline-block font-youngest text-arylideYellow drop-shadow-lg sm:mb-4 text-3xl sm:text-4xl md:hidden"
-          style={{ textShadow: glowIntensities.subtle }}
+          className="mb-2 inline-block font-youngest text-3xl text-arylideYellow sm:mb-4 sm:text-4xl md:hidden"
         >
           {item.fullYear}
         </m.time>
@@ -212,7 +176,7 @@ const TimelineEventComponent = ({
         {/* Title */}
         <m.h3
           variants={fadeInUpVariant}
-          className="mb-2 text-[1.25rem] font-semibold transition-colors duration-500 group-hover/content:text-arylideYellow sm:mb-4 sm:text-3xl lg:text-4xl"
+          className="mb-2 text-[1.25rem] font-semibold transition-colors duration-300 group-hover/content:text-arylideYellow sm:mb-4 sm:text-3xl lg:text-4xl"
         >
           {item.title}
         </m.h3>
@@ -220,68 +184,42 @@ const TimelineEventComponent = ({
         {/* Description */}
         <m.p
           variants={fadeInUpVariant}
-          className="mb-2 text-[0.9rem] leading-relaxed text-white/90 transition-colors duration-500 sm:mb-6 sm:text-lg md:leading-relaxed lg:text-xl"
+          className="mb-2 text-[0.9rem] leading-relaxed text-white/90 sm:mb-6 sm:text-lg md:leading-relaxed lg:text-xl"
         >
           {item.text}
         </m.p>
 
         {/* Image */}
         <m.div
-          variants={imageRevealVariant}
-          className="group/image relative"
-          style={{ perspective: 1000 }}
+          variants={fadeInUpVariant}
+          whileHover={{
+            y: -6,
+            transition: ultraSmoothSpring,
+          }}
+          className="group/image relative overflow-hidden rounded-xl shadow-xl sm:rounded-2xl lg:rounded-3xl"
         >
-          <m.div
-            whileHover={{
-              scale: hoverScales.subtle,
-              rotateX: 2,
-              transition: ultraSmoothSpring,
-            }}
-            onHoverStart={() => setIsImageHovered(true)}
-            onHoverEnd={() => setIsImageHovered(false)}
-            className="relative overflow-hidden rounded-xl shadow-xl transition-all duration-500 sm:rounded-2xl lg:rounded-3xl"
-            style={{
-              boxShadow: isImageHovered
-                ? glowIntensities.normal
-                : "0 10px 30px rgba(0,0,0,0.3)",
-            }}
-          >
-            {/* Glow effect */}
-            <div
-              className="absolute -inset-2 rounded-xl opacity-0 blur-2xl transition-all duration-700 group-hover/image:opacity-100"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(233,215,88,0.2) 0%, transparent 70%)",
-              }}
-            />
+          {/* Image */}
+          {item.image && (
+            <div className="relative">
+              <Image
+                src={urlFor(item.image).width(1000).height(563).quality(90).url()}
+                alt={item.alt}
+                width={1000}
+                height={563}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1000px"
+                className="h-auto w-full object-cover transition-transform duration-700 group-hover/image:scale-105"
+                loading="lazy"
+                placeholder="blur"
+                blurDataURL={urlFor(item.image).width(20).height(11).blur(10).url()}
+              />
 
-            {/* Image */}
-            {item.image && (
-              <div className="relative">
-                <Image
-                  src={urlFor(item.image).width(1000).height(563).quality(90).url()}
-                  alt={item.alt}
-                  width={1000}
-                  height={563}
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1000px"
-                  className="h-auto w-full object-cover transition-transform duration-700 group-hover/image:scale-105"
-                  loading="lazy"
-                  placeholder="blur"
-                  blurDataURL={urlFor(item.image).width(20).height(11).blur(10).url()}
-                />
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-linear-to-t from-raisinBlack/40 to-transparent" />
 
-                {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-linear-to-t from-raisinBlack/40 to-transparent opacity-60 transition-opacity duration-700 group-hover/image:opacity-30" />
-
-                {/* Color overlay */}
-                <div className="absolute inset-0 bg-linear-to-br from-arylideYellow/0 to-arylideYellow/0 opacity-0 transition-opacity duration-700 group-hover/image:from-arylideYellow/10 group-hover/image:to-arylideYellow/5 group-hover/image:opacity-100" />
-              </div>
-            )}
-
-            {/* Corner decorations */}
-            <div className="absolute left-0 top-0 h-10 w-10 border-l-2 border-t-2 border-arylideYellow/0 transition-all duration-500 group-hover/image:border-arylideYellow/50 sm:h-12 sm:w-12 lg:h-16 lg:w-16" />
-            <div className="absolute bottom-0 right-0 h-10 w-10 border-b-2 border-r-2 border-arylideYellow/0 transition-all duration-500 group-hover/image:border-arylideYellow/50 sm:h-12 sm:w-12 lg:h-16 lg:w-16" />
-          </m.div>
+              {/* Hover overlay */}
+              <div className="absolute inset-0 bg-arylideYellow/0 transition-colors duration-300 group-hover/image:bg-arylideYellow/10" />
+            </div>
+          )}
         </m.div>
 
         {/* Connection line to badge (desktop) */}
