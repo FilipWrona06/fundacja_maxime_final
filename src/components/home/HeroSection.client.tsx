@@ -9,7 +9,7 @@ import {
   useTransform,
 } from "framer-motion";
 import Link from "next/link";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FiArrowDown } from "react-icons/fi";
 import {
   ultraSmoothSpring,
@@ -56,6 +56,8 @@ export const HeroSectionClient = ({
   heroData: HomePageData["heroSection"];
 }) => {
   const heroRef = useRef<HTMLElement>(null);
+  const [shouldHideArrow, setShouldHideArrow] = useState(false);
+  
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
@@ -71,6 +73,31 @@ export const HeroSectionClient = ({
   const videoOpacity = useTransform(smoothProgress, [0, 0.5, 1], [1, 0.8, 0.6]);
   const contentOpacity = useTransform(smoothProgress, [0, 0.3, 0.5], [1, 0.5, 0]);
   const contentY = useTransform(smoothProgress, [0, 1], [0, 150]);
+
+  useEffect(() => {
+    let scrollCount = 0;
+    let lastScrollY = window.scrollY;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Wykryj scroll w dół o więcej niż 50px
+      if (currentScrollY > lastScrollY + 50) {
+        scrollCount++;
+        lastScrollY = currentScrollY;
+        
+        // Po 3 scrollach ukryj strzałkę
+        if (scrollCount >= 3) {
+          setShouldHideArrow(true);
+          window.removeEventListener("scroll", handleScroll);
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const scrollToContent = useCallback(() => {
     document.querySelector("#stats-section")?.scrollIntoView({
@@ -176,28 +203,31 @@ export const HeroSectionClient = ({
         </m.div>
 
         {/* Scroll indicator */}
-        <m.button
-          onClick={scrollToContent}
-          initial={{ opacity: 0, y: -10 }}
-          animate={{
-            opacity: [0, 1, 1, 0],
-            y: [0, 10, 10, 0],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: smoothEase,
-          }}
-          whileHover={{ scale: 1.1 }}
-          className="absolute bottom-4.5 lg:bottom-8 rounded-full p-2 transition-transform duration-300 md:bottom-12"
-          aria-label="Przewiń w dół do treści"
-        >
-          <FiArrowDown
-            size={36}
-            className="text-arylideYellow drop-shadow-lg"
-            aria-hidden="true"
-          />
-        </m.button>
+        {!shouldHideArrow && (
+          <m.button
+            onClick={scrollToContent}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{
+              opacity: [0, 1, 1, 0],
+              y: [0, 10, 10, 0],
+            }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{
+              duration: 3,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: smoothEase,
+            }}
+            whileHover={{ scale: 1.1 }}
+            className="absolute bottom-4.5 lg:bottom-8 rounded-full p-2 transition-transform duration-300 md:bottom-12"
+            aria-label="Przewiń w dół do treści"
+          >
+            <FiArrowDown
+              size={36}
+              className="text-arylideYellow drop-shadow-lg"
+              aria-hidden="true"
+            />
+          </m.button>
+        )}
       </section>
     </LazyMotion>
   );
