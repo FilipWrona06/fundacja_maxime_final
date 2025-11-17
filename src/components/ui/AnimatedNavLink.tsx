@@ -1,12 +1,9 @@
 "use client";
 
-import {
-  m,
-  type Variants,
-} from "framer-motion";
+import { m, type Variants } from "framer-motion";
 import Link from "next/link";
 import { memo } from "react";
-import { ultraSmoothSpring, premiumEase, tapScales } from "@/lib/animations";
+import { premiumEase, tapScales, ultraSmoothSpring } from "@/lib/animations";
 import { Underline } from "./Underline";
 
 const mobileLinkVariants: Variants = {
@@ -50,7 +47,7 @@ export const AnimatedNavLink = memo(
           >
             <m.span
               className="inline-block"
-              whileHover={{ 
+              whileHover={{
                 x: 6,
               }}
               whileTap={{ scale: tapScales.normal }}
@@ -80,10 +77,16 @@ export const AnimatedNavLink = memo(
               {name}
               <m.span
                 className="absolute -bottom-0.5 left-0 h-0.5 w-full rounded-full bg-linear-to-r from-transparent via-arylideYellow to-transparent"
-                initial={{ scaleX: isActive ? 1 : 0, opacity: isActive ? 1 : 0 }}
+                initial={{
+                  scaleX: isActive ? 1 : 0,
+                  opacity: isActive ? 1 : 0,
+                }}
                 variants={{
-                  initial: { scaleX: isActive ? 1 : 0, opacity: isActive ? 1 : 0 },
-                  hovered: { scaleX: 1, opacity: 1 }
+                  initial: {
+                    scaleX: isActive ? 1 : 0,
+                    opacity: isActive ? 1 : 0,
+                  },
+                  hovered: { scaleX: 1, opacity: 1 },
                 }}
                 transition={{
                   duration: 0.5,
@@ -98,7 +101,7 @@ export const AnimatedNavLink = memo(
         </m.div>
       </li>
     );
-  }
+  },
 );
 
 AnimatedNavLink.displayName = "AnimatedNavLink";

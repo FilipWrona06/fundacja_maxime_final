@@ -145,7 +145,9 @@ export const Lightbox = ({
               </p>
             </div>
             {currentImage.caption && (
-              <p className="text-sm text-white/80 px-4">{currentImage.caption}</p>
+              <p className="text-sm text-white/80 px-4">
+                {currentImage.caption}
+              </p>
             )}
           </div>
         </m.div>

@@ -22,11 +22,11 @@ import { AnimatedNavLink } from "../ui/AnimatedNavLink";
 import { AnimatedMenuButton } from "./AnimatedMenuButton";
 import { PatroniteLink } from "./PatroniteLink";
 
-const ultraSmoothTransition = { 
-  type: "spring", 
-  stiffness: 180, 
+const ultraSmoothTransition = {
+  type: "spring",
+  stiffness: 180,
   damping: 28,
-  mass: 0.9
+  mass: 0.9,
 } as const;
 
 const skipLinkClasses =
@@ -42,7 +42,7 @@ const mobileMenuVariants: Variants = {
       staggerDirection: -1,
       when: "afterChildren",
       duration: 0.3,
-      ease: [0.34, 1.56, 0.64, 1]
+      ease: [0.34, 1.56, 0.64, 1],
     },
   },
   visible: {
@@ -54,7 +54,7 @@ const mobileMenuVariants: Variants = {
       staggerDirection: 1,
       when: "beforeChildren",
       duration: 0.5,
-      ease: [0.34, 1.56, 0.64, 1]
+      ease: [0.34, 1.56, 0.64, 1],
     },
   },
 };
@@ -121,7 +121,7 @@ export const MobileNavbar = ({ navLinks, logo }: MobileNavbarProps) => {
     const footer = document.querySelector<HTMLElement>("footer");
     if (mainContent) mainContent.setAttribute("inert", "");
     if (footer) footer.setAttribute("inert", "");
-    
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         closeMobileMenu();
@@ -152,7 +152,7 @@ export const MobileNavbar = ({ navLinks, logo }: MobileNavbarProps) => {
         }
       }
     };
-    
+
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.body.style.overflow = "";
@@ -238,10 +238,10 @@ export const MobileNavbar = ({ navLinks, logo }: MobileNavbarProps) => {
                   className="pt-5 sm:pt-7"
                   initial={{ opacity: 0, y: 25, filter: "blur(4px)" }}
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  transition={{ 
-                    delay: navLinks.length * 0.08 + 0.15, 
+                  transition={{
+                    delay: navLinks.length * 0.08 + 0.15,
                     duration: 0.6,
-                    ease: [0.34, 1.56, 0.64, 1]
+                    ease: [0.34, 1.56, 0.64, 1],
                   }}
                 >
                   <PatroniteLink isMobile onClick={closeMobileMenu} />

@@ -124,7 +124,11 @@ const ImpactCardComponent = ({
               className="object-cover transition-transform duration-700 group-hover:scale-105"
               loading="lazy"
               placeholder="blur"
-              blurDataURL={urlFor(card.image).width(20).height(27).blur(10).url()}
+              blurDataURL={urlFor(card.image)
+                .width(20)
+                .height(27)
+                .blur(10)
+                .url()}
             />
           )}
         </div>

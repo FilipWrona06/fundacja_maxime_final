@@ -66,7 +66,8 @@ export default async function GaleriaPage() {
         <div className="container mx-auto px-6 text-center">
           <h1 className="text-4xl font-bold mb-4">Galeria Wydarzeń</h1>
           <p className="text-white/60">
-            Brak danych do wyświetlenia. Skonfiguruj stronę galerii w Sanity CMS.
+            Brak danych do wyświetlenia. Skonfiguruj stronę galerii w Sanity
+            CMS.
           </p>
         </div>
       </div>

@@ -4,8 +4,8 @@ import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
 import type { ReactNode } from "react";
 import {
   premiumEase,
-  ultraSmoothSpring,
   staggerConfig,
+  ultraSmoothSpring,
   viewportConfig,
 } from "@/lib/animations";
 

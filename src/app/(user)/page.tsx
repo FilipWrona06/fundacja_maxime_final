@@ -79,7 +79,6 @@ export default function HomePage() {
       <HeroSection />
 
       <main>
-
         <Suspense fallback={<SectionSkeleton />}>
           <AboutSection />
         </Suspense>

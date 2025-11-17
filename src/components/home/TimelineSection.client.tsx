@@ -110,19 +110,22 @@ export const TimelineSectionClient = ({
               variants={lineDrawVariant}
               className="absolute left-4 top-0 hidden h-full w-0.5 origin-top md:left-8 md:block lg:left-10"
               style={{
-                background: "linear-gradient(to bottom, rgba(233,215,88,0.6), rgba(233,215,88,0.3), rgba(233,215,88,0.1), transparent)",
+                background:
+                  "linear-gradient(to bottom, rgba(233,215,88,0.6), rgba(233,215,88,0.3), rgba(233,215,88,0.1), transparent)",
               }}
             />
 
             {/* Events */}
             <div className="space-y-10 sm:space-y-12 md:space-y-16 lg:space-y-20">
-              {timelineData.timelineEvents.map((item: TimelineEvent, index: number) => (
-                <TimelineEventComponent
-                  key={item.year}
-                  item={item}
-                  isLast={index === timelineData.timelineEvents.length - 1}
-                />
-              ))}
+              {timelineData.timelineEvents.map(
+                (item: TimelineEvent, index: number) => (
+                  <TimelineEventComponent
+                    key={item.year}
+                    item={item}
+                    isLast={index === timelineData.timelineEvents.length - 1}
+                  />
+                ),
+              )}
             </div>
           </div>
         </div>
@@ -202,7 +205,11 @@ const TimelineEventComponent = ({
           {item.image && (
             <div className="relative">
               <Image
-                src={urlFor(item.image).width(1000).height(563).quality(90).url()}
+                src={urlFor(item.image)
+                  .width(1000)
+                  .height(563)
+                  .quality(90)
+                  .url()}
                 alt={item.alt}
                 width={1000}
                 height={563}
@@ -210,7 +217,11 @@ const TimelineEventComponent = ({
                 className="h-auto w-full object-cover transition-transform duration-700 group-hover/image:scale-105"
                 loading="lazy"
                 placeholder="blur"
-                blurDataURL={urlFor(item.image).width(20).height(11).blur(10).url()}
+                blurDataURL={urlFor(item.image)
+                  .width(20)
+                  .height(11)
+                  .blur(10)
+                  .url()}
               />
 
               {/* Gradient overlay */}

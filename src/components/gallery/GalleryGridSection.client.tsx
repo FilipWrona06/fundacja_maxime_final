@@ -3,11 +3,7 @@
 import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
 import Image from "next/image";
 import { useState } from "react";
-import {
-  premiumEase,
-  staggerConfig,
-  viewportConfig,
-} from "@/lib/animations";
+import { premiumEase, staggerConfig, viewportConfig } from "@/lib/animations";
 import { Lightbox } from "./Lightbox";
 
 interface ImageData {
@@ -75,7 +71,10 @@ export const GalleryGridSectionClient = ({
           transition={{ delay: index * 0.1 }}
           className="mb-8"
         >
-          <h2 id={`gallery-${index}`} className="mb-3 text-4xl font-bold md:text-5xl">
+          <h2
+            id={`gallery-${index}`}
+            className="mb-3 text-4xl font-bold md:text-5xl"
+          >
             {galleryData.title}
           </h2>
           <div className="flex flex-wrap gap-4 text-sm text-white/60">

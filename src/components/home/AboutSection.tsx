@@ -1,10 +1,13 @@
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import Image from "next/image";
-import { getAboutSectionData, getStatsSectionData } from "@/sanity/lib/get-data";
-import { urlFor } from "@/sanity/lib/image";
-import { AboutSectionClient } from "./AboutSection.client";
 import { FiAward, FiMusic, FiUsers } from "react-icons/fi";
 import type { Stat } from "@/lib/types";
+import {
+  getAboutSectionData,
+  getStatsSectionData,
+} from "@/sanity/lib/get-data";
+import { urlFor } from "@/sanity/lib/image";
+import { AboutSectionClient } from "./AboutSection.client";
 
 const ICONS_MAP: { [key: string]: React.ElementType } = {
   Koncertów: FiMusic,
@@ -90,12 +93,12 @@ const createMiniStats = (statsData: Stat[]) => (
               className="mb-2 text-arylideYellow/70 transition-all duration-300 group-hover/stat:scale-110 group-hover/stat:text-arylideYellow sm:mb-3"
               aria-hidden="true"
             />
-            
+
             {/* Number */}
             <p className="mb-1 bg-linear-to-br from-white to-white/80 bg-clip-text text-2xl font-bold text-transparent transition-transform duration-300 group-hover/stat:scale-105 sm:text-3xl">
               {stat.value}
             </p>
-            
+
             {/* Label */}
             <p className="text-[0.6rem] font-medium uppercase tracking-wider text-white/50 transition-colors duration-300 group-hover/stat:text-arylideYellow/60 sm:text-xs">
               {stat.label}
@@ -104,7 +107,7 @@ const createMiniStats = (statsData: Stat[]) => (
         );
       })}
     </div>
-    
+
     {/* Corner accent */}
     <div className="absolute bottom-0 right-0 h-8 w-8 border-b border-r border-arylideYellow/20" />
   </div>

@@ -4,10 +4,7 @@ import { m } from "framer-motion";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { FaHeart } from "react-icons/fa";
-import {
-  ultraSmoothSpring,
-  tapScales,
-} from "@/lib/animations";
+import { tapScales, ultraSmoothSpring } from "@/lib/animations";
 
 const patroniteUrl = "https://patronite.pl/stowarzyszeniemaxime";
 
@@ -61,9 +58,7 @@ export const PatroniteLink = ({
         onMouseLeave={() => setIsHovered(false)}
       >
         {/* Link text */}
-        <span className="relative z-10 text-arylideYellow">
-          Wesprzyj nas
-        </span>
+        <span className="relative z-10 text-arylideYellow">Wesprzyj nas</span>
 
         {/* Heart icon */}
         <m.span

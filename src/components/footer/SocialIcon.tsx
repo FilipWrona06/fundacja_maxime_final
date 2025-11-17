@@ -5,10 +5,7 @@ import Link from "next/link";
 import type { FC, SVGProps } from "react";
 import { memo, useState } from "react";
 import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
-import {
-  ultraSmoothSpring,
-  tapScales,
-} from "@/lib/animations";
+import { tapScales, ultraSmoothSpring } from "@/lib/animations";
 import type { SocialLink } from "@/lib/types";
 
 interface IconProps extends SVGProps<SVGSVGElement> {

@@ -5,8 +5,8 @@ import Link from "next/link";
 import { FiCamera, FiHeart } from "react-icons/fi";
 import {
   premiumEase,
-  ultraSmoothSpring,
   staggerConfig,
+  ultraSmoothSpring,
   viewportConfig,
 } from "@/lib/animations";
 
@@ -100,7 +100,9 @@ export const CTASectionClient = ({
                   className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full border-2 border-arylideYellow/40 bg-transparent px-6 py-3 text-sm font-bold text-arylideYellow backdrop-blur-sm transition-all duration-300 hover:border-arylideYellow hover:bg-arylideYellow/10 sm:w-auto sm:gap-3 sm:px-8 sm:py-4 sm:text-base md:px-10 md:py-5 md:text-lg"
                 >
                   <FiCamera className="h-4 w-4 sm:h-5 sm:w-5" />
-                  <span className="whitespace-nowrap">Zobacz naszą galerię</span>
+                  <span className="whitespace-nowrap">
+                    Zobacz naszą galerię
+                  </span>
                 </MotionLink>
               </m.div>
             </m.div>

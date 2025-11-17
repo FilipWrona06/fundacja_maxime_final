@@ -67,7 +67,7 @@ export const AnimatedMenuButton = memo(
         />
       </m.div>
     </m.button>
-  )
+  ),
 );
 
 AnimatedMenuButton.displayName = "AnimatedMenuButton";

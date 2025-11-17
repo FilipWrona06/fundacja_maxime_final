@@ -4,8 +4,8 @@ import { m } from "framer-motion";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { memo, useState } from "react";
-import { ultraSmoothSpring } from "@/lib/animations";
 import { Underline } from "@/components/ui/Underline";
+import { ultraSmoothSpring } from "@/lib/animations";
 
 export const CreditLink = memo(
   ({ href, children }: { href: string; children: ReactNode }) => {
@@ -30,7 +30,7 @@ export const CreditLink = memo(
         <Underline isHovered={isHovered} variant="subtle" />
       </Link>
     );
-  }
+  },
 );
 
 CreditLink.displayName = "CreditLink";

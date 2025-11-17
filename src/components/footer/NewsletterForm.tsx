@@ -4,10 +4,7 @@ import { m } from "framer-motion";
 import type { FormEvent } from "react";
 import { memo, useCallback, useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
-import {
-  ultraSmoothSpring,
-  tapScales,
-} from "@/lib/animations";
+import { tapScales, ultraSmoothSpring } from "@/lib/animations";
 
 export const NewsletterForm = memo(() => {
   const [email, setEmail] = useState("");
@@ -52,11 +49,7 @@ export const NewsletterForm = memo(() => {
           onMouseLeave={() => setIsButtonHovered(false)}
         >
           <m.span
-            animate={
-              isButtonHovered
-                ? { x: 2 }
-                : { x: 0 }
-            }
+            animate={isButtonHovered ? { x: 2 } : { x: 0 }}
             transition={{ duration: 0.3 }}
           >
             <FiArrowRight size={20} />

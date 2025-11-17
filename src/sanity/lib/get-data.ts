@@ -1,9 +1,7 @@
 import { groq } from "next-sanity";
 import { cache } from "react";
-
-import type { HomePageData } from "@/lib/types"; // Upewnij się, że ten typ zawiera teraz pole `seo`
+import type { GaleriaPageData, HomePageData } from "@/lib/types";
 import { client } from "./client";
-import type { GaleriaPageData } from "@/lib/types";
 
 /**
  * Ten plik centralizuje logikę pobierania danych dla strony głównej z Sanity.
@@ -115,8 +113,6 @@ export const getCTASectionData = cache(
 
 // Dodaj tę funkcję do istniejącego pliku sanity/lib/get-data.ts
 
-
-
 /**
  * Pobiera dane dla strony galerii z cache'owaniem
  */
@@ -159,7 +155,7 @@ export async function getGalleryPageData(): Promise<GaleriaPageData | null> {
           tags: ["gallery-page"],
           revalidate: 3600, // 1 godzina
         },
-      }
+      },
     );
 
     return data;

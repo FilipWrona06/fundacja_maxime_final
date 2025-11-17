@@ -11,11 +11,7 @@ import {
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FiArrowDown } from "react-icons/fi";
-import {
-  ultraSmoothSpring,
-  premiumEase,
-  smoothEase,
-} from "@/lib/animations";
+import { premiumEase, smoothEase, ultraSmoothSpring } from "@/lib/animations";
 import type { HomePageData } from "@/lib/types";
 
 const HeroButton = ({
@@ -57,7 +53,7 @@ export const HeroSectionClient = ({
 }) => {
   const heroRef = useRef<HTMLElement>(null);
   const [shouldHideArrow, setShouldHideArrow] = useState(false);
-  
+
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
@@ -71,7 +67,11 @@ export const HeroSectionClient = ({
 
   const videoScale = useTransform(smoothProgress, [0, 1], [1, 1.15]);
   const videoOpacity = useTransform(smoothProgress, [0, 0.5, 1], [1, 0.8, 0.6]);
-  const contentOpacity = useTransform(smoothProgress, [0, 0.3, 0.5], [1, 0.5, 0]);
+  const contentOpacity = useTransform(
+    smoothProgress,
+    [0, 0.3, 0.5],
+    [1, 0.5, 0],
+  );
   const contentY = useTransform(smoothProgress, [0, 1], [0, 150]);
 
   useEffect(() => {
@@ -80,12 +80,12 @@ export const HeroSectionClient = ({
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
+
       // Wykryj scroll w dół o więcej niż 50px
       if (currentScrollY > lastScrollY + 50) {
         scrollCount++;
         lastScrollY = currentScrollY;
-        
+
         // Po 3 scrollach ukryj strzałkę
         if (scrollCount >= 3) {
           setShouldHideArrow(true);
@@ -95,7 +95,7 @@ export const HeroSectionClient = ({
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 

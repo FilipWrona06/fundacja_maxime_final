@@ -13,7 +13,7 @@ interface UnderlineProps {
 export const Underline = memo(
   ({ isActive, isHovered, variant = "default" }: UnderlineProps) => {
     const isVisible = isActive || isHovered;
-    
+
     // Różne warianty wysokości
     const heightVariants = {
       default: "h-0.5",
@@ -38,7 +38,7 @@ export const Underline = memo(
         }}
       />
     );
-  }
+  },
 );
 
 Underline.displayName = "Underline";

@@ -22,9 +22,9 @@ export const FooterNav = memo(({ links }: FooterNavProps) => {
           key={link.href}
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ 
-            delay: 0.4 + index * staggerConfig.normal, 
-            ...smoothSpring 
+          transition={{
+            delay: 0.4 + index * staggerConfig.normal,
+            ...smoothSpring,
           }}
         >
           <AnimatedNavLink

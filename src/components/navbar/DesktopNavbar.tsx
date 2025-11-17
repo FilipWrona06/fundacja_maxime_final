@@ -21,7 +21,7 @@ export const DesktopNavbar = ({ navLinks, logo }: DesktopNavbarProps) => {
 
   useEffect(() => {
     let ticking = false;
-    
+
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
@@ -31,7 +31,7 @@ export const DesktopNavbar = ({ navLinks, logo }: DesktopNavbarProps) => {
         ticking = true;
       }
     };
-    
+
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -49,7 +49,7 @@ export const DesktopNavbar = ({ navLinks, logo }: DesktopNavbarProps) => {
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: navbarY, opacity: 1 }}
         transition={navTransition}
-        style={{ 
+        style={{
           backdropFilter: `blur(${navbarBlur}px)`,
           WebkitBackdropFilter: `blur(${navbarBlur}px)`,
         }}
