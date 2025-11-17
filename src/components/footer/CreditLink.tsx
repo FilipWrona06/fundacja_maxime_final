@@ -1,11 +1,11 @@
 "use client";
 
-import { m } from "framer-motion"; // ZMIANA: Import
+import { m } from "framer-motion";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { memo, useState } from "react";
-import { softSpring } from "@/lib/animations";
-import { Underline } from "../ui/Underline";
+import { textLiftTransition, liftDistances } from "@/lib/animations";
+import { Underline } from "@/components/ui/Underline";
 
 export const CreditLink = memo(
   ({ href, children }: { href: string; children: ReactNode }) => {
@@ -16,22 +16,21 @@ export const CreditLink = memo(
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className="group relative font-semibold transition-colors duration-300"
+        className="group relative font-semibold inline-block"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <m.span // ZMIANA: motion.span -> m.span
+        <m.span
           className="inline-block"
-          animate={isHovered ? { y: -2 } : { y: 0 }}
-          transition={softSpring}
+          animate={isHovered ? { y: liftDistances.normal } : { y: 0 }}
+          transition={textLiftTransition}
         >
           {children}
         </m.span>
-        {/* Komponent Underline już wcześniej został zoptymalizowany */}
-        <Underline isHovered={isHovered} />
+        <Underline isHovered={isHovered} variant="subtle" />
       </Link>
     );
-  },
+  }
 );
 
 CreditLink.displayName = "CreditLink";

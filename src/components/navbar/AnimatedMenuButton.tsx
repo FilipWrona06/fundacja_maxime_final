@@ -3,6 +3,7 @@
 import { m, type Transition } from "framer-motion";
 import type { Ref } from "react";
 import { memo } from "react";
+import { premiumEase, tapScales, glowIntensities } from "@/lib/animations";
 
 const menuButtonVariants = {
   top: {
@@ -19,11 +20,9 @@ const menuButtonVariants = {
   },
 };
 
-// Definiujemy typ dla `ease`, aby TypeScript go poprawnie rozpoznał.
-// Jest to tablica czterech liczb (tuple) reprezentująca krzywą Beziera.
-const smoothTransition: Transition = {
+const menuTransition: Transition = {
   duration: 0.4,
-  ease: [0.34, 1.56, 0.64, 1],
+  ease: premiumEase,
 };
 
 interface AnimatedMenuButtonProps {
@@ -42,10 +41,10 @@ export const AnimatedMenuButton = memo(
       aria-label={isOpen ? "Zamknij menu" : "Otwórz menu"}
       aria-expanded={isOpen}
       aria-controls="mobile-menu"
-      whileTap={{ scale: 0.92 }}
-      transition={{ duration: 0.2, ease: [0.34, 1.56, 0.64, 1] }}
+      whileTap={{ scale: tapScales.normal }}
+      transition={{ duration: 0.2, ease: premiumEase }}
     >
-      {/* Tło podświetlenia przy hover */}
+      {/* Unified hover glow */}
       <m.div
         className="absolute inset-0 rounded-xl"
         initial={{ backgroundColor: "rgba(233, 215, 88, 0)" }}
@@ -57,32 +56,32 @@ export const AnimatedMenuButton = memo(
         className="flex flex-col justify-around w-6 h-6 relative z-10"
         animate={isOpen ? "open" : "closed"}
         initial={false}
-        transition={smoothTransition}
+        transition={menuTransition}
       >
         <m.span
           className="block h-0.5 w-full bg-white origin-center will-change-transform rounded-full"
           variants={menuButtonVariants.top}
-          transition={smoothTransition}
+          transition={menuTransition}
           style={{
-            boxShadow: isOpen ? "0 0 8px rgba(255,255,255,0.3)" : "none",
+            boxShadow: isOpen ? glowIntensities.subtle : "none",
           }}
         />
         <m.span
           className="block h-0.5 w-full bg-white will-change-transform rounded-full"
           variants={menuButtonVariants.middle}
-          transition={{ ...smoothTransition, duration: 0.3 }}
+          transition={{ ...menuTransition, duration: 0.3 }}
         />
         <m.span
           className="block h-0.5 w-full bg-white origin-center will-change-transform rounded-full"
           variants={menuButtonVariants.bottom}
-          transition={smoothTransition}
+          transition={menuTransition}
           style={{
-            boxShadow: isOpen ? "0 0 8px rgba(255,255,255,0.3)" : "none",
+            boxShadow: isOpen ? glowIntensities.subtle : "none",
           }}
         />
       </m.div>
     </m.button>
-  ),
+  )
 );
 
 AnimatedMenuButton.displayName = "AnimatedMenuButton";
