@@ -50,16 +50,16 @@ const textElementVariant: Variants = {
 export const AboutSectionClient = ({
   staticContent,
   staticImage,
-  staticStatsBubble,
+  miniStats,
 }: {
   staticContent: ReactNode;
   staticImage: ReactNode;
-  staticStatsBubble: ReactNode;
+  miniStats: ReactNode;
 }) => {
   return (
     <LazyMotion features={domAnimation}>
       <section
-        className="relative overflow-hidden py-16 sm:py-20 md:py-24 lg:py-32 xl:py-40"
+        className="relative overflow-hidden pt-16 pb-16 sm:pt-20 sm:pb-20 md:pt-16 md:pb-24 lg:pt-20 lg:pb-32 xl:pt-24 xl:pb-40"
         aria-labelledby="about-heading"
       >
         {/* Decorative background */}
@@ -99,7 +99,7 @@ export const AboutSectionClient = ({
                   <div className="relative">{staticImage}</div>
                 </m.div>
 
-                {/* Stats Bubble */}
+                {/* Mini Stats Card */}
                 <m.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -109,9 +109,9 @@ export const AboutSectionClient = ({
                     y: -8,
                     transition: ultraSmoothSpring,
                   }}
-                  className="relative"
+                  className="absolute -bottom-6 -left-4 right-4 sm:-bottom-8 sm:left-4 sm:right-8 md:-bottom-10 md:-left-8 md:right-12 lg:-left-12 lg:right-16"
                 >
-                  <div className="relative">{staticStatsBubble}</div>
+                  {miniStats}
                 </m.div>
               </div>
             </m.div>

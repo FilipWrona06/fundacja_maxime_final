@@ -5,7 +5,6 @@ import { AboutSection } from "@/components/home/AboutSection";
 import { CTASection } from "@/components/home/CtaSection";
 import { HeroSection } from "@/components/home/HeroSection";
 import { ImpactSection } from "@/components/home/ImpactSection";
-import { StatsSection } from "@/components/home/StatsSection";
 import { TimelineSection } from "@/components/home/TimelineSection";
 import { getHomePageSeoData } from "@/sanity/lib/get-data";
 import { urlFor } from "@/sanity/lib/image";
@@ -80,9 +79,6 @@ export default function HomePage() {
       <HeroSection />
 
       <main>
-        <Suspense fallback={<SectionSkeleton />}>
-          <StatsSection />
-        </Suspense>
 
         <Suspense fallback={<SectionSkeleton />}>
           <AboutSection />

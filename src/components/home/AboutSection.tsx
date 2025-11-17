@@ -1,8 +1,16 @@
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import Image from "next/image";
-import { getAboutSectionData } from "@/sanity/lib/get-data";
+import { getAboutSectionData, getStatsSectionData } from "@/sanity/lib/get-data";
 import { urlFor } from "@/sanity/lib/image";
 import { AboutSectionClient } from "./AboutSection.client";
+import { FiAward, FiMusic, FiUsers } from "react-icons/fi";
+import type { Stat } from "@/lib/types";
+
+const ICONS_MAP: { [key: string]: React.ElementType } = {
+  Koncertów: FiMusic,
+  Widzów: FiUsers,
+  Nagród: FiAward,
+};
 
 const createStaticContent = (data: {
   smallHeading: string;
@@ -66,26 +74,47 @@ const createStaticImage = (data: {
   </div>
 );
 
-const createStaticStatsBubble = () => (
-  <div className="absolute -bottom-6 -left-2.5 w-auto sm:-bottom-8 sm:right-4 md:-bottom-8 md:-left-12 md:right-auto lg:-left-16 xl:-left-20">
-    <div className="group/stats relative overflow-hidden rounded-xl border border-white/10 bg-white/5 p-3 shadow-2xl backdrop-blur-md transition-all duration-300 hover:border-arylideYellow/30 hover:bg-white/8 sm:rounded-2xl sm:p-6 md:p-8">
-      {/* Content */}
-      <div className="relative">
-        <p className="bg-linear-to-br from-arylideYellow to-arylideYellow/80 bg-clip-text font-youngest text-[1.75rem] font-bold text-transparent sm:mb-2 sm:text-5xl md:text-6xl lg:text-7xl">
-          50+
-        </p>
-        <p className="whitespace-nowrap text-xs font-semibold uppercase tracking-wider text-white/60 transition-colors duration-300 group-hover/stats:text-white/80 sm:text-sm sm:font-bold">
-          Zorganizowanych Koncertów
-        </p>
-      </div>
+const createMiniStats = (statsData: Stat[]) => (
+  <div className="relative overflow-hidden rounded-xl border border-white/10 bg-white/5 backdrop-blur-md shadow-2xl transition-all duration-300 hover:border-arylideYellow/30 hover:bg-white/8">
+    <div className="grid grid-cols-3 divide-x divide-white/10">
+      {statsData.map((stat) => {
+        const Icon = ICONS_MAP[stat.label] || FiAward;
+        return (
+          <div
+            key={stat.label}
+            className="group/stat flex flex-col items-center justify-center px-3 py-4 text-center transition-colors duration-300 hover:bg-white/5 sm:px-4 sm:py-5"
+          >
+            {/* Icon */}
+            <Icon
+              size={16}
+              className="mb-2 text-arylideYellow/70 transition-all duration-300 group-hover/stat:scale-110 group-hover/stat:text-arylideYellow sm:mb-3"
+              aria-hidden="true"
+            />
+            
+            {/* Number */}
+            <p className="mb-1 bg-linear-to-br from-white to-white/80 bg-clip-text text-2xl font-bold text-transparent transition-transform duration-300 group-hover/stat:scale-105 sm:text-3xl">
+              {stat.value}
+            </p>
+            
+            {/* Label */}
+            <p className="text-[0.6rem] font-medium uppercase tracking-wider text-white/50 transition-colors duration-300 group-hover/stat:text-arylideYellow/60 sm:text-xs">
+              {stat.label}
+            </p>
+          </div>
+        );
+      })}
     </div>
+    
+    {/* Corner accent */}
+    <div className="absolute bottom-0 right-0 h-8 w-8 border-b border-r border-arylideYellow/20" />
   </div>
 );
 
 export async function AboutSection() {
   const aboutData = await getAboutSectionData();
+  const statsData = await getStatsSectionData();
 
-  if (!aboutData) {
+  if (!aboutData || !statsData) {
     return null;
   }
 
@@ -93,7 +122,7 @@ export async function AboutSection() {
     <AboutSectionClient
       staticContent={createStaticContent(aboutData)}
       staticImage={createStaticImage(aboutData)}
-      staticStatsBubble={createStaticStatsBubble()}
+      miniStats={createMiniStats(statsData)}
     />
   );
 }
