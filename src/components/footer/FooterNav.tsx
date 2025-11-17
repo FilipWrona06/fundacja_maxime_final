@@ -4,7 +4,7 @@
 import { m } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { memo } from "react";
-import { softSpring, staggerConfig } from "@/lib/animations";
+import { smoothSpring, staggerConfig } from "@/lib/animations";
 import type { NavLink } from "@/lib/types";
 import { AnimatedNavLink } from "../ui/AnimatedNavLink";
 
@@ -24,7 +24,7 @@ export const FooterNav = memo(({ links }: FooterNavProps) => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ 
             delay: 0.4 + index * staggerConfig.normal, 
-            ...softSpring 
+            ...smoothSpring 
           }}
         >
           <AnimatedNavLink
