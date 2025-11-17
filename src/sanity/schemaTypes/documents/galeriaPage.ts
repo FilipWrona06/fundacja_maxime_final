@@ -1,3 +1,5 @@
+// src/sanity/schemas/galeriaPage.ts
+
 import { defineField, defineType } from "sanity";
 
 export const galeriaPage = defineType({
@@ -5,16 +7,15 @@ export const galeriaPage = defineType({
   title: "Strona Galerii",
   type: "document",
   fields: [
+    // --- POPRAWKA ---
+    // Zamiast definiować pola SEO na nowo, używamy
+    // naszego reużywalnego typu obiektu "seo".
     defineField({
       name: "seo",
-      title: "SEO",
-      type: "object",
-      fields: [
-        { name: "title", type: "string", title: "Meta Title" },
-        { name: "description", type: "text", title: "Meta Description" },
-        { name: "ogImage", type: "image", title: "OG Image" },
-      ],
+      title: "Ustawienia SEO i Social Media",
+      type: "seo", // Używamy typu zdefiniowanego w seo.ts
     }),
+    // Reszta pól pozostaje bez zmian...
     defineField({
       name: "heroSection",
       title: "Sekcja Hero",

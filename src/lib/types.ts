@@ -157,11 +157,11 @@ export interface Gallery {
 }
 
 export interface GaleriaPageData {
-  seo: {
-    title: string;
-    description: string;
-    ogImage?: SanityImage;
-  };
+  // --- POPRAWKA ---
+  // Używamy pełnego, reużywalnego interfejsu SeoData
+  seo: SeoData;
+
+  // Reszta typów bez zmian
   heroSection: {
     badge: string;
     headingLine1: string;

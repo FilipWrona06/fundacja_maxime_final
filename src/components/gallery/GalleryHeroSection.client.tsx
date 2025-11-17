@@ -3,11 +3,13 @@
 import { motion } from "framer-motion";
 import type { GaleriaPageData } from "@/lib/types";
 
+// 1. Zmieniamy nazwę propsa z 'hero' na 'heroData'
 interface Props {
-  hero: GaleriaPageData["heroSection"];
+  heroData: GaleriaPageData["heroSection"];
 }
 
-export default function GalleryHero({ hero }: Props) {
+// 2. W parametrach komponentu również używamy 'heroData'
+export default function GalleryHeroSectionClient({ heroData }: Props) {
   return (
     <header className="mb-20 text-center">
       <motion.span
@@ -16,7 +18,8 @@ export default function GalleryHero({ hero }: Props) {
         transition={{ duration: 0.6, delay: 0.2 }}
         className="mb-6 inline-block text-sm font-semibold uppercase tracking-widest text-arylideYellow"
       >
-        {hero.badge}
+        {/* 3. Używamy 'heroData' w całym JSX */}
+        {heroData.badge}
       </motion.span>
 
       <motion.h1
@@ -26,9 +29,9 @@ export default function GalleryHero({ hero }: Props) {
         className="mb-6 text-6xl font-bold leading-tight md:text-7xl lg:text-8xl"
       >
         <span className="font-youngest text-arylideYellow block">
-          {hero.headingLine1}
+          {heroData.headingLine1}
         </span>
-        <span className="block">{hero.headingLine2}</span>
+        <span className="block">{heroData.headingLine2}</span>
       </motion.h1>
 
       <motion.p
@@ -37,7 +40,7 @@ export default function GalleryHero({ hero }: Props) {
         transition={{ duration: 0.8, delay: 0.3 }}
         className="mx-auto max-w-2xl text-xl text-white/60"
       >
-        {hero.description}
+        {heroData.description}
       </motion.p>
     </header>
   );

@@ -3,6 +3,7 @@ import { cache } from "react";
 
 import type { HomePageData } from "@/lib/types"; // Upewnij się, że ten typ zawiera teraz pole `seo`
 import { client } from "./client";
+import type { GaleriaPageData } from "@/lib/types";
 
 /**
  * Ten plik centralizuje logikę pobierania danych dla strony głównej z Sanity.
@@ -111,3 +112,59 @@ export const getCTASectionData = cache(
     return data?.ctaSection ?? null;
   },
 );
+
+// Dodaj tę funkcję do istniejącego pliku sanity/lib/get-data.ts
+
+
+
+/**
+ * Pobiera dane dla strony galerii z cache'owaniem
+ */
+export async function getGalleryPageData(): Promise<GaleriaPageData | null> {
+  try {
+    const data = await client.fetch<GaleriaPageData>(
+      `*[_type == "galeriaPage"][0]{
+        seo{
+          title,
+          description,
+          noIndex,
+          noFollow,
+          canonicalUrl,
+          ogTitle,
+          ogDescription,
+          ogImage
+        },
+        heroSection{
+          badge,
+          headingLine1,
+          headingLine2,
+          description
+        },
+        galleries[]{
+          title,
+          date,
+          location,
+          slug,
+          images[]{
+            asset,
+            alt,
+            caption
+          }
+        }
+      }`,
+      {},
+      {
+        cache: "force-cache",
+        next: {
+          tags: ["gallery-page"],
+          revalidate: 3600, // 1 godzina
+        },
+      }
+    );
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching gallery page data:", error);
+    return null;
+  }
+}
