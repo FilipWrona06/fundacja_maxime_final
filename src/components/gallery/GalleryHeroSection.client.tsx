@@ -1,47 +1,114 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
 import type { GaleriaPageData } from "@/lib/types";
+import { premiumEase } from "@/lib/animations";
 
-// 1. Zmieniamy nazwę propsa z 'hero' na 'heroData'
 interface Props {
   heroData: GaleriaPageData["heroSection"];
 }
 
-// 2. W parametrach komponentu również używamy 'heroData'
+const fadeInUpVariant: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: premiumEase,
+    },
+  },
+};
+
+const staggerContainerVariant: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.2,
+    },
+  },
+};
+
 export default function GalleryHeroSectionClient({ heroData }: Props) {
   return (
-    <header className="mb-20 text-center">
-      <motion.span
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="mb-6 inline-block text-sm font-semibold uppercase tracking-widest text-arylideYellow"
+    <LazyMotion features={domAnimation}>
+      <m.header
+        initial="hidden"
+        animate="visible"
+        variants={staggerContainerVariant}
+        className="relative overflow-hidden py-16 sm:py-20"
       >
-        {/* 3. Używamy 'heroData' w całym JSX */}
-        {heroData.badge}
-      </motion.span>
+        {/* Background blurs - subtler */}
+        <m.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.5, ease: premiumEase }}
+          className="pointer-events-none absolute left-1/4 top-0 h-96 w-96 rounded-full bg-arylideYellow/8 blur-3xl"
+        />
+        <m.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.5, delay: 0.3, ease: premiumEase }}
+          className="pointer-events-none absolute bottom-0 right-1/4 h-80 w-80 rounded-full bg-oxfordBlue/12 blur-3xl"
+        />
 
-      <motion.h1
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="mb-6 text-6xl font-bold leading-tight md:text-7xl lg:text-8xl"
-      >
-        <span className="font-youngest text-arylideYellow block">
-          {heroData.headingLine1}
-        </span>
-        <span className="block">{heroData.headingLine2}</span>
-      </motion.h1>
+        <div className="relative z-10 text-center">
+          {/* Badge */}
+          <m.div
+            variants={fadeInUpVariant}
+            className="mb-6 flex items-center justify-center gap-3"
+          >
+            <span className="h-px w-12 bg-linear-to-r from-transparent to-arylideYellow" />
+            <span className="inline-flex items-center gap-2 rounded-full border border-arylideYellow/30 bg-arylideYellow/10 px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] text-arylideYellow backdrop-blur-sm sm:px-6 sm:text-sm">
+              {heroData.badge}
+            </span>
+            <span className="h-px w-12 bg-linear-to-l from-transparent to-arylideYellow" />
+          </m.div>
 
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.3 }}
-        className="mx-auto max-w-2xl text-xl text-white/60"
-      >
-        {heroData.description}
-      </motion.p>
-    </header>
+          {/* Main Heading - responsive size */}
+          <m.h1
+            variants={fadeInUpVariant}
+            className="mb-6 space-y-1"
+          >
+            <span className="block font-youngest text-[clamp(3rem,7vw,6rem)] leading-[0.9] tracking-tight text-arylideYellow drop-shadow-2xl">
+              {heroData.headingLine1}
+            </span>
+            <span className="block font-youngest text-[clamp(3rem,7vw,6rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl">
+              {heroData.headingLine2}
+            </span>
+          </m.h1>
+
+          {/* Description */}
+          <m.p
+            variants={fadeInUpVariant}
+            className="mx-auto max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg md:max-w-3xl md:text-xl"
+          >
+            {heroData.description}
+          </m.p>
+
+          {/* Decorative line */}
+          <m.div
+            variants={fadeInUpVariant}
+            className="mx-auto mt-8 flex items-center justify-center gap-3"
+          >
+            <m.span
+              initial={{ width: 0 }}
+              animate={{ width: "3rem" }}
+              transition={{ duration: 0.8, delay: 0.8, ease: premiumEase }}
+              className="h-px bg-linear-to-r from-transparent to-arylideYellow"
+            />
+            <span className="h-1.5 w-1.5 rounded-full bg-arylideYellow shadow-lg shadow-arylideYellow/50" />
+            <m.span
+              initial={{ width: 0 }}
+              animate={{ width: "3rem" }}
+              transition={{ duration: 0.8, delay: 0.8, ease: premiumEase }}
+              className="h-px bg-linear-to-l from-transparent to-arylideYellow"
+            />
+          </m.div>
+        </div>
+      </m.header>
+    </LazyMotion>
   );
 }

@@ -6,9 +6,6 @@ import { GalleryHeroSection } from "@/components/gallery/GalleryHeroSection";
 import { getGalleryPageData } from "@/sanity/lib/get-data";
 import { urlFor } from "@/sanity/lib/image";
 
-/**
- * Generowanie metadanych SEO dla strony galerii
- */
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getGalleryPageData();
 
@@ -19,7 +16,6 @@ export async function generateMetadata(): Promise<Metadata> {
     };
   }
 
-  // Poprawiono nazwy pól na te z reużywalnego schematu SEO
   return {
     title: data.seo.metaTitle || "Galeria Wydarzeń | Fundacja Maxime",
     description:
@@ -48,26 +44,31 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-// Skeleton dla ładowania
 const SectionSkeleton = () => (
-  <div
-    className="container mx-auto my-16 h-96 animate-pulse rounded-2xl bg-white/5"
-    aria-hidden="true"
-  />
+  <div className="animate-pulse space-y-8" aria-hidden="true">
+    <div className="space-y-4">
+      <div className="h-16 w-2/3 rounded-2xl bg-white/5" />
+      <div className="h-4 w-48 rounded-full bg-white/5" />
+    </div>
+    <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+      <div className="col-span-2 row-span-2 aspect-square rounded-2xl bg-white/5" />
+      {[1, 2, 3, 4, 5, 6].map((i) => (
+        <div key={i} className="aspect-square rounded-2xl bg-white/5" />
+      ))}
+    </div>
+  </div>
 );
 
 export default async function GaleriaPage() {
   const data = await getGalleryPageData();
 
-  // Fallback gdy brak danych
   if (!data) {
     return (
       <div className="min-h-screen pt-32 pb-20">
         <div className="container mx-auto px-6 text-center">
-          <h1 className="text-4xl font-bold mb-4">Galeria Wydarzeń</h1>
+          <h1 className="mb-4 text-4xl font-bold">Galeria Wydarzeń</h1>
           <p className="text-white/60">
-            Brak danych do wyświetlenia. Skonfiguruj stronę galerii w Sanity
-            CMS.
+            Brak danych do wyświetlenia. Skonfiguruj stronę galerii w Sanity CMS.
           </p>
         </div>
       </div>
@@ -75,15 +76,21 @@ export default async function GaleriaPage() {
   }
 
   return (
-    <div className="min-h-screen pt-32 pb-20">
-      <div className="container mx-auto px-6">
+    <div className="relative min-h-screen overflow-hidden pt-28 pb-20">
+      {/* Subtle background decoration */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden opacity-40">
+        <div className="absolute left-0 top-1/4 h-[500px] w-[500px] rounded-full bg-arylideYellow/10 blur-3xl" />
+        <div className="absolute right-0 bottom-1/4 h-[400px] w-[400px] rounded-full bg-oxfordBlue/15 blur-3xl" />
+      </div>
+
+      <div className="container relative z-10 mx-auto px-6">
         {/* Hero Section */}
-        <Suspense fallback={<SectionSkeleton />}>
+        <Suspense fallback={<div className="h-64 animate-pulse" />}>
           <GalleryHeroSection heroData={data.heroSection} />
         </Suspense>
 
-        {/* Gallery Grids */}
-        <div className="space-y-32">
+        {/* Gallery Sections */}
+        <div className="space-y-16 sm:space-y-24">
           {data.galleries?.map((gallery, index) => (
             <Suspense key={gallery.slug.current} fallback={<SectionSkeleton />}>
               <GalleryGridSection gallery={gallery} index={index} />
