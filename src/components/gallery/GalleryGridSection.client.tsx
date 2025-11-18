@@ -1,11 +1,28 @@
 "use client";
 
-import { domAnimation, LazyMotion, m, useScroll, useTransform, type Variants } from "framer-motion";
+import {
+  domAnimation,
+  LazyMotion,
+  m,
+  useScroll,
+  useTransform,
+  type Variants,
+} from "framer-motion";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { FiCalendar, FiMapPin } from "react-icons/fi";
-import { premiumEase, ultraSmoothSpring, viewportConfig } from "@/lib/animations";
-import { Lightbox } from "./Lightbox";
+import {
+  premiumEase,
+  ultraSmoothSpring,
+  viewportConfig,
+} from "@/lib/animations";
+
+// Dynamiczne ładowanie komponentu Lightbox.
+// Zostanie on załadowany dopiero, gdy będzie potrzebny (po kliknięciu zdjęcia).
+const DynamicLightbox = dynamic(() =>
+  import("./Lightbox").then((mod) => mod.Lightbox)
+);
 
 interface ImageData {
   src: string;
@@ -73,7 +90,11 @@ export const GalleryGridSectionClient = ({
   });
 
   const blurY = useTransform(scrollYProgress, [0, 1], [80, -80]);
-  const blurOpacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
+  const blurOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.3, 0.7, 1],
+    [0, 1, 1, 0]
+  );
 
   const formattedDate = new Date(galleryData.date).toLocaleDateString("pl-PL", {
     day: "numeric",
@@ -207,12 +228,18 @@ export const GalleryGridSectionClient = ({
                   aria-label={`Otwórz zdjęcie: ${image.alt}`}
                 >
                   <div className="pointer-events-none absolute -inset-1 rounded-2xl bg-linear-to-br from-arylideYellow/20 to-transparent opacity-0 blur-lg transition-opacity duration-500 group-hover:opacity-100" />
-                  <div className={`relative h-full w-full overflow-hidden rounded-2xl ${aspectClass}`}>
+                  <div
+                    className={`relative h-full w-full overflow-hidden rounded-2xl ${aspectClass}`}
+                  >
                     <Image
                       src={image.src}
                       alt={image.alt}
                       fill
-                      sizes={isHero ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 50vw, 25vw"}
+                      sizes={
+                        isHero
+                          ? "(max-width: 768px) 100vw, 50vw"
+                          : "(max-width: 768px) 50vw, 25vw"
+                      }
                       placeholder="blur"
                       blurDataURL={image.blurDataURL}
                       className="object-cover transition-transform duration-700 group-hover:scale-110"
@@ -234,9 +261,9 @@ export const GalleryGridSectionClient = ({
           </m.div>
         </div>
 
-        {/* Lightbox - wspólny dla obu widoków */}
+        {/* Lightbox - wspólny dla obu widoków, ładowany dynamicznie */}
         {lightboxIndex !== null && (
-          <Lightbox
+          <DynamicLightbox
             images={galleryData.images}
             currentIndex={lightboxIndex}
             onClose={() => setLightboxIndex(null)}

@@ -6,7 +6,7 @@ import { CTASection } from "@/components/home/CtaSection";
 import { HeroSection } from "@/components/home/HeroSection";
 import { ImpactSection } from "@/components/home/ImpactSection";
 import { TimelineSection } from "@/components/home/TimelineSection";
-import { getHomePageSeoData } from "@/sanity/lib/get-data";
+import { getHomePageSeoData } from "@/sanity/lib/queries/home";
 import { urlFor } from "@/sanity/lib/image";
 
 /**

@@ -1,4 +1,4 @@
-import { getHeroSectionData } from "@/sanity/lib/get-data";
+import { getHeroSectionData } from "@/sanity/lib/queries/home";
 import { HeroSectionClient } from "./HeroSection.client";
 
 /**

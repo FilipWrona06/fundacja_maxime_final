@@ -1,4 +1,4 @@
-import { getImpactSectionData } from "@/sanity/lib/get-data";
+import { getImpactSectionData } from "@/sanity/lib/queries/home";
 import { ImpactSectionClient } from "./ImpactSection.client";
 
 export async function ImpactSection() {

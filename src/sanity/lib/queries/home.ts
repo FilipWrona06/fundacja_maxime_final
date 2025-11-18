@@ -1,33 +1,32 @@
 import { groq } from "next-sanity";
 import { cache } from "react";
-import type { GaleriaPageData, HomePageData } from "@/lib/types";
-import { client } from "./client";
+import type { HomePageData } from "@/lib/types";
+import { client } from "../client";
 
 /**
- * Ten plik centralizuje logikę pobierania danych dla strony głównej z Sanity.
- * Każda funkcja jest opakowana w `React.cache`, aby zapobiec duplikowaniu
- * tych samych zapytań w trakcie jednego cyklu renderowania na serwerze.
+ * Zbiór funkcji do pobierania danych wyłącznie dla strony głównej.
+ * Każda funkcja jest opakowana w React.cache, aby zdeduplikować zapytania
+ * w trakcie jednego cyklu renderowania.
  */
 
-// --- NOWA FUNKCJA DO POBIERANIA DANYCH SEO ---
 /**
  * Pobiera tylko i wyłącznie dane SEO dla strony głównej.
- * Jest to zoptymalizowane do użycia w funkcji `generateMetadata` w `page.tsx`,
- * ponieważ nie pobiera niepotrzebnie danych z innych sekcji.
+ * Zoptymalizowane do użycia w `generateMetadata`.
  */
 export const getHomePageSeoData = cache(
   async (): Promise<HomePageData["seo"] | null> => {
     const data = await client.fetch<{ seo: HomePageData["seo"] }>(
-      groq`*[_type == "homePage"][0]{ seo }`, // Pobieramy tylko obiekt 'seo'
+      groq`*[_type == "homePage"][0]{ seo }`,
       {},
-      { next: { tags: ["homePage"] } }, // Tagujemy tak samo, bo to część tej samej strony
+      { next: { tags: ["homePage"] } },
     );
     return data?.seo ?? null;
   },
 );
 
-// --- ISTNIEJĄCE FUNKCJE (BEZ ZMIAN) ---
-
+/**
+ * Pobiera dane dla sekcji Hero.
+ */
 export const getHeroSectionData = cache(
   async (): Promise<HomePageData["heroSection"] | null> => {
     const data = await client.fetch<{
@@ -48,6 +47,9 @@ export const getHeroSectionData = cache(
   },
 );
 
+/**
+ * Pobiera dane dla sekcji Statystyk.
+ */
 export const getStatsSectionData = cache(
   async (): Promise<HomePageData["statsSection"] | null> => {
     const data = await client.fetch<{
@@ -61,6 +63,9 @@ export const getStatsSectionData = cache(
   },
 );
 
+/**
+ * Pobiera dane dla sekcji "O Fundacji".
+ */
 export const getAboutSectionData = cache(
   async (): Promise<HomePageData["aboutSection"] | null> => {
     const data = await client.fetch<{
@@ -74,6 +79,9 @@ export const getAboutSectionData = cache(
   },
 );
 
+/**
+ * Pobiera dane dla sekcji "Nasz Wpływ".
+ */
 export const getImpactSectionData = cache(
   async (): Promise<HomePageData["impactSection"] | null> => {
     const data = await client.fetch<{
@@ -87,6 +95,9 @@ export const getImpactSectionData = cache(
   },
 );
 
+/**
+ * Pobiera dane dla sekcji "Nasza Historia" (oś czasu).
+ */
 export const getTimelineSectionData = cache(
   async (): Promise<HomePageData["timelineSection"] | null> => {
     const data = await client.fetch<{
@@ -100,6 +111,9 @@ export const getTimelineSectionData = cache(
   },
 );
 
+/**
+ * Pobiera dane dla sekcji Wezwania do Działania (CTA).
+ */
 export const getCTASectionData = cache(
   async (): Promise<HomePageData["ctaSection"] | null> => {
     const data = await client.fetch<{ ctaSection: HomePageData["ctaSection"] }>(
@@ -110,57 +124,3 @@ export const getCTASectionData = cache(
     return data?.ctaSection ?? null;
   },
 );
-
-// Dodaj tę funkcję do istniejącego pliku sanity/lib/get-data.ts
-
-/**
- * Pobiera dane dla strony galerii z cache'owaniem
- */
-export async function getGalleryPageData(): Promise<GaleriaPageData | null> {
-  try {
-    const data = await client.fetch<GaleriaPageData>(
-      `*[_type == "galeriaPage"][0]{
-        seo{
-          title,
-          description,
-          noIndex,
-          noFollow,
-          canonicalUrl,
-          ogTitle,
-          ogDescription,
-          ogImage
-        },
-        heroSection{
-          badge,
-          headingLine1,
-          headingLine2,
-          description
-        },
-        galleries[]{
-          title,
-          date,
-          location,
-          slug,
-          images[]{
-            asset,
-            alt,
-            caption
-          }
-        }
-      }`,
-      {},
-      {
-        cache: "force-cache",
-        next: {
-          tags: ["gallery-page"],
-          revalidate: 3600, // 1 godzina
-        },
-      },
-    );
-
-    return data;
-  } catch (error) {
-    console.error("Error fetching gallery page data:", error);
-    return null;
-  }
-}

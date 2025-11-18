@@ -1,4 +1,4 @@
-import { getTimelineSectionData } from "@/sanity/lib/get-data";
+import { getTimelineSectionData } from "@/sanity/lib/queries/home";
 import { TimelineSectionClient } from "./TimelineSection.client";
 
 export async function TimelineSection() {

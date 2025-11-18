@@ -1,4 +1,4 @@
-import { getCTASectionData } from "@/sanity/lib/get-data";
+import { getCTASectionData } from "@/sanity/lib/queries/home";
 import { CTASectionClient } from "./CtaSection.client";
 
 export async function CTASection() {

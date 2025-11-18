@@ -6,6 +6,7 @@ import { memo } from "react";
 import { premiumEase, tapScales, ultraSmoothSpring } from "@/lib/animations";
 import { Underline } from "./Underline";
 
+// Wersja mobilna - bez zmian
 const mobileLinkVariants: Variants = {
   hidden: { opacity: 0, y: -20 },
   visible: {
@@ -15,6 +16,25 @@ const mobileLinkVariants: Variants = {
       duration: 0.5,
       ease: premiumEase,
     },
+  },
+};
+
+// Krok 1: Definiujemy warianty dla samego podkreślenia
+const underlineVariants: Variants = {
+  // Stan domyślny (nieaktywny, bez hover)
+  initial: {
+    scaleX: 0,
+    opacity: 0,
+  },
+  // Stan po najechaniu myszą
+  hovered: {
+    scaleX: 1,
+    opacity: 1,
+  },
+  // Stan, gdy link jest aktywny
+  active: {
+    scaleX: 1,
+    opacity: 1,
   },
 };
 
@@ -47,9 +67,7 @@ export const AnimatedNavLink = memo(
           >
             <m.span
               className="inline-block"
-              whileHover={{
-                x: 6,
-              }}
+              whileHover={{ x: 6 }}
               whileTap={{ scale: tapScales.normal }}
               transition={ultraSmoothSpring}
             >
@@ -61,14 +79,21 @@ export const AnimatedNavLink = memo(
       );
     }
 
+    // Wersja desktopowa z poprawioną logiką
     return (
       <li>
-        <m.div whileHover="hovered" initial="initial">
+        {/* Krok 2: Używamy nadrzędnego m.div do sterowania stanem */}
+        <m.div
+          // Kluczowa zmiana: 'animate' jest teraz dynamicznie ustawiany.
+          // Gdy isActive się zmieni, Framer Motion animuje do nowego wariantu.
+          animate={isActive ? "active" : "initial"}
+          whileHover="hovered"
+        >
           <Link
             href={href}
-            className={`group block py-1 relative transition-all duration-300 ease-out ${
+            className={`group block py-1 relative transition-colors duration-300 ease-out ${
               isActive
-                ? "font-semibold"
+                ? "font-semibold text-white"
                 : "font-normal text-white/85 hover:text-white"
             } ${className}`}
             aria-current={isActive ? "page" : undefined}
@@ -77,23 +102,12 @@ export const AnimatedNavLink = memo(
               {name}
               <m.span
                 className="absolute -bottom-0.5 left-0 h-0.5 w-full rounded-full bg-linear-to-r from-transparent via-arylideYellow to-transparent"
-                initial={{
-                  scaleX: isActive ? 1 : 0,
-                  opacity: isActive ? 1 : 0,
-                }}
-                variants={{
-                  initial: {
-                    scaleX: isActive ? 1 : 0,
-                    opacity: isActive ? 1 : 0,
-                  },
-                  hovered: { scaleX: 1, opacity: 1 },
-                }}
+                style={{ transformOrigin: "center" }}
+                // Krok 3: Przekazujemy zdefiniowane warianty do potomka
+                variants={underlineVariants}
                 transition={{
                   duration: 0.5,
                   ease: premiumEase,
-                }}
-                style={{
-                  transformOrigin: "center",
                 }}
               />
             </span>
@@ -101,7 +115,7 @@ export const AnimatedNavLink = memo(
         </m.div>
       </li>
     );
-  },
+  }
 );
 
 AnimatedNavLink.displayName = "AnimatedNavLink";

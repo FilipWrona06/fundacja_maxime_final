@@ -3,7 +3,7 @@ import { Suspense } from "react";
 
 import { GalleryGridSection } from "@/components/gallery/GalleryGridSection";
 import { GalleryHeroSection } from "@/components/gallery/GalleryHeroSection";
-import { getGalleryPageData } from "@/sanity/lib/get-data";
+import { getGalleryPageData } from "@/sanity/lib/queries/gallery";
 import { urlFor } from "@/sanity/lib/image";
 
 export async function generateMetadata(): Promise<Metadata> {

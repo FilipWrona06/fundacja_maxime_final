@@ -5,7 +5,7 @@ import type { Stat } from "@/lib/types";
 import {
   getAboutSectionData,
   getStatsSectionData,
-} from "@/sanity/lib/get-data";
+} from "@/sanity/lib/queries/home";
 import { urlFor } from "@/sanity/lib/image";
 import { AboutSectionClient } from "./AboutSection.client";
 
