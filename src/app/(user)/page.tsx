@@ -1,3 +1,5 @@
+// Plik: src/app/page.tsx (wersja ostateczna)
+
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -9,52 +11,37 @@ import { TimelineSection } from "@/components/home/TimelineSection";
 import { getHomePageSeoData } from "@/sanity/lib/queries/home";
 import { urlFor } from "@/sanity/lib/image";
 
-/**
- * Ta funkcja jest wykonywana na serwerze podczas budowania strony.
- * Pobiera dane SEO z Sanity i generuje metadane dla sekcji <head> dokumentu HTML.
- * Dzięki temu Twoja strona jest w pełni zoptymalizowana dla SEO od samego początku.
- */
 export async function generateMetadata(): Promise<Metadata> {
-  // 1. Pobieramy dane SEO za pomocą naszej dedykowanej, z-cache-owanej funkcji.
   const seoData = await getHomePageSeoData();
 
-  // 2. Jeśli z jakiegoś powodu danych SEO nie ma, zwracamy solidne wartości domyślne.
   if (!seoData) {
     return {
       title: "Fundacja Maxime | Z Pasji do Muzyki",
-      description:
-        "Odkryj historię naszej fundacji, sprawdź nadchodzące koncerty i dołącz do naszej muzycznej społeczności.",
+      description: "Odkryj historię naszej fundacji, sprawdź nadchodzące koncerty i dołącz do naszej muzycznej społeczności.",
     };
   }
 
-  // 3. Budujemy kompletny obiekt metadanych na podstawie danych z Sanity.
   return {
     title: seoData.metaTitle,
     description: seoData.metaDescription,
-
-    // Ustawienia dla robotów wyszukiwarek
     robots: {
       index: !seoData.noIndex,
       follow: !seoData.noFollow,
     },
-
-    // Ustawienie kanonicznego URL-a, jeśli został zdefiniowany
     alternates: {
       canonical: seoData.canonicalUrl || "/",
     },
-
-    // Ustawienia dla udostępniania w social mediach (Open Graph)
     openGraph: {
       title: seoData.ogTitle || seoData.metaTitle,
       description: seoData.ogDescription || seoData.metaDescription,
-      // Jeśli obrazek OG istnieje, budujemy jego pełny URL
-      images: seoData.ogImage
+      images: seoData.ogImage?.asset
         ? [
             {
               url: urlFor(seoData.ogImage).width(1200).height(630).url(),
               width: 1200,
               height: 630,
-              alt: seoData.metaTitle,
+              // ZMIANA: Używamy dedykowanego pola 'alt' z Sanity, z fallbackiem do metaTitle.
+              alt: seoData.ogImage.alt || seoData.metaTitle,
             },
           ]
         : [],
@@ -62,8 +49,6 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-// Komponent szkieletu (skeleton) do wyświetlania podczas ładowania danych.
-// Pozostaje bez zmian.
 const SectionSkeleton = () => (
   <div
     className="container mx-auto my-16 h-96 animate-pulse rounded-2xl bg-white/5"
@@ -71,12 +56,13 @@ const SectionSkeleton = () => (
   />
 );
 
-// Komponent strony jest teraz kompletny. Next.js automatycznie połączy
-// wygenerowane metadane z tym komponentem.
 export default function HomePage() {
   return (
     <>
-      <HeroSection />
+      {/* HeroSection również powinna być w Suspense, aby nie blokować renderowania reszty strony */}
+      <Suspense fallback={<SectionSkeleton />}>
+        <HeroSection />
+      </Suspense>
 
       <main>
         <Suspense fallback={<SectionSkeleton />}>

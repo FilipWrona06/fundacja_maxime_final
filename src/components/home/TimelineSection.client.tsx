@@ -2,6 +2,7 @@
 
 import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
 import Image from "next/image";
+
 import {
   premiumEase,
   staggerConfig,
@@ -11,6 +12,7 @@ import {
 import type { HomePageData, TimelineEvent } from "@/lib/types";
 import { urlFor } from "@/sanity/lib/image";
 
+// Warianty animacji pozostają bez zmian.
 const fadeInUpVariant: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
@@ -70,26 +72,26 @@ const lineDrawVariant: Variants = {
   },
 };
 
+// --- KLUCZOWA ZMIANA W TYPACH ---
+// Gwarantujemy TypeScriptowi, że dane zawsze będą dostępne.
 export const TimelineSectionClient = ({
   timelineData,
   children,
 }: {
-  timelineData: HomePageData["timelineSection"];
+  timelineData: NonNullable<HomePageData["timelineSection"]>;
   children: React.ReactNode;
 }) => {
   return (
     <LazyMotion features={domAnimation}>
       <section
-        id="historia-section"
+        id="timeline-section"
         className="relative overflow-hidden py-16 sm:py-20 md:py-24 lg:py-32 xl:py-40"
         aria-labelledby="timeline-heading"
       >
-        {/* Decorative background */}
         <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-arylideYellow/5 blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-arylideYellow/5 blur-3xl" />
 
         <div className="container relative z-10 mx-auto px-6 lg:px-8">
-          {/* Header */}
           <m.div
             initial="hidden"
             whileInView="visible"
@@ -100,9 +102,7 @@ export const TimelineSectionClient = ({
             <m.div variants={headingVariant}>{children}</m.div>
           </m.div>
 
-          {/* Timeline Container */}
           <div className="relative mx-auto max-w-5xl">
-            {/* Vertical line */}
             <m.div
               initial="hidden"
               whileInView="visible"
@@ -115,17 +115,15 @@ export const TimelineSectionClient = ({
               }}
             />
 
-            {/* Events */}
             <div className="space-y-10 sm:space-y-12 md:space-y-16 lg:space-y-20">
-              {timelineData.timelineEvents.map(
-                (item: TimelineEvent, index: number) => (
-                  <TimelineEventComponent
-                    key={item.year}
-                    item={item}
-                    isLast={index === timelineData.timelineEvents.length - 1}
-                  />
-                ),
-              )}
+              {/* Ten mapping jest teraz w 100% bezpieczny */}
+              {timelineData.timelineEvents.map((item, index) => (
+                <TimelineEventComponent
+                  key={item.year}
+                  item={item}
+                  isLast={index === timelineData.timelineEvents.length - 1}
+                />
+              ))}
             </div>
           </div>
         </div>
@@ -149,7 +147,6 @@ const TimelineEventComponent = ({
       variants={staggerContainerVariant}
       className="relative grid grid-cols-1 gap-6 md:grid-cols-[auto_1fr] md:gap-10 lg:gap-12"
     >
-      {/* Year Badge (Desktop) */}
       <div className="hidden items-start pt-1 md:flex">
         <m.div
           variants={yearBadgeVariant}
@@ -160,23 +157,22 @@ const TimelineEventComponent = ({
           className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-arylideYellow bg-raisinBlack shadow-lg transition-shadow duration-300 hover:shadow-arylideYellow/30 lg:h-20 lg:w-20"
         >
           <span className="relative z-10 font-youngest text-2xl text-arylideYellow lg:text-3xl">
-            {item.year}
+            {/* ZMIANA: Formatujemy liczbę na skrócony rok, np. 2022 -> '22 */}
+            {`'${item.year.toString().slice(-2)}`}
           </span>
         </m.div>
       </div>
 
-      {/* Content */}
       <div className="group/content relative">
-        {/* Mobile Year */}
         <m.time
           variants={fadeInUpVariant}
-          dateTime={item.fullYear}
+          // ZMIANA: Używamy pełnego roku z tego samego pola
+          dateTime={item.year.toString()}
           className="mb-2 inline-block font-youngest text-3xl text-arylideYellow sm:mb-4 sm:text-4xl md:hidden"
         >
-          {item.fullYear}
+          {item.year.toString()}
         </m.time>
 
-        {/* Title */}
         <m.h3
           variants={fadeInUpVariant}
           className="mb-2 text-[1.25rem] font-semibold transition-colors duration-300 group-hover/content:text-arylideYellow sm:mb-4 sm:text-3xl lg:text-4xl"
@@ -184,15 +180,14 @@ const TimelineEventComponent = ({
           {item.title}
         </m.h3>
 
-        {/* Description */}
         <m.p
           variants={fadeInUpVariant}
           className="mb-2 text-[0.9rem] leading-relaxed text-white/90 sm:mb-6 sm:text-lg md:leading-relaxed lg:text-xl"
         >
-          {item.text}
+          {/* ZMIANA: `text` na `description` */}
+          {item.description}
         </m.p>
 
-        {/* Image */}
         <m.div
           variants={fadeInUpVariant}
           whileHover={{
@@ -201,7 +196,6 @@ const TimelineEventComponent = ({
           }}
           className="group/image relative overflow-hidden rounded-xl shadow-xl sm:rounded-2xl lg:rounded-3xl"
         >
-          {/* Image */}
           {item.image && (
             <div className="relative">
               <Image
@@ -210,7 +204,8 @@ const TimelineEventComponent = ({
                   .height(563)
                   .quality(90)
                   .url()}
-                alt={item.alt}
+                // ZMIANA: `alt` na `altText`
+                alt={item.altText}
                 width={1000}
                 height={563}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1000px"
@@ -223,17 +218,12 @@ const TimelineEventComponent = ({
                   .blur(10)
                   .url()}
               />
-
-              {/* Gradient overlay */}
               <div className="absolute inset-0 bg-linear-to-t from-raisinBlack/40 to-transparent" />
-
-              {/* Hover overlay */}
               <div className="absolute inset-0 bg-arylideYellow/0 transition-colors duration-300 group-hover/image:bg-arylideYellow/10" />
             </div>
           )}
         </m.div>
 
-        {/* Connection line to badge (desktop) */}
         {!isLast && (
           <div className="absolute -bottom-8 left-0 hidden h-16 w-px bg-linear-to-b from-arylideYellow/20 to-transparent md:-left-10 md:block lg:-left-12" />
         )}

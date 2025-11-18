@@ -5,13 +5,10 @@ import { client } from "../client";
 
 /**
  * Zbiór funkcji do pobierania danych wyłącznie dla strony głównej.
- * Każda funkcja jest opakowana w React.cache, aby zdeduplikować zapytania
- * w trakcie jednego cyklu renderowania.
  */
 
 /**
- * Pobiera tylko i wyłącznie dane SEO dla strony głównej.
- * Zoptymalizowane do użycia w `generateMetadata`.
+ * Pobiera dane SEO dla strony głównej.
  */
 export const getHomePageSeoData = cache(
   async (): Promise<HomePageData["seo"] | null> => {
@@ -33,6 +30,7 @@ export const getHeroSectionData = cache(
       heroSection: HomePageData["heroSection"];
     }>(
       groq`*[_type == "homePage"][0]{
+        // USUNIĘTO FILTR: Sekcja będzie pobierana zawsze.
         heroSection {
           ...,
           "videoWebmUrl": videoWebm.asset->url,
@@ -48,18 +46,18 @@ export const getHeroSectionData = cache(
 );
 
 /**
- * Pobiera dane dla sekcji "O Fundacji", włączając w to zagnieżdżone statystyki.
+ * Pobiera dane dla sekcji "O Fundacji".
  */
 export const getAboutSectionData = cache(
   async (): Promise<HomePageData["aboutSection"] | null> => {
     const data = await client.fetch<{
       aboutSection: HomePageData["aboutSection"];
     }>(
-      // Zaktualizowane zapytanie: pobieramy cały obiekt aboutSection,
-      // a w nim rozwijamy tablicę 'stats'.
       groq`*[_type == "homePage"][0]{
+        // USUNIĘTO FILTR: Sekcja będzie pobierana zawsze.
         aboutSection {
           ...,
+          "imageUrl": image.asset->url,
           stats[] {
             value,
             label
@@ -81,7 +79,16 @@ export const getImpactSectionData = cache(
     const data = await client.fetch<{
       impactSection: HomePageData["impactSection"];
     }>(
-      groq`*[_type == "homePage"][0]{ impactSection }`,
+      groq`*[_type == "homePage"][0]{
+        // USUNIĘTO FILTR: Sekcja będzie pobierana zawsze.
+        impactSection {
+          ...,
+          impactCards[] {
+            ...,
+            "imageUrl": image.asset->url
+          }
+        }
+      }`,
       {},
       { next: { tags: ["homePage"] } },
     );
@@ -97,7 +104,16 @@ export const getTimelineSectionData = cache(
     const data = await client.fetch<{
       timelineSection: HomePageData["timelineSection"];
     }>(
-      groq`*[_type == "homePage"][0]{ timelineSection }`,
+      groq`*[_type == "homePage"][0]{
+        // USUNIĘTO FILTR: Sekcja będzie pobierana zawsze.
+        timelineSection {
+          ...,
+          timelineEvents[] {
+            ...,
+            "imageUrl": image.asset->url
+          }
+        }
+      }`,
       {},
       { next: { tags: ["homePage"] } },
     );
@@ -111,6 +127,7 @@ export const getTimelineSectionData = cache(
 export const getCTASectionData = cache(
   async (): Promise<HomePageData["ctaSection"] | null> => {
     const data = await client.fetch<{ ctaSection: HomePageData["ctaSection"] }>(
+      // USUNIĘTO FILTR: Sekcja będzie pobierana zawsze.
       groq`*[_type == "homePage"][0]{ ctaSection }`,
       {},
       { next: { tags: ["homePage"] } },

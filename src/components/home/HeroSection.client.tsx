@@ -11,9 +11,11 @@ import {
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FiArrowDown } from "react-icons/fi";
+
 import { premiumEase, smoothEase, ultraSmoothSpring } from "@/lib/animations";
 import type { HomePageData } from "@/lib/types";
 
+// Komponent przycisku pozostaje bez zmian.
 const HeroButton = ({
   href,
   variant = "primary",
@@ -46,10 +48,13 @@ const HeroButton = ({
   );
 };
 
+// --- KLUCZOWA ZMIANA W TYPACH ---
+// Mówimy TypeScriptowi, że `heroData` nigdy nie będzie null/undefined, ponieważ komponent
+// nadrzędny (serwerowy) już to sprawdził przed renderowaniem tego komponentu.
 export const HeroSectionClient = ({
   heroData,
 }: {
-  heroData: HomePageData["heroSection"];
+  heroData: NonNullable<HomePageData["heroSection"]>;
 }) => {
   const heroRef = useRef<HTMLElement>(null);
   const [shouldHideArrow, setShouldHideArrow] = useState(false);
@@ -80,32 +85,29 @@ export const HeroSectionClient = ({
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-
-      // Wykryj scroll w dół o więcej niż 50px
       if (currentScrollY > lastScrollY + 50) {
         scrollCount++;
         lastScrollY = currentScrollY;
-
-        // Po 3 scrollach ukryj strzałkę
         if (scrollCount >= 3) {
           setShouldHideArrow(true);
           window.removeEventListener("scroll", handleScroll);
         }
       }
     };
-
     window.addEventListener("scroll", handleScroll, { passive: true });
-
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const scrollToContent = useCallback(() => {
-    document.querySelector("#stats-section")?.scrollIntoView({
+    // Poprawka: "#stats-section" już nie istnieje, użyjmy następnej sekcji, np. "#about-section"
+    // Pamiętaj, aby dodać id="about-section" do tagu <section> w komponencie AboutSection.
+    document.querySelector("#about-section")?.scrollIntoView({
       behavior: "smooth",
       block: "start",
     });
   }, []);
 
+  // Dzięki zmianie typów powyżej, wszystkie poniższe błędy TypeScriptu zniknęły.
   return (
     <LazyMotion features={domAnimation}>
       <section
@@ -113,7 +115,6 @@ export const HeroSectionClient = ({
         className="relative flex min-h-screen w-full items-center justify-center overflow-hidden py-20"
         aria-labelledby="hero-heading"
       >
-        {/* Video background */}
         <m.video
           style={{
             scale: videoScale,
@@ -132,10 +133,8 @@ export const HeroSectionClient = ({
           <source src={heroData.videoMp4Url} type="video/mp4" />
         </m.video>
 
-        {/* Gradient overlay */}
         <div className="absolute inset-0 -z-10 bg-linear-to-b from-raisinBlack/40 via-raisinBlack/70 to-raisinBlack backdrop-blur-[1px]" />
 
-        {/* Content */}
         <m.div
           style={{
             opacity: contentOpacity,
@@ -202,7 +201,6 @@ export const HeroSectionClient = ({
           </m.div>
         </m.div>
 
-        {/* Scroll indicator */}
         {!shouldHideArrow && (
           <m.button
             onClick={scrollToContent}

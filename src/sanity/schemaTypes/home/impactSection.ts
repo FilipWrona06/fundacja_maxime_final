@@ -1,32 +1,45 @@
+// Plik: impactSection.ts (wersja ostateczna)
+
 import { defineArrayMember, defineField, defineType } from "sanity";
 
 export default defineType({
   name: "impactSection",
   title: 'Sekcja "Nasz Wpływ"',
   type: "object",
+  fieldsets: [{ name: "header", title: "Nagłówek sekcji" }],
   fields: [
+    // --- Nagłówek sekcji (bez zmian) ---
     defineField({
-      name: "heading",
-      title: "Nagłówek",
+      name: "headingPrefix",
+      title: "Nagłówek - część standardowa",
       type: "string",
-      description:
-        'Część nagłówka, która będzie wyróżniona kolorem, np. "Wpływ".',
-      validation: (Rule) => Rule.required(),
+      description: 'Standardowy tekst przed wyróżnieniem, np. "Nasz".',
+      fieldset: "header",
+    }),
+    defineField({
+      name: "headingHighlighted",
+      title: "Nagłówek - część wyróżniona",
+      type: "string",
+      description: 'Część nagłówka, która zostanie wyróżniona kolorem, np. "Wpływ".',
+      validation: (Rule) => Rule.required().error("Wyróżniona część nagłówka jest wymagana."),
+      fieldset: "header",
     }),
     defineField({
       name: "subheading",
       title: "Podtytuł",
       type: "string",
-      description: "Tekst wyświetlany pod głównym nagłówkiem.",
-      validation: (Rule) => Rule.required(),
+      description: "Krótki tekst wyjaśniający, wyświetlany pod głównym nagłówkiem.",
+      validation: (Rule) => Rule.required().error("Podtytuł jest wymagany."),
+      fieldset: "header",
     }),
+
+    // --- Lista Kart Wpływu (bez zmian) ---
     defineField({
       name: "impactCards",
       title: "Karty Wpływu",
       type: "array",
-      description:
-        "Lista kart prezentujących osiągnięcia lub obszary działalności.",
-      // Używamy defineArrayMember dla lepszej organizacji
+      description: "Lista kart prezentujących kluczowe obszary działalności lub osiągnięcia.",
+      validation: (Rule) => Rule.required().min(1).error("Należy dodać przynajmniej jedną Kartę Wpływu."),
       of: [
         defineArrayMember({
           name: "impactCard",
@@ -37,48 +50,46 @@ export default defineType({
               name: "title",
               title: "Tytuł karty",
               type: "string",
-              validation: (Rule) => Rule.required(),
+              validation: (Rule) => Rule.required().error("Tytuł karty jest wymagany."),
             }),
             defineField({
-              name: "desc",
+              name: "description",
               title: "Opis karty",
-              type: "string",
-              validation: (Rule) => Rule.required(),
+              type: "text",
+              rows: 3,
+              validation: (Rule) => Rule.required().error("Opis karty jest wymagany."),
             }),
             defineField({
               name: "image",
               title: "Zdjęcie",
               type: "image",
               options: { hotspot: true },
-              validation: (Rule) => Rule.required(),
+              validation: (Rule) => Rule.required().error("Zdjęcie na karcie jest wymagane."),
             }),
             defineField({
-              name: "alt",
+              name: "altText",
               title: "Tekst alternatywny",
               type: "string",
-              description:
-                "Ważne dla SEO i dostępności. Opisz, co widać na zdjęciu.",
-              validation: (Rule) => Rule.required(),
+              description: "Ważne dla SEO i dostępności. Opisz zwięźle, co przedstawia zdjęcie.",
+              validation: (Rule) => Rule.required().error("Tekst alternatywny jest wymagany."),
             }),
           ],
-          // Ulepszony podgląd dla każdej karty w liście
           preview: {
             select: {
               title: "title",
+              subtitle: "description",
               media: "image",
             },
-            prepare({ title, media }) {
+            prepare({ title, subtitle, media }) {
               return {
                 title: title || "Brak tytułu",
-                subtitle: "Karta Wpływu",
+                subtitle: subtitle || "Brak opisu",
                 media: media,
               };
             },
           },
         }),
       ],
-      validation: (Rule) =>
-        Rule.required().min(1).error("Należy dodać co najmniej jedną kartę."),
     }),
   ],
 });

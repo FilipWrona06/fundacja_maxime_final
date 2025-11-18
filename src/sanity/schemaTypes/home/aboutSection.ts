@@ -1,4 +1,4 @@
-// Plik: aboutSection.ts (nowa, połączona wersja)
+// Plik: aboutSection.ts (wersja ostateczna)
 
 import { defineArrayMember, defineField, defineType } from "sanity";
 
@@ -6,50 +6,61 @@ export default defineType({
   name: "aboutSection",
   title: "Sekcja O Fundacji",
   type: "object",
+  fieldsets: [
+    { name: "content", title: "Treść sekcji" },
+    { name: "imageGroup", title: "Główny obraz" },
+    { name: "statsGroup", title: "Statystyki liczbowe" },
+  ],
   fields: [
+    // --- GRUPA: Treść sekcji (bez zmian) ---
     defineField({
       name: "smallHeading",
-      title: "Mały nagłówek",
+      title: "Podtytuł (nad nagłówkiem)",
       type: "string",
-      description:
-        'Tekst wyświetlany nad głównym nagłówkiem, np. "O Fundacji Maxime".',
-      validation: (Rule) =>
-        Rule.required().error("Mały nagłówek jest wymagany."),
+      description: 'Krótki tekst wprowadzający, np. "O Fundacji Maxime".',
+      validation: (Rule) => Rule.required().error("Podtytuł jest wymagany."),
+      fieldset: "content",
     }),
     defineField({
       name: "headingPart1",
-      title: "Nagłówek - część 1",
+      title: "Nagłówek - część 1 (początek)",
       type: "string",
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) => Rule.required().error("Początkowa część nagłówka jest wymagana."),
+      fieldset: "content",
     }),
     defineField({
       name: "headingPart2",
-      title: "Nagłówek - część 2 (żółty)",
+      title: "Nagłówek - część 2 (wyróżniona)",
       type: "string",
-      description: "Ta część nagłówka będzie wyróżniona kolorem.",
-      validation: (Rule) => Rule.required(),
+      description: "Ta część nagłówka zostanie automatycznie wyróżniona kolorem (np. żółtym).",
+      validation: (Rule) => Rule.required().error("Wyróżniona część nagłówka jest wymagana."),
+      fieldset: "content",
     }),
     defineField({
       name: "headingPart3",
-      title: "Nagłówek - część 3",
+      title: "Nagłówek - część 3 (koniec)",
       type: "string",
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) => Rule.required().error("Końcowa część nagłówka jest wymagana."),
+      fieldset: "content",
     }),
     defineField({
       name: "paragraph1",
-      title: "Akapit 1",
+      title: "Akapit 1 (główny)",
       type: "text",
       rows: 4,
-      validation: (Rule) =>
-        Rule.required().error("Pierwszy akapit jest wymagany."),
+      validation: (Rule) => Rule.required().error("Pierwszy, główny akapit jest wymagany."),
+      fieldset: "content",
     }),
     defineField({
       name: "paragraph2",
-      title: "Akapit 2",
+      title: "Akapit 2 (opcjonalny)",
       type: "text",
       rows: 4,
-      description: "Drugi akapit jest opcjonalny.",
+      description: "Dodatkowy akapit, jeśli potrzebne jest więcej miejsca na opis.",
+      fieldset: "content",
     }),
+
+    // --- GRUPA: Główny obraz (bez zmian) ---
     defineField({
       name: "image",
       title: "Zdjęcie",
@@ -57,28 +68,30 @@ export default defineType({
       options: {
         hotspot: true,
       },
-      validation: (Rule) => Rule.required().error("Zdjęcie jest wymagane."),
+      validation: (Rule) => Rule.required().error("Zdjęcie w tej sekcji jest wymagane."),
+      fieldset: "imageGroup",
     }),
     defineField({
       name: "imageAlt",
-      title: "Tekst alternatywny zdjęcia",
+      title: "Tekst alternatywny (Alt Text)",
       type: "string",
-      description:
-        "Ważne dla SEO i dostępności. Opisz zwięźle, co znajduje się na zdjęciu.",
-      validation: (Rule) =>
-        Rule.required().error("Tekst alternatywny jest wymagany dla zdjęcia."),
+      description: "Kluczowe dla SEO i dostępności. Opisz zwięźle, co przedstawia zdjęcie (np. 'Założyciel fundacji podczas przemówienia').",
+      validation: (Rule) => Rule.required().error("Tekst alternatywny jest wymagany."),
+      fieldset: "imageGroup",
     }),
-    // --- POCZĄTEK: DODANA SEKCJA STATYSTYK ---
+
+    // --- GRUPA: Statystyki liczbowe (bez zmian) ---
     defineField({
-      name: "stats", // Nowa nazwa pola
-      title: "Statystyki (wyświetlane na zdjęciu)",
+      name: "stats",
+      title: "Statystyki",
       type: "array",
-      description: "Lista kluczowych liczb opisujących działalność fundacji.",
+      description: "Dodaj od 1 do 3 kluczowych statystyk, które pojawią się na zdjęciu.",
       validation: (Rule) =>
         Rule.required()
           .min(1)
-          .max(3) // Opcjonalnie: można dodać limit, jeśli w designie są zawsze 3
+          .max(3)
           .error("Należy dodać od 1 do 3 statystyk."),
+      fieldset: "statsGroup",
       of: [
         defineArrayMember({
           name: "stat",
@@ -87,17 +100,25 @@ export default defineType({
           fields: [
             defineField({
               name: "value",
-              title: "Wartość (np. 50+)",
+              title: "Wartość",
               type: "string",
-              validation: (Rule) => Rule.required(),
+              description: "Wpisz liczbę lub tekst, np. '50+', '1000', 'Nr 1'.",
+              validation: (Rule) => Rule.required().error("Wartość statystyki jest wymagana."),
             }),
             defineField({
               name: "label",
-              title: "Etykieta (np. Koncertów, Widzów, Nagród)",
+              title: "Etykieta",
               type: "string",
-              description:
-                "Musi pasować do jednej z ikon w kodzie (Koncertów, Widzów, Nagród).",
-              validation: (Rule) => Rule.required(),
+              description: "Wybierz etykietę, do której w kodzie przypisana jest odpowiednia ikona.",
+              options: {
+                list: [
+                  { title: "Zorganizowanych koncertów", value: "Koncertów" },
+                  { title: "Zadowolonych widzów", value: "Widzów" },
+                  { title: "Zdobytych nagród", value: "Nagród" },
+                ],
+                layout: "radio",
+              },
+              validation: (Rule) => Rule.required().error("Musisz wybrać etykietę dla statystyki."),
             }),
           ],
           preview: {
@@ -107,14 +128,12 @@ export default defineType({
             },
             prepare({ title, subtitle }) {
               return {
-                title: title || "Brak etykiety",
-                subtitle: subtitle || "Brak wartości",
+                title: subtitle ? `${subtitle} ${title}` : "Nowa statystyka",
               };
             },
           },
         }),
       ],
     }),
-    // --- KONIEC: DODANA SEKCJA STATYSTYK ---
   ],
 });

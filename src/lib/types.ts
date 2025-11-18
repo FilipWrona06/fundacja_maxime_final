@@ -4,6 +4,8 @@
  * zwłaszcza tych pochodzących z CMS Sanity.
  */
 
+// --- PODSTAWOWE TYPY SANITY ---
+
 export interface SanityImage {
   _type: "image";
   asset: {
@@ -17,72 +19,62 @@ export interface SanitySlug {
   current: string;
 }
 
-/**
- * Definiuje strukturę danych SEO, która może być używana
- * na każdej podstronie (strona główna, artykuły, galerie itp.).
- * Odpowiada schematowi 'seo.ts' w Sanity.
- */
+// --- GŁÓWNE REUŻYWALNE TYPY ---
+
 export interface SeoData {
   metaTitle: string;
   metaDescription: string;
   ogTitle?: string;
   ogDescription?: string;
-  ogImage?: SanityImage;
+  ogImage?: SanityImage & {
+    alt: string;
+  };
   noIndex?: boolean;
   noFollow?: boolean;
   canonicalUrl?: string;
 }
 
-// --- WYODRĘBNIONE, REUŻYWALNE TYPY DLA STRONY GŁÓWNEJ ---
+// --- TYPY DLA SEKCJI STRONY GŁÓWNEJ ---
 
-/**
- * Reprezentuje pojedynczy element na osi czasu na stronie głównej.
- */
 export interface TimelineEvent {
-  year: string;
-  fullYear: string;
+  year: number;
   title: string;
-  text: string;
+  description: string;
   image: SanityImage;
-  alt: string;
+  altText: string;
 }
 
-/**
- * Reprezentuje pojedynczą kartę w sekcji "Nasz Wpływ".
- */
 export interface ImpactCard {
   title: string;
-  desc: string;
+  description: string;
   image: SanityImage;
-  alt: string;
+  altText: string;
 }
 
-/**
- * Reprezentuje pojedynczy element w sekcji statystyk.
- */
 export interface Stat {
   value: string;
   label: string;
 }
 
 /**
- * Definiuje pełną strukturę danych dla strony głównej,
- * pobieraną z dokumentu 'homePage' w Sanity.
+ * ZAKTUALIZOWANE: Definiuje pełną strukturę danych dla strony głównej.
  */
 export interface HomePageData {
   seo: SeoData;
 
-  heroSection: {
+  // ZMIANA: Usunięto isEnabled
+  heroSection?: {
     badgeText: string;
     headingPart1: string;
     headingPart2: string;
     description: string;
     videoWebmUrl: string;
-    videoMp4Url: string;
+    videoMp4Url:string;
     posterUrl: string;
   };
-  // ZMIANA: Pole `aboutSection` zawiera teraz statystyki.
-  aboutSection: {
+
+  // ZMIANA: Usunięto isEnabled
+  aboutSection?: {
     smallHeading: string;
     headingPart1: string;
     headingPart2: string;
@@ -91,26 +83,39 @@ export interface HomePageData {
     paragraph2: string;
     image: SanityImage;
     imageAlt: string;
-    stats: Stat[]; // <-- DODANE POLE
+    stats: Stat[];
   };
-  // USUNIĘTE: Pole `statsSection` nie jest już potrzebne na tym poziomie.
-  impactSection: {
-    heading: string;
+
+  // ZMIANA: Usunięto isEnabled
+  impactSection?: {
+    headingPrefix?: string;
+    headingHighlighted: string;
     subheading: string;
     impactCards: ImpactCard[];
   };
-  timelineSection: {
-    heading: string;
+
+  // ZMIANA: Usunięto isEnabled
+  timelineSection?: {
+    headingPrefix?: string;
+    headingHighlighted: string;
     subheading: string;
     timelineEvents: TimelineEvent[];
   };
-  ctaSection: {
+
+  // ZMIANA: Usunięto isEnabled
+  ctaSection?: {
     heading: string;
-    text: string;
+    text?: string;
+    button: {
+      label: string;
+      link: string;
+    };
   };
 }
 
-// --- TYPY DANYCH STATYCZNYCH STRONY (bez zmian) ---
+
+// --- POZOSTAŁE TYPY (bez zmian) ---
+
 export interface NavLink {
   readonly name: string;
   readonly href: string;
@@ -158,7 +163,6 @@ export interface Gallery {
 
 export interface GaleriaPageData {
   seo: SeoData;
-
   heroSection: {
     badge: string;
     headingLine1: string;
