@@ -57,23 +57,30 @@ export interface Stat {
 }
 
 /**
- * ZAKTUALIZOWANE: Definiuje pełną strukturę danych dla strony głównej.
+ * Definiuje pełną strukturę danych dla strony głównej.
  */
 export interface HomePageData {
   seo: SeoData;
 
-  // ZMIANA: Usunięto isEnabled
+  // ZAKTUALIZOWANE: Dodano typy dla przycisków w sekcji Hero.
   heroSection?: {
     badgeText: string;
     headingPart1: string;
     headingPart2: string;
     description: string;
     videoWebmUrl: string;
-    videoMp4Url:string;
+    videoMp4Url: string;
     posterUrl: string;
+    primaryButton: {
+      label: string;
+      link: string;
+    };
+    secondaryButton?: {
+      label: string;
+      link: string;
+    };
   };
 
-  // ZMIANA: Usunięto isEnabled
   aboutSection?: {
     smallHeading: string;
     headingPart1: string;
@@ -86,7 +93,6 @@ export interface HomePageData {
     stats: Stat[];
   };
 
-  // ZMIANA: Usunięto isEnabled
   impactSection?: {
     headingPrefix?: string;
     headingHighlighted: string;
@@ -94,7 +100,6 @@ export interface HomePageData {
     impactCards: ImpactCard[];
   };
 
-  // ZMIANA: Usunięto isEnabled
   timelineSection?: {
     headingPrefix?: string;
     headingHighlighted: string;
@@ -102,17 +107,19 @@ export interface HomePageData {
     timelineEvents: TimelineEvent[];
   };
 
-  // ZMIANA: Usunięto isEnabled
   ctaSection?: {
     heading: string;
     text?: string;
-    button: {
+    primaryButton: {
+      label: string;
+      link: string;
+    };
+    secondaryButton?: {
       label: string;
       link: string;
     };
   };
 }
-
 
 // --- POZOSTAŁE TYPY (bez zmian) ---
 

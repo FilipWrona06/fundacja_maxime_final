@@ -7,9 +7,11 @@ export default defineType({
   fieldsets: [
     { name: "content", title: "Treść tekstowa" },
     { name: "media", title: "Media w tle" },
+    // NOWOŚĆ: Dodano osobny fieldset dla przycisków, aby utrzymać porządek w studio.
+    { name: "actions", title: "Przyciski Akcji" },
   ],
   fields: [
-    // --- Reszta pól pozostaje bez zmian ---
+    // --- GRUPA: Treść tekstowa (pola bez zmian) ---
     defineField({
       name: "badgeText",
       title: "Tekst na znaczku (Badge)",
@@ -42,6 +44,8 @@ export default defineType({
       validation: (Rule) => Rule.required().error("Opis pod nagłówkiem jest wymagany."),
       fieldset: "content",
     }),
+
+    // --- GRUPA: Media w tle (pola bez zmian) ---
     defineField({
       name: "videoWebm",
       title: "Wideo w tle (.webm)",
@@ -49,8 +53,8 @@ export default defineType({
       options: {
         accept: "video/webm",
       },
-      description: "Nowoczesny i wydajny format wideo dla przeglądarek takich jak Chrome i Firefox. Zawsze dodawaj oba formaty wideo.",
-      validation: (Rule) => Rule.required().error("Plik wideo w formacie .webm jest wymagany."),
+      description: "Nowoczesny i wydajny format wideo. Zawsze dodawaj oba formaty.",
+      validation: (Rule) => Rule.required().error("Plik wideo .webm jest wymagany."),
       fieldset: "media",
     }),
     defineField({
@@ -60,20 +64,69 @@ export default defineType({
       options: {
         accept: "video/mp4",
       },
-      description: "Format wideo zapewniający kompatybilność ze starszymi przeglądarkami, np. Safari.",
-      validation: (Rule) => Rule.required().error("Plik wideo w formacie .mp4 jest wymagany jako alternatywa."),
+      description: "Format wideo zapewniający kompatybilność ze starszymi przeglądarkami.",
+      validation: (Rule) => Rule.required().error("Plik wideo .mp4 jest wymagany."),
       fieldset: "media",
     }),
     defineField({
       name: "poster",
       title: "Obrazek zastępczy (Poster)",
       type: "image",
-      description: "Obrazek wyświetlany, zanim wideo się załaduje lub gdy jego odtworzenie jest niemożliwe. Kluczowy dla user experience i szybkości strony.",
+      description: "Obrazek wyświetlany, zanim wideo się załaduje.",
       options: {
         hotspot: true,
       },
-      validation: (Rule) => Rule.required().error("Obrazek zastępczy dla wideo jest wymagany."),
+      validation: (Rule) => Rule.required().error("Obrazek zastępczy jest wymagany."),
       fieldset: "media",
+    }),
+
+    // --- GRUPA: Przyciski Akcji (nowe pola) ---
+    defineField({
+      name: "primaryButton",
+      title: "Przycisk główny (np. 'Nadchodzące koncerty')",
+      type: "object",
+      fieldset: "actions",
+      description: "Główny przycisk wezwania do działania w sekcji Hero.",
+      validation: (Rule) => Rule.required().error("Przycisk główny jest wymagany."),
+      fields: [
+        defineField({
+          name: "label",
+          title: "Etykieta przycisku",
+          type: "string",
+          validation: (Rule) => Rule.required().error("Etykieta przycisku jest wymagana."),
+        }),
+        defineField({
+          name: "link",
+          title: "Link docelowy",
+          type: "string",
+          description: "Link wewnętrzny (np. '/wydarzenia') lub zewnętrzny (np. 'https://google.com').",
+          validation: (Rule) => Rule.required().error("Link docelowy jest wymagany."),
+        }),
+      ],
+    }),
+
+    defineField({
+      name: "secondaryButton",
+      title: "Przycisk dodatkowy (np. 'Skontaktuj się z nami')",
+      type: "object",
+      fieldset: "actions",
+      description: "Opcjonalny, drugi przycisk o niższym priorytecie.",
+      // Brak walidacji .required() na poziomie obiektu czyni go opcjonalnym.
+      fields: [
+        defineField({
+          name: "label",
+          title: "Etykieta przycisku",
+          type: "string",
+          validation: (Rule) => Rule.required().error("Etykieta przycisku jest wymagana."),
+        }),
+        defineField({
+          name: "link",
+          title: "Link docelowy",
+          type: "string",
+          description: "Link wewnętrzny (np. '/kontakt').",
+          validation: (Rule) => Rule.required().error("Link docelowy jest wymagany."),
+        }),
+      ],
     }),
   ],
 });

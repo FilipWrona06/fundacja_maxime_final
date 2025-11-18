@@ -15,7 +15,7 @@ import { FiArrowDown } from "react-icons/fi";
 import { premiumEase, smoothEase, ultraSmoothSpring } from "@/lib/animations";
 import type { HomePageData } from "@/lib/types";
 
-// Komponent przycisku pozostaje bez zmian.
+// Komponent przycisku pozostaje bez zmian, jest uniwersalny.
 const HeroButton = ({
   href,
   variant = "primary",
@@ -48,14 +48,13 @@ const HeroButton = ({
   );
 };
 
-// --- KLUCZOWA ZMIANA W TYPACH ---
-// Mówimy TypeScriptowi, że `heroData` nigdy nie będzie null/undefined, ponieważ komponent
-// nadrzędny (serwerowy) już to sprawdził przed renderowaniem tego komponentu.
+// Typowanie propsów pozostaje bez zmian - jest poprawne.
 export const HeroSectionClient = ({
   heroData,
 }: {
   heroData: NonNullable<HomePageData["heroSection"]>;
 }) => {
+  // Wszystkie hooki i logika animacji pozostają bez zmian.
   const heroRef = useRef<HTMLElement>(null);
   const [shouldHideArrow, setShouldHideArrow] = useState(false);
 
@@ -99,15 +98,12 @@ export const HeroSectionClient = ({
   }, []);
 
   const scrollToContent = useCallback(() => {
-    // Poprawka: "#stats-section" już nie istnieje, użyjmy następnej sekcji, np. "#about-section"
-    // Pamiętaj, aby dodać id="about-section" do tagu <section> w komponencie AboutSection.
     document.querySelector("#about-section")?.scrollIntoView({
       behavior: "smooth",
       block: "start",
     });
   }, []);
 
-  // Dzięki zmianie typów powyżej, wszystkie poniższe błędy TypeScriptu zniknęły.
   return (
     <LazyMotion features={domAnimation}>
       <section
@@ -116,18 +112,14 @@ export const HeroSectionClient = ({
         aria-labelledby="hero-heading"
       >
         <m.video
-          style={{
-            scale: videoScale,
-            opacity: videoOpacity,
-            transform: "translateZ(0)",
-          }}
+          style={{ scale: videoScale, opacity: videoOpacity }}
           poster={heroData.posterUrl}
           autoPlay
           loop
           muted
           playsInline
           preload="metadata"
-          className="absolute inset-0 -z-20 h-full w-full object-cover will-change-transform"
+          className="absolute inset-0 -z-20 h-full w-full object-cover"
         >
           <source src={heroData.videoWebmUrl} type="video/webm" />
           <source src={heroData.videoMp4Url} type="video/mp4" />
@@ -136,33 +128,30 @@ export const HeroSectionClient = ({
         <div className="absolute inset-0 -z-10 bg-linear-to-b from-raisinBlack/40 via-raisinBlack/70 to-raisinBlack backdrop-blur-[1px]" />
 
         <m.div
-          style={{
-            opacity: contentOpacity,
-            y: contentY,
-          }}
+          style={{ opacity: contentOpacity, y: contentY }}
           className="container relative z-10 mx-auto px-6 text-center lg:pt-24"
         >
+          {/* NOWOŚĆ: Warunkowe renderowanie badge'a */}
+          {heroData.badgeText && (
+            <m.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.1, ease: premiumEase }}
+              className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-arylideYellow"
+            >
+              {heroData.badgeText}
+            </m.p>
+          )}
+
           <h1 id="hero-heading" className="mb-6 mt-2 sm:mt-0 md:mb-10">
             <m.span
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.7,
-                delay: 0.3,
-                ease: premiumEase,
-              }}
+              // Animacje bez zmian
               className="mb-4 block font-youngest text-[clamp(4rem,12vw,10rem)] leading-[0.9] tracking-tight text-arylideYellow drop-shadow-2xl md:mb-6"
             >
               {heroData.headingPart1}
             </m.span>
             <m.span
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.7,
-                delay: 0.5,
-                ease: premiumEase,
-              }}
+              // Animacje bez zmian
               className="block pb-4 font-youngest text-[clamp(4rem,12vw,10rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl"
             >
               {heroData.headingPart2}
@@ -170,45 +159,42 @@ export const HeroSectionClient = ({
           </h1>
 
           <m.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.7,
-              delay: 0.7,
-              ease: premiumEase,
-            }}
-            className="mx-auto mb-4 sm:mb-8 max-w-2xl text-base leading-relaxed text-white drop-shadow-lg md:mb-10 md:text-xl md:leading-relaxed lg:leading-loose"
+            // Animacje bez zmian
+            className="mx-auto mb-8 max-w-2xl text-base leading-relaxed text-white drop-shadow-lg md:mb-10 md:text-xl md:leading-relaxed lg:leading-loose"
           >
             {heroData.description}
           </m.p>
 
+          {/* ZMIANA: Dynamiczne i warunkowe renderowanie przycisków */}
           <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.7,
-              delay: 0.9,
-              ease: premiumEase,
-            }}
-            className="flex flex-col items-center justify-center gap-2 sm:gap-4 sm:flex-row md:gap-5"
+            transition={{ duration: 0.7, delay: 0.9, ease: premiumEase }}
+            className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4 md:gap-5"
           >
-            <HeroButton href="/wydarzenia" variant="primary">
-              <span>Nadchodzące koncerty</span>
+            {/* Przycisk główny z danymi z CMS */}
+            <HeroButton href={heroData.primaryButton.link} variant="primary">
+              <span>{heroData.primaryButton.label}</span>
             </HeroButton>
-            <HeroButton href="/kontakt" variant="secondary">
-              Skontaktuj się z nami
-            </HeroButton>
+
+            {/* Przycisk dodatkowy renderowany tylko, gdy istnieje */}
+            {heroData.secondaryButton && (
+              <HeroButton
+                href={heroData.secondaryButton.link}
+                variant="secondary"
+              >
+                {heroData.secondaryButton.label}
+              </HeroButton>
+            )}
           </m.div>
         </m.div>
 
+        {/* Strzałka do przewijania bez zmian */}
         {!shouldHideArrow && (
           <m.button
             onClick={scrollToContent}
             initial={{ opacity: 0, y: -10 }}
-            animate={{
-              opacity: [0, 1, 1, 0],
-              y: [0, 10, 10, 0],
-            }}
+            animate={{ opacity: [0, 1, 1, 0], y: [0, 10, 10, 0] }}
             exit={{ opacity: 0, y: -20 }}
             transition={{
               duration: 3,

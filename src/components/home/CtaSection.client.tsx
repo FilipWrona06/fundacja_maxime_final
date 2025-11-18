@@ -10,8 +10,9 @@ import {
   viewportConfig,
 } from "@/lib/animations";
 
-const MotionLink = m.create(Link);
+const MotionLink = m(Link);
 
+// Warianty animacji pozostają bez zmian
 const fadeInUpVariant: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
@@ -35,14 +36,21 @@ const staggerContainerVariant: Variants = {
   },
 };
 
+// NOWOŚĆ: Definicja typów dla przycisków, które komponent będzie otrzymywał
+interface ButtonProps {
+  label: string;
+  link: string;
+}
+
+// ZMIANA: Komponent przyjmuje teraz obiekty 'primaryButton' i opcjonalny 'secondaryButton'
 export const CTASectionClient = ({
   children,
-  patroniteUrl,
-  galleryUrl,
+  primaryButton,
+  secondaryButton,
 }: {
   children: React.ReactNode;
-  patroniteUrl: string;
-  galleryUrl: string;
+  primaryButton: ButtonProps;
+  secondaryButton?: ButtonProps; // Znak '?' oznacza, że jest to props opcjonalny
 }) => {
   return (
     <LazyMotion features={domAnimation}>
@@ -50,7 +58,7 @@ export const CTASectionClient = ({
         className="relative overflow-hidden py-12 sm:py-20 md:py-24 lg:py-32 xl:py-40"
         aria-labelledby="cta-heading"
       >
-        {/* Decorative background */}
+        {/* Tło dekoracyjne bez zmian */}
         <div className="absolute left-1/4 top-25 h-96 w-96 rounded-full bg-arylideYellow/5 blur-3xl" />
         <div className="absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-arylideYellow/5 blur-3xl" />
 
@@ -62,7 +70,7 @@ export const CTASectionClient = ({
             variants={fadeInUpVariant}
             className="relative overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br from-arylideYellow/10 via-transparent to-oxfordBlue/20 p-8 text-center shadow-2xl backdrop-blur-sm sm:rounded-3xl sm:p-12 md:p-16 lg:p-20 xl:p-24"
           >
-            {/* Content */}
+            {/* Treść (nagłówek i tekst) przekazywana jako children */}
             <m.div
               className="relative"
               initial="hidden"
@@ -72,15 +80,15 @@ export const CTASectionClient = ({
             >
               <m.div variants={fadeInUpVariant}>{children}</m.div>
 
-              {/* Buttons */}
+              {/* Przyciski */}
               <m.div
                 variants={fadeInUpVariant}
-                className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4 md:gap-6"
+                className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4 md:gap-6"
               >
-                {/* Primary Button */}
+                {/* Przycisk główny (dane dynamiczne) */}
                 <MotionLink
-                  href={patroniteUrl}
-                  target="_blank"
+                  href={primaryButton.link}
+                  target="_blank" // Zakładamy, że główny link jest zewnętrzny
                   rel="noopener noreferrer"
                   whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.98 }}
@@ -88,22 +96,24 @@ export const CTASectionClient = ({
                   className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-arylideYellow px-6 py-3 text-sm font-bold text-raisinBlack shadow-lg transition-all duration-300 hover:shadow-arylideYellow/30 sm:w-auto sm:gap-3 sm:px-8 sm:py-4 sm:text-base md:px-10 md:py-5 md:text-lg"
                 >
                   <FiHeart className="h-4 w-4 sm:h-5 sm:w-5" />
-                  <span>Wesprzyj nas</span>
+                  <span>{primaryButton.label}</span>
                 </MotionLink>
 
-                {/* Secondary Button */}
-                <MotionLink
-                  href={galleryUrl}
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={ultraSmoothSpring}
-                  className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full border-2 border-arylideYellow/40 bg-transparent px-6 py-3 text-sm font-bold text-arylideYellow backdrop-blur-sm transition-all duration-300 hover:border-arylideYellow hover:bg-arylideYellow/10 sm:w-auto sm:gap-3 sm:px-8 sm:py-4 sm:text-base md:px-10 md:py-5 md:text-lg"
-                >
-                  <FiCamera className="h-4 w-4 sm:h-5 sm:w-5" />
-                  <span className="whitespace-nowrap">
-                    Zobacz naszą galerię
-                  </span>
-                </MotionLink>
+                {/* Przycisk dodatkowy (renderowany warunkowo i z danymi dynamicznymi) */}
+                {secondaryButton?.link && (
+                  <MotionLink
+                    href={secondaryButton.link}
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={ultraSmoothSpring}
+                    className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full border-2 border-arylideYellow/40 bg-transparent px-6 py-3 text-sm font-bold text-arylideYellow backdrop-blur-sm transition-all duration-300 hover:border-arylideYellow hover:bg-arylideYellow/10 sm:w-auto sm:gap-3 sm:px-8 sm:py-4 sm:text-base md:px-10 md:py-5 md:text-lg"
+                  >
+                    <FiCamera className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <span className="whitespace-nowrap">
+                      {secondaryButton.label}
+                    </span>
+                  </MotionLink>
+                )}
               </m.div>
             </m.div>
           </m.div>
