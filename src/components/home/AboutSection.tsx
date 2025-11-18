@@ -2,10 +2,7 @@ import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import Image from "next/image";
 import { FiAward, FiMusic, FiUsers } from "react-icons/fi";
 import type { Stat } from "@/lib/types";
-import {
-  getAboutSectionData,
-  getStatsSectionData,
-} from "@/sanity/lib/queries/home";
+import { getAboutSectionData } from "@/sanity/lib/queries/home";
 import { urlFor } from "@/sanity/lib/image";
 import { AboutSectionClient } from "./AboutSection.client";
 
@@ -15,6 +12,7 @@ const ICONS_MAP: { [key: string]: React.ElementType } = {
   Nagród: FiAward,
 };
 
+// Ta funkcja pozostaje bez zmian.
 const createStaticContent = (data: {
   smallHeading: string;
   headingPart1: string;
@@ -54,6 +52,7 @@ const createStaticContent = (data: {
   </div>
 );
 
+// Ta funkcja pozostaje bez zmian.
 const createStaticImage = (data: {
   image: SanityImageSource;
   imageAlt: string;
@@ -77,6 +76,7 @@ const createStaticImage = (data: {
   </div>
 );
 
+// Ta funkcja pozostaje bez zmian.
 const createMiniStats = (statsData: Stat[]) => (
   <div className="relative overflow-hidden rounded-xl border border-white/10 bg-white/5 backdrop-blur-md shadow-2xl transition-all duration-300 hover:border-arylideYellow/30 hover:bg-white/8">
     <div className="grid grid-cols-3 divide-x divide-white/10">
@@ -87,19 +87,14 @@ const createMiniStats = (statsData: Stat[]) => (
             key={stat.label}
             className="group/stat flex flex-col items-center justify-center px-3 py-4 text-center transition-colors duration-300 hover:bg-white/5 sm:px-4 sm:py-5"
           >
-            {/* Icon */}
             <Icon
               size={16}
               className="mb-2 text-arylideYellow/70 transition-all duration-300 group-hover/stat:scale-110 group-hover/stat:text-arylideYellow sm:mb-3"
               aria-hidden="true"
             />
-
-            {/* Number */}
             <p className="mb-1 bg-linear-to-br from-white to-white/80 bg-clip-text text-2xl font-bold text-transparent transition-transform duration-300 group-hover/stat:scale-105 sm:text-3xl">
               {stat.value}
             </p>
-
-            {/* Label */}
             <p className="text-[0.6rem] font-medium uppercase tracking-wider text-white/50 transition-colors duration-300 group-hover/stat:text-arylideYellow/60 sm:text-xs">
               {stat.label}
             </p>
@@ -107,25 +102,28 @@ const createMiniStats = (statsData: Stat[]) => (
         );
       })}
     </div>
-
-    {/* Corner accent */}
     <div className="absolute bottom-0 right-0 h-8 w-8 border-b border-r border-arylideYellow/20" />
   </div>
 );
 
+// Główna logika komponentu została uproszczona.
 export async function AboutSection() {
+  // 1. Wykonujemy tylko JEDNO zapytanie, które pobiera wszystkie potrzebne dane.
   const aboutData = await getAboutSectionData();
-  const statsData = await getStatsSectionData();
 
-  if (!aboutData || !statsData) {
+  // 2. Sprawdzamy, czy otrzymaliśmy dane dla sekcji ORAZ czy zawierają one statystyki.
+  //    Pole `stats` jest teraz częścią obiektu `aboutData`.
+  if (!aboutData || !aboutData.stats) {
     return null;
   }
 
+  // 3. Przekazujemy dane do komponentu klienckiego.
+  //    Dane do `createMiniStats` pochodzą bezpośrednio z `aboutData.stats`.
   return (
     <AboutSectionClient
       staticContent={createStaticContent(aboutData)}
       staticImage={createStaticImage(aboutData)}
-      miniStats={createMiniStats(statsData)}
+      miniStats={createMiniStats(aboutData.stats)}
     />
   );
 }

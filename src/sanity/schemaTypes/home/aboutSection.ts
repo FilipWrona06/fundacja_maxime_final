@@ -1,4 +1,6 @@
-import { defineField, defineType } from "sanity";
+// Plik: aboutSection.ts (nowa, połączona wersja)
+
+import { defineArrayMember, defineField, defineType } from "sanity";
 
 export default defineType({
   name: "aboutSection",
@@ -53,7 +55,7 @@ export default defineType({
       title: "Zdjęcie",
       type: "image",
       options: {
-        hotspot: true, // Umożliwia inteligentne kadrowanie
+        hotspot: true,
       },
       validation: (Rule) => Rule.required().error("Zdjęcie jest wymagane."),
     }),
@@ -66,5 +68,53 @@ export default defineType({
       validation: (Rule) =>
         Rule.required().error("Tekst alternatywny jest wymagany dla zdjęcia."),
     }),
+    // --- POCZĄTEK: DODANA SEKCJA STATYSTYK ---
+    defineField({
+      name: "stats", // Nowa nazwa pola
+      title: "Statystyki (wyświetlane na zdjęciu)",
+      type: "array",
+      description: "Lista kluczowych liczb opisujących działalność fundacji.",
+      validation: (Rule) =>
+        Rule.required()
+          .min(1)
+          .max(3) // Opcjonalnie: można dodać limit, jeśli w designie są zawsze 3
+          .error("Należy dodać od 1 do 3 statystyk."),
+      of: [
+        defineArrayMember({
+          name: "stat",
+          title: "Statystyka",
+          type: "object",
+          fields: [
+            defineField({
+              name: "value",
+              title: "Wartość (np. 50+)",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: "label",
+              title: "Etykieta (np. Koncertów, Widzów, Nagród)",
+              type: "string",
+              description:
+                "Musi pasować do jednej z ikon w kodzie (Koncertów, Widzów, Nagród).",
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+          preview: {
+            select: {
+              title: "label",
+              subtitle: "value",
+            },
+            prepare({ title, subtitle }) {
+              return {
+                title: title || "Brak etykiety",
+                subtitle: subtitle || "Brak wartości",
+              };
+            },
+          },
+        }),
+      ],
+    }),
+    // --- KONIEC: DODANA SEKCJA STATYSTYK ---
   ],
 });

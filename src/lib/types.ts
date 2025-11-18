@@ -17,7 +17,6 @@ export interface SanitySlug {
   current: string;
 }
 
-// --- NOWY, REUŻYWALNY TYP DLA DANYCH SEO ---
 /**
  * Definiuje strukturę danych SEO, która może być używana
  * na każdej podstronie (strona główna, artykuły, galerie itp.).
@@ -71,7 +70,6 @@ export interface Stat {
  * pobieraną z dokumentu 'homePage' w Sanity.
  */
 export interface HomePageData {
-  // --- DODANO POLE SEO ---
   seo: SeoData;
 
   heroSection: {
@@ -83,7 +81,7 @@ export interface HomePageData {
     videoMp4Url: string;
     posterUrl: string;
   };
-  statsSection: Stat[];
+  // ZMIANA: Pole `aboutSection` zawiera teraz statystyki.
   aboutSection: {
     smallHeading: string;
     headingPart1: string;
@@ -93,7 +91,9 @@ export interface HomePageData {
     paragraph2: string;
     image: SanityImage;
     imageAlt: string;
+    stats: Stat[]; // <-- DODANE POLE
   };
+  // USUNIĘTE: Pole `statsSection` nie jest już potrzebne na tym poziomie.
   impactSection: {
     heading: string;
     subheading: string;
@@ -157,11 +157,8 @@ export interface Gallery {
 }
 
 export interface GaleriaPageData {
-  // --- POPRAWKA ---
-  // Używamy pełnego, reużywalnego interfejsu SeoData
   seo: SeoData;
 
-  // Reszta typów bez zmian
   heroSection: {
     badge: string;
     headingLine1: string;

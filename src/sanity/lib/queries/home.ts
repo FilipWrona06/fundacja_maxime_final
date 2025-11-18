@@ -48,30 +48,24 @@ export const getHeroSectionData = cache(
 );
 
 /**
- * Pobiera dane dla sekcji Statystyk.
- */
-export const getStatsSectionData = cache(
-  async (): Promise<HomePageData["statsSection"] | null> => {
-    const data = await client.fetch<{
-      statsSection: HomePageData["statsSection"];
-    }>(
-      groq`*[_type == "homePage"][0]{ statsSection }`,
-      {},
-      { next: { tags: ["homePage"] } },
-    );
-    return data?.statsSection ?? null;
-  },
-);
-
-/**
- * Pobiera dane dla sekcji "O Fundacji".
+ * Pobiera dane dla sekcji "O Fundacji", włączając w to zagnieżdżone statystyki.
  */
 export const getAboutSectionData = cache(
   async (): Promise<HomePageData["aboutSection"] | null> => {
     const data = await client.fetch<{
       aboutSection: HomePageData["aboutSection"];
     }>(
-      groq`*[_type == "homePage"][0]{ aboutSection }`,
+      // Zaktualizowane zapytanie: pobieramy cały obiekt aboutSection,
+      // a w nim rozwijamy tablicę 'stats'.
+      groq`*[_type == "homePage"][0]{
+        aboutSection {
+          ...,
+          stats[] {
+            value,
+            label
+          }
+        }
+      }`,
       {},
       { next: { tags: ["homePage"] } },
     );
