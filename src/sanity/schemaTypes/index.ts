@@ -11,6 +11,8 @@ import heroSection from "./home/heroSection";
 import impactSection from "./home/impactSection";
 import timelineSection from "./home/timelineSection";
 import seo from "./objects/seo";
+import horizontalRule from "./objects/horizontalRule";
+import spacer from "./objects/spacer";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -28,5 +30,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     impactSection,
     timelineSection,
     ctaSection,
+    horizontalRule,
+    spacer
   ],
 };

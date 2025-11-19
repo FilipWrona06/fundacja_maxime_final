@@ -7,16 +7,16 @@ export default defineType({
   fieldsets: [
     { name: "content", title: "Treść tekstowa" },
     { name: "media", title: "Media w tle" },
-    // NOWOŚĆ: Dodano osobny fieldset dla przycisków, aby utrzymać porządek w studio.
     { name: "actions", title: "Przyciski Akcji" },
   ],
   fields: [
-    // --- GRUPA: Treść tekstowa (pola bez zmian) ---
+    // --- GRUPA: Treść tekstowa (bez zmian) ---
     defineField({
       name: "badgeText",
       title: "Tekst na znaczku (Badge)",
       type: "string",
-      description: "Opcjonalny, krótki tekst wyświetlany nad głównym nagłówkiem (np. 'Nowość!').",
+      description:
+        "Opcjonalny, krótki tekst wyświetlany nad głównym nagłówkiem (np. 'Nowość!').",
       fieldset: "content",
     }),
     defineField({
@@ -24,28 +24,76 @@ export default defineType({
       title: "Nagłówek - część główna",
       type: "string",
       description: "Pierwsza, standardowa część głównego nagłówka.",
-      validation: (Rule) => Rule.required().error("Główna część nagłówka jest wymagana."),
+      validation: (Rule) =>
+        Rule.required().error("Główna część nagłówka jest wymagana."),
       fieldset: "content",
     }),
     defineField({
       name: "headingPart2",
       title: "Nagłówek - część wyróżniona",
       type: "string",
-      description: "Druga część nagłówka, która zostanie automatycznie wyróżniona innym stylem (np. kolorem).",
-      validation: (Rule) => Rule.required().error("Wyróżniona część nagłówka jest wymagana."),
-      fieldset: "content",
-    }),
-    defineField({
-      name: "description",
-      title: "Opis pod nagłówkiem",
-      type: "text",
-      rows: 3,
-      description: "Krótki (1-2 zdania) paragraf zachęcający do dalszej interakcji, wyświetlany pod głównym nagłówkiem.",
-      validation: (Rule) => Rule.required().error("Opis pod nagłówkiem jest wymagany."),
+      description:
+        "Druga część nagłówka, która zostanie automatycznie wyróżniona innym stylem (np. kolorem).",
+      validation: (Rule) =>
+        Rule.required().error("Wyróżniona część nagłówka jest wymagana."),
       fieldset: "content",
     }),
 
-    // --- GRUPA: Media w tle (pola bez zmian) ---
+    // ZAKTUALIZOWANE POLE "description"
+    defineField({
+      name: "description",
+      title: "Opis pod nagłówkiem",
+      type: "array",
+      fieldset: "content",
+      of: [
+        {
+          type: "block",
+          styles: [{ title: "Normal", value: "normal" }],
+          lists: [
+            { title: "Lista punktowana", value: "bullet" },
+            { title: "Lista numerowana", value: "number" },
+          ],
+          marks: {
+            decorators: [
+              { title: "Pogrubienie", value: "strong" },
+              { title: "Kursywa", value: "em" },
+              { title: "Podkreślenie", value: "underline" },
+              { title: "Przekreślenie", value: "strike-through" },
+            ],
+            annotations: [
+              {
+                name: "link",
+                type: "object",
+                title: "Link zewnętrzny",
+                fields: [
+                  {
+                    name: "href",
+                    type: "url",
+                    title: "URL",
+                    validation: (Rule) =>
+                      Rule.uri({
+                        scheme: ["http", "https", "mailto", "tel"],
+                      }),
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        // --- Separator w formie linii ---
+        {
+          type: "horizontalRule",
+        },
+        // --- NOWOŚĆ: Separator w formie pustego odstępu ---
+        {
+          type: "spacer",
+        },
+      ],
+      validation: (Rule) =>
+        Rule.required().error("Opis pod nagłówkiem jest wymagany."),
+    }),
+
+    // --- GRUPA: Media w tle (bez zmian) ---
     defineField({
       name: "videoWebm",
       title: "Wideo w tle (.webm)",
@@ -80,7 +128,7 @@ export default defineType({
       fieldset: "media",
     }),
 
-    // --- GRUPA: Przyciski Akcji (nowe pola) ---
+    // --- GRUPA: Przyciski Akcji (bez zmian) ---
     defineField({
       name: "primaryButton",
       title: "Przycisk główny (np. 'Nadchodzące koncerty')",
@@ -93,13 +141,15 @@ export default defineType({
           name: "label",
           title: "Etykieta przycisku",
           type: "string",
-          validation: (Rule) => Rule.required().error("Etykieta przycisku jest wymagana."),
+          validation: (Rule) =>
+            Rule.required().error("Etykieta przycisku jest wymagana."),
         }),
         defineField({
           name: "link",
           title: "Link docelowy",
           type: "string",
-          description: "Link wewnętrzny (np. '/wydarzenia') lub zewnętrzny (np. 'https://google.com').",
+          description:
+            "Link wewnętrzny (np. '/wydarzenia') lub zewnętrzny (np. 'https://google.com').",
           validation: (Rule) => Rule.required().error("Link docelowy jest wymagany."),
         }),
       ],
@@ -111,13 +161,13 @@ export default defineType({
       type: "object",
       fieldset: "actions",
       description: "Opcjonalny, drugi przycisk o niższym priorytecie.",
-      // Brak walidacji .required() na poziomie obiektu czyni go opcjonalnym.
       fields: [
         defineField({
           name: "label",
           title: "Etykieta przycisku",
           type: "string",
-          validation: (Rule) => Rule.required().error("Etykieta przycisku jest wymagana."),
+          validation: (Rule) =>
+            Rule.required().error("Etykieta przycisku jest wymagana."),
         }),
         defineField({
           name: "link",

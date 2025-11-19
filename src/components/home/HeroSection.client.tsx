@@ -1,5 +1,8 @@
 "use client";
 
+// --- IMPORTY ---
+import { PortableText } from "@portabletext/react";
+import type { PortableTextComponents } from "@portabletext/react";
 import {
   domAnimation,
   LazyMotion,
@@ -15,7 +18,38 @@ import { FiArrowDown } from "react-icons/fi";
 import { premiumEase, smoothEase, ultraSmoothSpring } from "@/lib/animations";
 import type { HomePageData } from "@/lib/types";
 
-// Komponent przycisku pozostaje bez zmian, jest uniwersalny.
+// --- KONFIGURACJA KOMPONENTÓW PORTABLE TEXT (Z DODANĄ OBSŁUGĄ SPACERA) ---
+const myPortableTextComponents: PortableTextComponents = {
+  // `types` odpowiada za renderowanie niestandardowych obiektów.
+  types: {
+    // Separator w formie linii (bez zmian).
+    horizontalRule: () => <hr className="my-8 border-white/20" />,
+
+    // --- NOWOŚĆ: Dodano renderowanie dla separatora pustej linijki ---
+    // 'h-8' w Tailwind CSS to wysokość 2rem (32px). Możesz dostosować tę wartość.
+    spacer: () => <div className="h-8" aria-hidden="true" />,
+  },
+
+  // `marks` pozwala stylizować dekoratory, np. linki (bez zmian).
+  marks: {
+    link: ({ children, value }) => {
+      const rel = !value.href.startsWith("/")
+        ? "noreferrer noopener"
+        : undefined;
+      return (
+        <a
+          href={value.href}
+          rel={rel}
+          className="text-arylideYellow underline hover:no-underline"
+        >
+          {children}
+        </a>
+      );
+    },
+  },
+};
+
+// --- KOMPONENTY POMOCNICZE (bez zmian) ---
 const HeroButton = ({
   href,
   variant = "primary",
@@ -48,27 +82,23 @@ const HeroButton = ({
   );
 };
 
-// Typowanie propsów pozostaje bez zmian - jest poprawne.
+// --- GŁÓWNY KOMPONENT (bez zmian w logice) ---
 export const HeroSectionClient = ({
   heroData,
 }: {
   heroData: NonNullable<HomePageData["heroSection"]>;
 }) => {
-  // Wszystkie hooki i logika animacji pozostają bez zmian.
   const heroRef = useRef<HTMLElement>(null);
   const [shouldHideArrow, setShouldHideArrow] = useState(false);
-
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
   });
-
   const smoothProgress = useSpring(scrollYProgress, {
     stiffness: 80,
     damping: 25,
     restDelta: 0.001,
   });
-
   const videoScale = useTransform(smoothProgress, [0, 1], [1, 1.15]);
   const videoOpacity = useTransform(smoothProgress, [0, 0.5, 1], [1, 0.8, 0.6]);
   const contentOpacity = useTransform(
@@ -81,7 +111,6 @@ export const HeroSectionClient = ({
   useEffect(() => {
     let scrollCount = 0;
     let lastScrollY = window.scrollY;
-
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       if (currentScrollY > lastScrollY + 50) {
@@ -131,7 +160,6 @@ export const HeroSectionClient = ({
           style={{ opacity: contentOpacity, y: contentY }}
           className="container relative z-10 mx-auto px-6 text-center lg:pt-24"
         >
-          {/* NOWOŚĆ: Warunkowe renderowanie badge'a */}
           {heroData.badgeText && (
             <m.p
               initial={{ opacity: 0, y: 20 }}
@@ -144,40 +172,35 @@ export const HeroSectionClient = ({
           )}
 
           <h1 id="hero-heading" className="mb-6 mt-2 sm:mt-0 md:mb-10">
-            <m.span
-              // Animacje bez zmian
-              className="mb-4 block font-youngest text-[clamp(4rem,12vw,10rem)] leading-[0.9] tracking-tight text-arylideYellow drop-shadow-2xl md:mb-6"
-            >
+            <m.span className="mb-4 block font-youngest text-[clamp(4rem,12vw,10rem)] leading-[0.9] tracking-tight text-arylideYellow drop-shadow-2xl md:mb-6">
               {heroData.headingPart1}
             </m.span>
-            <m.span
-              // Animacje bez zmian
-              className="block pb-4 font-youngest text-[clamp(4rem,12vw,10rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl"
-            >
+            <m.span className="block pb-4 font-youngest text-[clamp(4rem,12vw,10rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl">
               {heroData.headingPart2}
             </m.span>
           </h1>
 
-          <m.p
-            // Animacje bez zmian
-            className="mx-auto mb-8 max-w-2xl text-base leading-relaxed text-white drop-shadow-lg md:mb-10 md:text-xl md:leading-relaxed lg:leading-loose"
+          <m.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.5, ease: premiumEase }}
+            className="prose prose-invert mx-auto mb-8 max-w-2xl text-base leading-relaxed text-white drop-shadow-lg md:mb-10 md:text-xl md:leading-relaxed lg:leading-loose"
           >
-            {heroData.description}
-          </m.p>
+            <PortableText
+              value={heroData.description}
+              components={myPortableTextComponents}
+            />
+          </m.div>
 
-          {/* ZMIANA: Dynamiczne i warunkowe renderowanie przycisków */}
           <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.9, ease: premiumEase }}
             className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4 md:gap-5"
           >
-            {/* Przycisk główny z danymi z CMS */}
             <HeroButton href={heroData.primaryButton.link} variant="primary">
               <span>{heroData.primaryButton.label}</span>
             </HeroButton>
-
-            {/* Przycisk dodatkowy renderowany tylko, gdy istnieje */}
             {heroData.secondaryButton && (
               <HeroButton
                 href={heroData.secondaryButton.link}
@@ -189,7 +212,6 @@ export const HeroSectionClient = ({
           </m.div>
         </m.div>
 
-        {/* Strzałka do przewijania bez zmian */}
         {!shouldHideArrow && (
           <m.button
             onClick={scrollToContent}

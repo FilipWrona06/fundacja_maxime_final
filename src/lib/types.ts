@@ -67,7 +67,7 @@ export interface HomePageData {
     badgeText: string;
     headingPart1: string;
     headingPart2: string;
-    description: string;
+    description: any[];
     videoWebmUrl: string;
     videoMp4Url: string;
     posterUrl: string;
