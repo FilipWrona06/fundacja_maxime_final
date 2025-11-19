@@ -1,3 +1,5 @@
+// Plik: src/components/home/CtaSection.client.tsx (wersja zrefaktoryzowana)
+
 "use client";
 
 import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
@@ -10,7 +12,7 @@ import {
   viewportConfig,
 } from "@/lib/animations";
 
-const MotionLink = m.create(Link);
+const MotionLink = m.create(Link); // Użycie m(Link) zostało zachowane dla spójności
 
 // Warianty animacji pozostają bez zmian
 const fadeInUpVariant: Variants = {
@@ -36,13 +38,12 @@ const staggerContainerVariant: Variants = {
   },
 };
 
-// NOWOŚĆ: Definicja typów dla przycisków, które komponent będzie otrzymywał
+// Definicja typów dla przycisków
 interface ButtonProps {
   label: string;
   link: string;
 }
 
-// ZMIANA: Komponent przyjmuje teraz obiekty 'primaryButton' i opcjonalny 'secondaryButton'
 export const CTASectionClient = ({
   children,
   primaryButton,
@@ -50,75 +51,66 @@ export const CTASectionClient = ({
 }: {
   children: React.ReactNode;
   primaryButton: ButtonProps;
-  secondaryButton?: ButtonProps; // Znak '?' oznacza, że jest to props opcjonalny
+  secondaryButton?: ButtonProps;
 }) => {
   return (
     <LazyMotion features={domAnimation}>
-      <section
-        className="relative overflow-hidden py-12 sm:py-20 md:py-24 lg:py-32 xl:py-40"
-        aria-labelledby="cta-heading"
+      {/* Komponent zaczyna się teraz od animowanego kontenera-karty */}
+      <m.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewportConfig.once}
+        variants={fadeInUpVariant}
+        className="relative overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br from-arylideYellow/10 via-transparent to-oxfordBlue/20 p-8 text-center shadow-2xl backdrop-blur-sm sm:rounded-3xl sm:p-12 md:p-16 lg:p-20 xl:p-24"
       >
-        {/* Tło dekoracyjne bez zmian */}
-        <div className="absolute left-1/4 top-25 h-96 w-96 rounded-full bg-arylideYellow/5 blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-arylideYellow/5 blur-3xl" />
+        {/* Wewnętrzny kontener do animacji "stagger" */}
+        <m.div
+          className="relative"
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportConfig.once}
+          variants={staggerContainerVariant}
+        >
+          {/* Treść (nagłówek i tekst) */}
+          <m.div variants={fadeInUpVariant}>{children}</m.div>
 
-        <div className="container relative z-10 mx-auto px-6 lg:px-8">
+          {/* Przyciski */}
           <m.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportConfig.once}
             variants={fadeInUpVariant}
-            className="relative overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br from-arylideYellow/10 via-transparent to-oxfordBlue/20 p-8 text-center shadow-2xl backdrop-blur-sm sm:rounded-3xl sm:p-12 md:p-16 lg:p-20 xl:p-24"
+            className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4 md:gap-6"
           >
-            {/* Treść (nagłówek i tekst) przekazywana jako children */}
-            <m.div
-              className="relative"
-              initial="hidden"
-              whileInView="visible"
-              viewport={viewportConfig.once}
-              variants={staggerContainerVariant}
+            {/* Przycisk główny */}
+            <MotionLink
+              href={primaryButton.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              transition={ultraSmoothSpring}
+              className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-arylideYellow px-6 py-3 text-sm font-bold text-raisinBlack shadow-lg transition-all duration-300 hover:shadow-arylideYellow/30 sm:w-auto sm:gap-3 sm:px-8 sm:py-4 sm:text-base md:px-10 md:py-5 md:text-lg"
             >
-              <m.div variants={fadeInUpVariant}>{children}</m.div>
+              <FiHeart className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span>{primaryButton.label}</span>
+            </MotionLink>
 
-              {/* Przyciski */}
-              <m.div
-                variants={fadeInUpVariant}
-                className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4 md:gap-6"
+            {/* Przycisk dodatkowy (renderowany warunkowo) */}
+            {secondaryButton?.link && (
+              <MotionLink
+                href={secondaryButton.link}
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                transition={ultraSmoothSpring}
+                className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full border-2 border-arylideYellow/40 bg-transparent px-6 py-3 text-sm font-bold text-arylideYellow backdrop-blur-sm transition-all duration-300 hover:border-arylideYellow hover:bg-arylideYellow/10 sm:w-auto sm:gap-3 sm:px-8 sm:py-4 sm:text-base md:px-10 md:py-5 md:text-lg"
               >
-                {/* Przycisk główny (dane dynamiczne) */}
-                <MotionLink
-                  href={primaryButton.link}
-                  target="_blank" // Zakładamy, że główny link jest zewnętrzny
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={ultraSmoothSpring}
-                  className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-arylideYellow px-6 py-3 text-sm font-bold text-raisinBlack shadow-lg transition-all duration-300 hover:shadow-arylideYellow/30 sm:w-auto sm:gap-3 sm:px-8 sm:py-4 sm:text-base md:px-10 md:py-5 md:text-lg"
-                >
-                  <FiHeart className="h-4 w-4 sm:h-5 sm:w-5" />
-                  <span>{primaryButton.label}</span>
-                </MotionLink>
-
-                {/* Przycisk dodatkowy (renderowany warunkowo i z danymi dynamicznymi) */}
-                {secondaryButton?.link && (
-                  <MotionLink
-                    href={secondaryButton.link}
-                    whileHover={{ scale: 1.02, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                    transition={ultraSmoothSpring}
-                    className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full border-2 border-arylideYellow/40 bg-transparent px-6 py-3 text-sm font-bold text-arylideYellow backdrop-blur-sm transition-all duration-300 hover:border-arylideYellow hover:bg-arylideYellow/10 sm:w-auto sm:gap-3 sm:px-8 sm:py-4 sm:text-base md:px-10 md:py-5 md:text-lg"
-                  >
-                    <FiCamera className="h-4 w-4 sm:h-5 sm:w-5" />
-                    <span className="whitespace-nowrap">
-                      {secondaryButton.label}
-                    </span>
-                  </MotionLink>
-                )}
-              </m.div>
-            </m.div>
+                <FiCamera className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="whitespace-nowrap">
+                  {secondaryButton.label}
+                </span>
+              </MotionLink>
+            )}
           </m.div>
-        </div>
-      </section>
+        </m.div>
+      </m.div>
     </LazyMotion>
   );
 };

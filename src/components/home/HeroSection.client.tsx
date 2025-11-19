@@ -18,19 +18,12 @@ import { FiArrowDown } from "react-icons/fi";
 import { premiumEase, smoothEase, ultraSmoothSpring } from "@/lib/animations";
 import type { HomePageData } from "@/lib/types";
 
-// --- KONFIGURACJA KOMPONENTÓW PORTABLE TEXT (Z DODANĄ OBSŁUGĄ SPACERA) ---
+// --- KONFIGURACJA KOMPONENTÓW PORTABLE TEXT ---
 const myPortableTextComponents: PortableTextComponents = {
-  // `types` odpowiada za renderowanie niestandardowych obiektów.
   types: {
-    // Separator w formie linii (bez zmian).
     horizontalRule: () => <hr className="my-8 border-white/20" />,
-
-    // --- NOWOŚĆ: Dodano renderowanie dla separatora pustej linijki ---
-    // 'h-8' w Tailwind CSS to wysokość 2rem (32px). Możesz dostosować tę wartość.
     spacer: () => <div className="h-8" aria-hidden="true" />,
   },
-
-  // `marks` pozwala stylizować dekoratory, np. linki (bez zmian).
   marks: {
     link: ({ children, value }) => {
       const rel = !value.href.startsWith("/")
@@ -49,7 +42,7 @@ const myPortableTextComponents: PortableTextComponents = {
   },
 };
 
-// --- KOMPONENTY POMOCNICZE (bez zmian) ---
+// --- KOMPONENTY POMOCNICZE ---
 const HeroButton = ({
   href,
   variant = "primary",
@@ -82,7 +75,7 @@ const HeroButton = ({
   );
 };
 
-// --- GŁÓWNY KOMPONENT (bez zmian w logice) ---
+// --- GŁÓWNY KOMPONENT ---
 export const HeroSectionClient = ({
   heroData,
 }: {
@@ -172,10 +165,20 @@ export const HeroSectionClient = ({
           )}
 
           <h1 id="hero-heading" className="mb-6 mt-2 sm:mt-0 md:mb-10">
-            <m.span className="mb-4 block font-youngest text-[clamp(4rem,12vw,10rem)] leading-[0.9] tracking-tight text-arylideYellow drop-shadow-2xl md:mb-6">
+            <m.span
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.3, ease: premiumEase }}
+              className="mb-4 block font-youngest text-[clamp(4rem,12vw,10rem)] leading-[0.9] tracking-tight text-arylideYellow drop-shadow-2xl md:mb-6"
+            >
               {heroData.headingPart1}
             </m.span>
-            <m.span className="block pb-4 font-youngest text-[clamp(4rem,12vw,10rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl">
+            <m.span
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.4, ease: premiumEase }}
+              className="block pb-4 font-youngest text-[clamp(4rem,12vw,10rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl"
+            >
               {heroData.headingPart2}
             </m.span>
           </h1>

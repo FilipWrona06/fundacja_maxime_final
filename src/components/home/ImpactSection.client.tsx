@@ -1,9 +1,9 @@
+// Plik: src/components/home/ImpactSection.client.tsx (wersja zrefaktoryzowana)
+
 "use client";
 
 import type { PortableTextComponents } from "@portabletext/react";
-// 1. Dodajemy importy dla PortableText
 import { PortableText } from "@portabletext/react";
-// --- IMPORTY ---
 import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
 import Image from "next/image";
 
@@ -13,7 +13,11 @@ import {
   ultraSmoothSpring,
   viewportConfig,
 } from "@/lib/animations";
-import type { HomePageData, ImpactCard } from "@/lib/types";
+import type {
+  HomePageData,
+  ImpactCard,
+  PortableTextContent,
+} from "@/lib/types";
 import { urlFor } from "@/sanity/lib/image";
 
 // Warianty animacji pozostają bez zmian.
@@ -52,7 +56,7 @@ const headingVariant: Variants = {
   },
 };
 
-// 2. Definiujemy komponenty dla Portable Text (np. do stylizacji linków)
+// Konfiguracja Portable Text do obsługi linków w opisach kart
 const impactPortableTextComponents: PortableTextComponents = {
   marks: {
     link: ({ children, value }) => {
@@ -81,42 +85,35 @@ export const ImpactSectionClient = ({
 }) => {
   return (
     <LazyMotion features={domAnimation}>
-      <section
-        id="impact-section"
-        className="relative overflow-hidden py-16 sm:py-20 md:py-24 lg:py-32 xl:py-40"
-        aria-labelledby="impact-heading"
+      {/* Używamy React.Fragment (<>), ponieważ komponent renderuje dwa równorzędne bloki */}
+      {/* Blok 1: Animowany nagłówek */}
+      <m.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewportConfig.once}
+        variants={staggerContainerVariant}
+        className="mb-12 text-center sm:mb-16 md:mb-20 lg:mb-24"
       >
-        <div className="absolute right-0 top-1/3 h-96 w-96 rounded-full bg-arylideYellow/5 blur-3xl" />
-        <div className="absolute bottom-1/3 left-0 h-96 w-96 rounded-full bg-arylideYellow/5 blur-3xl" />
+        <m.div variants={headingVariant}>{children}</m.div>
+      </m.div>
 
-        <div className="container relative z-10 mx-auto px-6 lg:px-8">
-          <m.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportConfig.once}
-            variants={staggerContainerVariant}
-            className="mb-12 text-center sm:mb-16 md:mb-20 lg:mb-24"
-          >
-            <m.div variants={headingVariant}>{children}</m.div>
-          </m.div>
-
-          <m.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.1, margin: "0px 0px -100px 0px" }}
-            variants={staggerContainerVariant}
-            className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3"
-          >
-            {impactData.impactCards.map((card, index) => (
-              <ImpactCardComponent key={card.title} card={card} index={index} />
-            ))}
-          </m.div>
-        </div>
-      </section>
+      {/* Blok 2: Animowana siatka z kartami */}
+      <m.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1, margin: "0px 0px -100px 0px" }}
+        variants={staggerContainerVariant}
+        className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3"
+      >
+        {impactData.impactCards.map((card, index) => (
+          <ImpactCardComponent key={card.title} card={card} index={index} />
+        ))}
+      </m.div>
     </LazyMotion>
   );
 };
 
+// Komponent podrzędny dla karty pozostaje bez żadnych zmian
 const ImpactCardComponent = ({
   card,
   index,
@@ -154,7 +151,6 @@ const ImpactCardComponent = ({
             />
           )}
         </div>
-
         <div className="absolute inset-0 bg-linear-to-t from-raisinBlack/90 via-raisinBlack/50 to-transparent" />
         <div className="absolute inset-0 bg-arylideYellow/0 transition-colors duration-300 group-hover:bg-arylideYellow/10" />
       </div>
@@ -164,10 +160,9 @@ const ImpactCardComponent = ({
         <h3 className="mb-1 text-lg font-bold text-white transition-colors duration-300 group-hover:text-arylideYellow sm:mb-3 sm:text-2xl md:text-3xl">
           {card.title}
         </h3>
-        {/* 3. Używamy komponentu PortableText do renderowania opisu */}
         <div className="text-sm leading-relaxed text-white/90 sm:text-base md:leading-relaxed">
           <PortableText
-            value={card.description}
+            value={card.description as PortableTextContent} // Użyj asercji typu, jeśli jest potrzebna
             components={impactPortableTextComponents}
           />
         </div>

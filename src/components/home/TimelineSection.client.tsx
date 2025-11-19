@@ -1,9 +1,9 @@
+// Plik: src/components/home/TimelineSection.client.tsx (wersja zrefaktoryzowana)
+
 "use client";
 
 import type { PortableTextComponents } from "@portabletext/react";
-// 1. Dodajemy importy dla PortableText
 import { PortableText } from "@portabletext/react";
-// --- IMPORTY ---
 import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
 import Image from "next/image";
 
@@ -13,7 +13,11 @@ import {
   ultraSmoothSpring,
   viewportConfig,
 } from "@/lib/animations";
-import type { HomePageData, TimelineEvent } from "@/lib/types";
+import type {
+  HomePageData,
+  PortableTextContent,
+  TimelineEvent,
+} from "@/lib/types";
 import { urlFor } from "@/sanity/lib/image";
 
 // Warianty animacji pozostają bez zmian.
@@ -76,7 +80,7 @@ const lineDrawVariant: Variants = {
   },
 };
 
-// 2. Definiujemy komponenty dla Portable Text
+// Konfiguracja Portable Text do obsługi linków
 const timelinePortableTextComponents: PortableTextComponents = {
   marks: {
     link: ({ children, value }) => {
@@ -103,57 +107,48 @@ export const TimelineSectionClient = ({
   timelineData: NonNullable<HomePageData["timelineSection"]>;
   children: React.ReactNode;
 }) => {
-  // Główna logika komponentu pozostaje bez zmian
   return (
     <LazyMotion features={domAnimation}>
-      <section
-        id="timeline-section"
-        className="relative overflow-hidden py-16 sm:py-20 md:py-24 lg:py-32 xl:py-40"
-        aria-labelledby="timeline-heading"
+      {/* Używamy React.Fragment (<>), ponieważ komponent renderuje dwa równorzędne bloki */}
+      {/* Blok 1: Animowany nagłówek */}
+      <m.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewportConfig.once}
+        variants={staggerContainerVariant}
+        className="mb-12 text-center sm:mb-16 md:mb-20 lg:mb-24"
       >
-        <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-arylideYellow/5 blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-arylideYellow/5 blur-3xl" />
+        <m.div variants={headingVariant}>{children}</m.div>
+      </m.div>
 
-        <div className="container relative z-10 mx-auto px-6 lg:px-8">
-          <m.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportConfig.once}
-            variants={staggerContainerVariant}
-            className="mb-12 text-center sm:mb-16 md:mb-20 lg:mb-24"
-          >
-            <m.div variants={headingVariant}>{children}</m.div>
-          </m.div>
-
-          <div className="relative mx-auto max-w-5xl">
-            <m.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.1 }}
-              variants={lineDrawVariant}
-              className="absolute left-4 top-0 hidden h-full w-0.5 origin-top md:left-8 md:block lg:left-10"
-              style={{
-                background:
-                  "linear-gradient(to bottom, rgba(233,215,88,0.6), rgba(233,215,88,0.3), rgba(233,215,88,0.1), transparent)",
-              }}
+      {/* Blok 2: Animowana oś czasu */}
+      <div className="relative mx-auto max-w-5xl">
+        <m.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={lineDrawVariant}
+          className="absolute left-4 top-0 hidden h-full w-0.5 origin-top md:left-8 md:block lg:left-10"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(233,215,88,0.6), rgba(233,215,88,0.3), rgba(233,215,88,0.1), transparent)",
+          }}
+        />
+        <div className="space-y-10 sm:space-y-12 md:space-y-16 lg:space-y-20">
+          {timelineData.timelineEvents.map((item, index) => (
+            <TimelineEventComponent
+              key={item.year}
+              item={item}
+              isLast={index === timelineData.timelineEvents.length - 1}
             />
-
-            <div className="space-y-10 sm:space-y-12 md:space-y-16 lg:space-y-20">
-              {timelineData.timelineEvents.map((item, index) => (
-                <TimelineEventComponent
-                  key={item.year}
-                  item={item}
-                  isLast={index === timelineData.timelineEvents.length - 1}
-                />
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
-      </section>
+      </div>
     </LazyMotion>
   );
 };
 
+// Komponent podrzędny dla wydarzenia na osi czasu pozostaje bez żadnych zmian
 const TimelineEventComponent = ({
   item,
   isLast,
@@ -183,7 +178,6 @@ const TimelineEventComponent = ({
           </span>
         </m.div>
       </div>
-
       <div className="group/content relative">
         <m.time
           variants={fadeInUpVariant}
@@ -192,33 +186,23 @@ const TimelineEventComponent = ({
         >
           {item.year.toString()}
         </m.time>
-
         <m.h3
           variants={fadeInUpVariant}
           className="mb-2 text-[1.25rem] font-semibold transition-colors duration-300 group-hover/content:text-arylideYellow sm:mb-4 sm:text-3xl lg:text-4xl"
         >
           {item.title}
         </m.h3>
-
-        {/* --- 3. ZMIANA: Renderowanie opisu za pomocą PortableText --- */}
-        <m.div
-          variants={fadeInUpVariant}
-          className="mb-2 sm:mb-6" // Przeniesienie marginesu na opakowanie animacji
-        >
+        <m.div variants={fadeInUpVariant} className="mb-2 sm:mb-6">
           <div className="prose prose-invert max-w-none text-[0.9rem] leading-relaxed text-white/90 sm:text-lg md:leading-relaxed lg:text-xl">
             <PortableText
-              value={item.description}
+              value={item.description as PortableTextContent} // Użyj asercji typu, jeśli jest potrzebna
               components={timelinePortableTextComponents}
             />
           </div>
         </m.div>
-
         <m.div
           variants={fadeInUpVariant}
-          whileHover={{
-            y: -6,
-            transition: ultraSmoothSpring,
-          }}
+          whileHover={{ y: -6, transition: ultraSmoothSpring }}
           className="group/image relative overflow-hidden rounded-xl shadow-xl sm:rounded-2xl lg:rounded-3xl"
         >
           {item.image && (
@@ -247,7 +231,6 @@ const TimelineEventComponent = ({
             </div>
           )}
         </m.div>
-
         {!isLast && (
           <div className="absolute -bottom-8 left-0 hidden h-16 w-px bg-linear-to-b from-arylideYellow/20 to-transparent md:-left-10 md:block lg:-left-12" />
         )}
