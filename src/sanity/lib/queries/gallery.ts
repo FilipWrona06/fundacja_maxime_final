@@ -40,7 +40,10 @@ export const getGalleryPageData = cache(
       return data;
     } catch (error) {
       // Logujemy błąd na serwerze, ale nie przerywamy budowania strony
-      console.error("Błąd podczas pobierania danych dla strony galerii:", error);
+      console.error(
+        "Błąd podczas pobierania danych dla strony galerii:",
+        error,
+      );
       return null;
     }
   },

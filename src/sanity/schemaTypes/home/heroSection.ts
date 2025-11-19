@@ -101,8 +101,10 @@ export default defineType({
       options: {
         accept: "video/webm",
       },
-      description: "Nowoczesny i wydajny format wideo. Zawsze dodawaj oba formaty.",
-      validation: (Rule) => Rule.required().error("Plik wideo .webm jest wymagany."),
+      description:
+        "Nowoczesny i wydajny format wideo. Zawsze dodawaj oba formaty.",
+      validation: (Rule) =>
+        Rule.required().error("Plik wideo .webm jest wymagany."),
       fieldset: "media",
     }),
     defineField({
@@ -112,8 +114,10 @@ export default defineType({
       options: {
         accept: "video/mp4",
       },
-      description: "Format wideo zapewniający kompatybilność ze starszymi przeglądarkami.",
-      validation: (Rule) => Rule.required().error("Plik wideo .mp4 jest wymagany."),
+      description:
+        "Format wideo zapewniający kompatybilność ze starszymi przeglądarkami.",
+      validation: (Rule) =>
+        Rule.required().error("Plik wideo .mp4 jest wymagany."),
       fieldset: "media",
     }),
     defineField({
@@ -124,7 +128,8 @@ export default defineType({
       options: {
         hotspot: true,
       },
-      validation: (Rule) => Rule.required().error("Obrazek zastępczy jest wymagany."),
+      validation: (Rule) =>
+        Rule.required().error("Obrazek zastępczy jest wymagany."),
       fieldset: "media",
     }),
 
@@ -135,7 +140,8 @@ export default defineType({
       type: "object",
       fieldset: "actions",
       description: "Główny przycisk wezwania do działania w sekcji Hero.",
-      validation: (Rule) => Rule.required().error("Przycisk główny jest wymagany."),
+      validation: (Rule) =>
+        Rule.required().error("Przycisk główny jest wymagany."),
       fields: [
         defineField({
           name: "label",
@@ -150,7 +156,8 @@ export default defineType({
           type: "string",
           description:
             "Link wewnętrzny (np. '/wydarzenia') lub zewnętrzny (np. 'https://google.com').",
-          validation: (Rule) => Rule.required().error("Link docelowy jest wymagany."),
+          validation: (Rule) =>
+            Rule.required().error("Link docelowy jest wymagany."),
         }),
       ],
     }),
@@ -174,7 +181,8 @@ export default defineType({
           title: "Link docelowy",
           type: "string",
           description: "Link wewnętrzny (np. '/kontakt').",
-          validation: (Rule) => Rule.required().error("Link docelowy jest wymagany."),
+          validation: (Rule) =>
+            Rule.required().error("Link docelowy jest wymagany."),
         }),
       ],
     }),

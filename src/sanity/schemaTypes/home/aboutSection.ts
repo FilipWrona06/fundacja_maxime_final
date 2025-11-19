@@ -1,4 +1,4 @@
-// Plik: aboutSection.ts (wersja ostateczna)
+// Plik: aboutSection.ts (wersja ostateczna z edytorem Portable Text)
 
 import { defineArrayMember, defineField, defineType } from "sanity";
 
@@ -12,7 +12,7 @@ export default defineType({
     { name: "statsGroup", title: "Statystyki liczbowe" },
   ],
   fields: [
-    // --- GRUPA: Treść sekcji (bez zmian) ---
+    // --- GRUPA: Treść sekcji ---
     defineField({
       name: "smallHeading",
       title: "Podtytuł (nad nagłówkiem)",
@@ -25,39 +25,123 @@ export default defineType({
       name: "headingPart1",
       title: "Nagłówek - część 1 (początek)",
       type: "string",
-      validation: (Rule) => Rule.required().error("Początkowa część nagłówka jest wymagana."),
+      validation: (Rule) =>
+        Rule.required().error("Początkowa część nagłówka jest wymagana."),
       fieldset: "content",
     }),
     defineField({
       name: "headingPart2",
       title: "Nagłówek - część 2 (wyróżniona)",
       type: "string",
-      description: "Ta część nagłówka zostanie automatycznie wyróżniona kolorem (np. żółtym).",
-      validation: (Rule) => Rule.required().error("Wyróżniona część nagłówka jest wymagana."),
+      description:
+        "Ta część nagłówka zostanie automatycznie wyróżniona kolorem (np. żółtym).",
+      validation: (Rule) =>
+        Rule.required().error("Wyróżniona część nagłówka jest wymagana."),
       fieldset: "content",
     }),
     defineField({
       name: "headingPart3",
       title: "Nagłówek - część 3 (koniec)",
       type: "string",
-      validation: (Rule) => Rule.required().error("Końcowa część nagłówka jest wymagana."),
+      validation: (Rule) =>
+        Rule.required().error("Końcowa część nagłówka jest wymagana."),
       fieldset: "content",
     }),
+
+    // --- ZAKTUALIZOWANE POLE "paragraph1" ---
     defineField({
       name: "paragraph1",
       title: "Akapit 1 (główny)",
-      type: "text",
-      rows: 4,
-      validation: (Rule) => Rule.required().error("Pierwszy, główny akapit jest wymagany."),
+      type: "array", // Zmieniono z 'text' na 'array'
       fieldset: "content",
+      validation: (Rule) =>
+        Rule.required().error("Pierwszy, główny akapit jest wymagany."),
+      of: [
+        {
+          type: "block",
+          styles: [{ title: "Normal", value: "normal" }],
+          lists: [
+            { title: "Lista punktowana", value: "bullet" },
+            { title: "Lista numerowana", value: "number" },
+          ],
+          marks: {
+            decorators: [
+              { title: "Pogrubienie", value: "strong" },
+              { title: "Kursywa", value: "em" },
+              { title: "Podkreślenie", value: "underline" },
+              { title: "Przekreślenie", value: "strike-through" },
+            ],
+            annotations: [
+              {
+                name: "link",
+                type: "object",
+                title: "Link zewnętrzny",
+                fields: [
+                  {
+                    name: "href",
+                    type: "url",
+                    title: "URL",
+                    validation: (Rule) =>
+                      Rule.uri({
+                        scheme: ["http", "https", "mailto", "tel"],
+                      }),
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        { type: "horizontalRule" },
+        { type: "spacer" },
+      ],
     }),
+
+    // --- ZAKTUALIZOWANE POLE "paragraph2" ---
     defineField({
       name: "paragraph2",
       title: "Akapit 2 (opcjonalny)",
-      type: "text",
-      rows: 4,
-      description: "Dodatkowy akapit, jeśli potrzebne jest więcej miejsca na opis.",
+      type: "array", // Zmieniono z 'text' na 'array'
       fieldset: "content",
+      description:
+        "Dodatkowy akapit, jeśli potrzebne jest więcej miejsca na opis.",
+      of: [
+        {
+          type: "block",
+          styles: [{ title: "Normal", value: "normal" }],
+          lists: [
+            { title: "Lista punktowana", value: "bullet" },
+            { title: "Lista numerowana", value: "number" },
+          ],
+          marks: {
+            decorators: [
+              { title: "Pogrubienie", value: "strong" },
+              { title: "Kursywa", value: "em" },
+              { title: "Podkreślenie", value: "underline" },
+              { title: "Przekreślenie", value: "strike-through" },
+            ],
+            annotations: [
+              {
+                name: "link",
+                type: "object",
+                title: "Link zewnętrzny",
+                fields: [
+                  {
+                    name: "href",
+                    type: "url",
+                    title: "URL",
+                    validation: (Rule) =>
+                      Rule.uri({
+                        scheme: ["http", "https", "mailto", "tel"],
+                      }),
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        { type: "horizontalRule" },
+        { type: "spacer" },
+      ],
     }),
 
     // --- GRUPA: Główny obraz (bez zmian) ---
@@ -68,15 +152,18 @@ export default defineType({
       options: {
         hotspot: true,
       },
-      validation: (Rule) => Rule.required().error("Zdjęcie w tej sekcji jest wymagane."),
+      validation: (Rule) =>
+        Rule.required().error("Zdjęcie w tej sekcji jest wymagane."),
       fieldset: "imageGroup",
     }),
     defineField({
       name: "imageAlt",
       title: "Tekst alternatywny (Alt Text)",
       type: "string",
-      description: "Kluczowe dla SEO i dostępności. Opisz zwięźle, co przedstawia zdjęcie (np. 'Założyciel fundacji podczas przemówienia').",
-      validation: (Rule) => Rule.required().error("Tekst alternatywny jest wymagany."),
+      description:
+        "Kluczowe dla SEO i dostępności. Opisz zwięźle, co przedstawia zdjęcie (np. 'Założyciel fundacji podczas przemówienia').",
+      validation: (Rule) =>
+        Rule.required().error("Tekst alternatywny jest wymagany."),
       fieldset: "imageGroup",
     }),
 
@@ -85,7 +172,8 @@ export default defineType({
       name: "stats",
       title: "Statystyki",
       type: "array",
-      description: "Dodaj od 1 do 3 kluczowych statystyk, które pojawią się na zdjęciu.",
+      description:
+        "Dodaj od 1 do 3 kluczowych statystyk, które pojawią się na zdjęciu.",
       validation: (Rule) =>
         Rule.required()
           .min(1)
@@ -103,13 +191,15 @@ export default defineType({
               title: "Wartość",
               type: "string",
               description: "Wpisz liczbę lub tekst, np. '50+', '1000', 'Nr 1'.",
-              validation: (Rule) => Rule.required().error("Wartość statystyki jest wymagana."),
+              validation: (Rule) =>
+                Rule.required().error("Wartość statystyki jest wymagana."),
             }),
             defineField({
               name: "label",
               title: "Etykieta",
               type: "string",
-              description: "Wybierz etykietę, do której w kodzie przypisana jest odpowiednia ikona.",
+              description:
+                "Wybierz etykietę, do której w kodzie przypisana jest odpowiednia ikona.",
               options: {
                 list: [
                   { title: "Zorganizowanych koncertów", value: "Koncertów" },
@@ -118,7 +208,8 @@ export default defineType({
                 ],
                 layout: "radio",
               },
-              validation: (Rule) => Rule.required().error("Musisz wybrać etykietę dla statystyki."),
+              validation: (Rule) =>
+                Rule.required().error("Musisz wybrać etykietę dla statystyki."),
             }),
           ],
           preview: {

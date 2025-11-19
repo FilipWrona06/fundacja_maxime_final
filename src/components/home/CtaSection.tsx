@@ -1,3 +1,9 @@
+// Plik: src/components/home/CtaSection.tsx (zaktualizowana wersja)
+
+import type { PortableTextComponents } from "@portabletext/react";
+// --- IMPORTY ---
+// Dodajemy importy dla PortableText, wzorując się na AboutSection
+import { PortableText } from "@portabletext/react";
 import { getCTASectionData } from "@/sanity/lib/queries/home";
 import { CTASectionClient } from "./CtaSection.client";
 
@@ -6,6 +12,27 @@ interface ButtonProps {
   label: string;
   link: string;
 }
+
+// --- KONFIGURACJA PORTABLE TEXT DLA TEJ SEKCJI ---
+// Prosta konfiguracja do obsługi linków w tekście.
+const ctaPortableTextComponents: PortableTextComponents = {
+  marks: {
+    link: ({ children, value }) => {
+      const rel = !value.href.startsWith("/")
+        ? "noreferrer noopener"
+        : undefined;
+      return (
+        <a
+          href={value.href}
+          rel={rel}
+          className="text-arylideYellow underline transition-colors hover:text-arylideYellow/80"
+        >
+          {children}
+        </a>
+      );
+    },
+  },
+};
 
 export async function CTASection() {
   const ctaData = await getCTASectionData();
@@ -22,7 +49,6 @@ export async function CTASection() {
 
   return (
     // Przekazujemy pełne obiekty przycisków oraz treść jako `children`.
-    // Komponent kliencki nie musi już znać konkretnych URL-i jak "patroniteUrl".
     <CTASectionClient
       primaryButton={primaryButton}
       secondaryButton={secondaryButton}
@@ -36,11 +62,14 @@ export async function CTASection() {
           {ctaData.heading}
         </h2>
 
-        {/* Subheading - dane z Sanity */}
+        {/* Subheading - ZAKTUALIZOWANE RENDEROWANIE ZA POMOCĄ PORTABLE TEXT */}
         {ctaData.text && (
-          <p className="mx-auto mb-3 max-w-2xl text-[0.95rem] leading-relaxed text-white/80 sm:mb-5 sm:text-lg md:text-xl md:leading-relaxed lg:max-w-3xl">
-            {ctaData.text}
-          </p>
+          <div className="prose prose-invert mx-auto max-w-2xl text-[0.95rem] leading-relaxed text-white/80 sm:text-lg md:text-xl md:leading-relaxed lg:max-w-3xl">
+            <PortableText
+              value={ctaData.text}
+              components={ctaPortableTextComponents}
+            />
+          </div>
         )}
       </div>
     </CTASectionClient>

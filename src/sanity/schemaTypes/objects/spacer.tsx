@@ -1,16 +1,18 @@
 // schemas/objects/spacer.tsx
-import { defineType, defineField } from "sanity";
+import { defineField, defineType } from "sanity";
 
 // Komponent podglądu, który wizualizuje pustą przestrzeń w edytorze
 const SpacerPreview = () => (
-  <div style={{
-    border: '2px dashed #444',
-    borderRadius: '4px',
-    padding: '0.5em',
-    textAlign: 'center',
-    color: '#888',
-    margin: '1em 0',
-  }}>
+  <div
+    style={{
+      border: "2px dashed #444",
+      borderRadius: "4px",
+      padding: "0.5em",
+      textAlign: "center",
+      color: "#888",
+      margin: "1em 0",
+    }}
+  >
     Odstęp (Pusta Linia)
   </div>
 );
@@ -21,10 +23,10 @@ export default defineType({
   type: "object",
   fields: [
     defineField({
-      name: 'placeholder',
-      type: 'string',
+      name: "placeholder",
+      type: "string",
       hidden: true,
-    })
+    }),
   ],
   components: {
     preview: SpacerPreview,
@@ -32,8 +34,8 @@ export default defineType({
   preview: {
     prepare() {
       return {
-        title: 'Odstęp (Pusta Linia)',
-      }
-    }
-  }
+        title: "Odstęp (Pusta Linia)",
+      };
+    },
+  },
 });

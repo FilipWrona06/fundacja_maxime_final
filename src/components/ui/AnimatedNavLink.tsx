@@ -115,7 +115,7 @@ export const AnimatedNavLink = memo(
         </m.div>
       </li>
     );
-  }
+  },
 );
 
 AnimatedNavLink.displayName = "AnimatedNavLink";

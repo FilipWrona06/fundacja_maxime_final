@@ -1,9 +1,11 @@
-import { defineType, defineField } from "sanity";
+import { defineField, defineType } from "sanity";
 
 // Ten mały komponent React tworzy wizualny podgląd linii
 // bezpośrednio w edytorze Sanity, co bardzo ułatwia pracę redaktorowi.
 const RulePreview = () => (
-  <hr style={{ border: 'none', borderTop: '2px solid #ccc', margin: '1em 0' }} />
+  <hr
+    style={{ border: "none", borderTop: "2px solid #ccc", margin: "1em 0" }}
+  />
 );
 
 export default defineType({
@@ -14,10 +16,10 @@ export default defineType({
   // Jest ukryte i redaktor go nie widzi.
   fields: [
     defineField({
-      name: 'placeholder',
-      type: 'string',
+      name: "placeholder",
+      type: "string",
       hidden: true,
-    })
+    }),
   ],
   components: {
     preview: RulePreview,
@@ -26,8 +28,8 @@ export default defineType({
     prepare() {
       // Ta nazwa pojawi się przy komponencie, gdy jest zwinięty
       return {
-        title: 'Pozioma linia',
-      }
-    }
-  }
+        title: "Pozioma linia",
+      };
+    },
+  },
 });

@@ -1,4 +1,4 @@
-// Plik: timelineSection.ts (wersja ostateczna)
+// Plik: timelineSection.ts (wersja z edytorem Portable Text)
 
 import { defineArrayMember, defineField, defineType } from "sanity";
 
@@ -20,26 +20,33 @@ export default defineType({
       name: "headingHighlighted",
       title: "Nagłówek - część wyróżniona",
       type: "string",
-      description: 'Część nagłówka, która zostanie wyróżniona kolorem, np. "Historia".',
-      validation: (Rule) => Rule.required().error("Wyróżniona część nagłówka jest wymagana."),
+      description:
+        'Część nagłówka, która zostanie wyróżniona kolorem, np. "Historia".',
+      validation: (Rule) =>
+        Rule.required().error("Wyróżniona część nagłówka jest wymagana."),
       fieldset: "header",
     }),
     defineField({
       name: "subheading",
       title: "Podtytuł",
       type: "string",
-      description: "Krótki tekst wprowadzający, wyświetlany pod głównym nagłówkiem.",
+      description:
+        "Krótki tekst wprowadzający, wyświetlany pod głównym nagłówkiem.",
       validation: (Rule) => Rule.required().error("Podtytuł jest wymagany."),
       fieldset: "header",
     }),
 
-    // --- Lista wydarzeń na osi czasu (bez zmian) ---
+    // --- Lista wydarzeń na osi czasu (zaktualizowana) ---
     defineField({
       name: "timelineEvents",
       title: "Wydarzenia na osi czasu",
       type: "array",
-      description: "Lista kluczowych wydarzeń z historii fundacji. Najlepiej dodawać je w porządku chronologicznym (od najstarszego do najnowszego).",
-      validation: (Rule) => Rule.required().min(1).error("Należy dodać co najmniej jedno wydarzenie."),
+      description:
+        "Lista kluczowych wydarzeń z historii fundacji. Najlepiej dodawać je w porządku chronologicznym (od najstarszego do najnowszego).",
+      validation: (Rule) =>
+        Rule.required()
+          .min(1)
+          .error("Należy dodać co najmniej jedno wydarzenie."),
       of: [
         defineArrayMember({
           name: "timelineEvent",
@@ -50,7 +57,8 @@ export default defineType({
               name: "year",
               title: "Rok wydarzenia",
               type: "number",
-              description: "Wpisz pełny rok, np. 2022. Formatowanie na stronie (np. do '22) odbędzie się automatycznie.",
+              description:
+                "Wpisz pełny rok, np. 2022. Formatowanie na stronie (np. do '22) odbędzie się automatycznie.",
               validation: (Rule) =>
                 Rule.required()
                   .integer()
@@ -61,30 +69,74 @@ export default defineType({
               name: "title",
               title: "Tytuł wydarzenia",
               type: "string",
-              validation: (Rule) => Rule.required().error("Tytuł wydarzenia jest wymagany."),
+              validation: (Rule) =>
+                Rule.required().error("Tytuł wydarzenia jest wymagany."),
             }),
+
+            // --- ZAKTUALIZOWANE POLE "description" Z EDYTOREM TEKSTU ---
             defineField({
               name: "description",
               title: "Opis wydarzenia",
-              type: "text",
-              rows: 4,
-              validation: (Rule) => Rule.required().error("Opis wydarzenia jest wymagany."),
+              type: "array", // Zmieniono z 'text' na 'array'
+              validation: (Rule) =>
+                Rule.required().error("Opis wydarzenia jest wymagany."),
+              of: [
+                {
+                  type: "block",
+                  styles: [{ title: "Normal", value: "normal" }],
+                  lists: [
+                    { title: "Lista punktowana", value: "bullet" },
+                    { title: "Lista numerowana", value: "number" },
+                  ],
+                  marks: {
+                    decorators: [
+                      { title: "Pogrubienie", value: "strong" },
+                      { title: "Kursywa", value: "em" },
+                      { title: "Podkreślenie", value: "underline" },
+                      { title: "Przekreślenie", value: "strike-through" },
+                    ],
+                    annotations: [
+                      {
+                        name: "link",
+                        type: "object",
+                        title: "Link zewnętrzny",
+                        fields: [
+                          {
+                            name: "href",
+                            type: "url",
+                            title: "URL",
+                            validation: (Rule) =>
+                              Rule.uri({
+                                scheme: ["http", "https", "mailto", "tel"],
+                              }),
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                },
+              ],
             }),
+
             defineField({
               name: "image",
               title: "Zdjęcie",
               type: "image",
               options: { hotspot: true },
-              validation: (Rule) => Rule.required().error("Zdjęcie jest wymagane dla wydarzenia."),
+              validation: (Rule) =>
+                Rule.required().error("Zdjęcie jest wymagane dla wydarzenia."),
             }),
             defineField({
               name: "altText",
               title: "Tekst alternatywny",
               type: "string",
-              description: "Kluczowe dla SEO i dostępności. Opisz zwięźle, co przedstawia zdjęcie.",
-              validation: (Rule) => Rule.required().error("Tekst alternatywny jest wymagany."),
+              description:
+                "Kluczowe dla SEO i dostępności. Opisz zwięźle, co przedstawia zdjęcie.",
+              validation: (Rule) =>
+                Rule.required().error("Tekst alternatywny jest wymagany."),
             }),
           ],
+          // Konfiguracja podglądu nie wymaga zmian, ponieważ nie używała pola 'description'
           preview: {
             select: {
               title: "title",
@@ -93,7 +145,9 @@ export default defineType({
             },
             prepare({ title, subtitle, media }) {
               return {
-                title: subtitle ? `${subtitle}: ${title}` : title || "Brak tytułu",
+                title: subtitle
+                  ? `${subtitle}: ${title}`
+                  : title || "Brak tytułu",
                 subtitle: "Wydarzenie na osi czasu",
                 media: media,
               };

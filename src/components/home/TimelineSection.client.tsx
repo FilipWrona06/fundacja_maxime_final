@@ -1,5 +1,9 @@
 "use client";
 
+import type { PortableTextComponents } from "@portabletext/react";
+// 1. Dodajemy importy dla PortableText
+import { PortableText } from "@portabletext/react";
+// --- IMPORTY ---
 import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
 import Image from "next/image";
 
@@ -72,8 +76,26 @@ const lineDrawVariant: Variants = {
   },
 };
 
-// --- KLUCZOWA ZMIANA W TYPACH ---
-// Gwarantujemy TypeScriptowi, że dane zawsze będą dostępne.
+// 2. Definiujemy komponenty dla Portable Text
+const timelinePortableTextComponents: PortableTextComponents = {
+  marks: {
+    link: ({ children, value }) => {
+      const rel = !value.href.startsWith("/")
+        ? "noreferrer noopener"
+        : undefined;
+      return (
+        <a
+          href={value.href}
+          rel={rel}
+          className="text-arylideYellow underline transition-colors hover:text-arylideYellow/80"
+        >
+          {children}
+        </a>
+      );
+    },
+  },
+};
+
 export const TimelineSectionClient = ({
   timelineData,
   children,
@@ -81,6 +103,7 @@ export const TimelineSectionClient = ({
   timelineData: NonNullable<HomePageData["timelineSection"]>;
   children: React.ReactNode;
 }) => {
+  // Główna logika komponentu pozostaje bez zmian
   return (
     <LazyMotion features={domAnimation}>
       <section
@@ -116,7 +139,6 @@ export const TimelineSectionClient = ({
             />
 
             <div className="space-y-10 sm:space-y-12 md:space-y-16 lg:space-y-20">
-              {/* Ten mapping jest teraz w 100% bezpieczny */}
               {timelineData.timelineEvents.map((item, index) => (
                 <TimelineEventComponent
                   key={item.year}
@@ -157,7 +179,6 @@ const TimelineEventComponent = ({
           className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-arylideYellow bg-raisinBlack shadow-lg transition-shadow duration-300 hover:shadow-arylideYellow/30 lg:h-20 lg:w-20"
         >
           <span className="relative z-10 font-youngest text-2xl text-arylideYellow lg:text-3xl">
-            {/* ZMIANA: Formatujemy liczbę na skrócony rok, np. 2022 -> '22 */}
             {`'${item.year.toString().slice(-2)}`}
           </span>
         </m.div>
@@ -166,7 +187,6 @@ const TimelineEventComponent = ({
       <div className="group/content relative">
         <m.time
           variants={fadeInUpVariant}
-          // ZMIANA: Używamy pełnego roku z tego samego pola
           dateTime={item.year.toString()}
           className="mb-2 inline-block font-youngest text-3xl text-arylideYellow sm:mb-4 sm:text-4xl md:hidden"
         >
@@ -180,13 +200,18 @@ const TimelineEventComponent = ({
           {item.title}
         </m.h3>
 
-        <m.p
+        {/* --- 3. ZMIANA: Renderowanie opisu za pomocą PortableText --- */}
+        <m.div
           variants={fadeInUpVariant}
-          className="mb-2 text-[0.9rem] leading-relaxed text-white/90 sm:mb-6 sm:text-lg md:leading-relaxed lg:text-xl"
+          className="mb-2 sm:mb-6" // Przeniesienie marginesu na opakowanie animacji
         >
-          {/* ZMIANA: `text` na `description` */}
-          {item.description}
-        </m.p>
+          <div className="prose prose-invert max-w-none text-[0.9rem] leading-relaxed text-white/90 sm:text-lg md:leading-relaxed lg:text-xl">
+            <PortableText
+              value={item.description}
+              components={timelinePortableTextComponents}
+            />
+          </div>
+        </m.div>
 
         <m.div
           variants={fadeInUpVariant}
@@ -204,7 +229,6 @@ const TimelineEventComponent = ({
                   .height(563)
                   .quality(90)
                   .url()}
-                // ZMIANA: `alt` na `altText`
                 alt={item.altText}
                 width={1000}
                 height={563}

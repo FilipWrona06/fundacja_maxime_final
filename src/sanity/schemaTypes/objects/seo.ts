@@ -4,7 +4,7 @@ import { defineField, defineType } from "sanity";
 // ZMIANA: Poprawiony import klienta Sanity przy użyciu aliasu ścieżki.
 // Zakładamy, że masz skonfigurowany alias '@' wskazujący na src/.
 // Jeśli nie, użyj poprawnej ścieżki względnej, np. '../../client'.
-import { client } from "@/sanity/lib/client"; 
+import { client } from "@/sanity/lib/client";
 
 // Definiujemy grupy, które stworzą zakładki w interfejsie Sanity Studio
 const seoGroups = [
@@ -25,7 +25,8 @@ export default defineType({
       title: "Meta Tytuł (Title Tag)",
       type: "string",
       group: "main",
-      description: "Najważniejszy element SEO. Pojawi się w zakładce przeglądarki i w wynikach Google. Idealna długość: 50-60 znaków.",
+      description:
+        "Najważniejszy element SEO. Pojawi się w zakładce przeglądarki i w wynikach Google. Idealna długość: 50-60 znaków.",
       validation: (Rule) =>
         Rule.required()
           .max(70)
@@ -37,7 +38,8 @@ export default defineType({
       type: "text",
       rows: 3,
       group: "main",
-      description: "Tekst widoczny pod tytułem w wynikach Google. Kluczowy dla zachęcenia do kliknięcia. Idealna długość: 150-160 znaków.",
+      description:
+        "Tekst widoczny pod tytułem w wynikach Google. Kluczowy dla zachęcenia do kliknięcia. Idealna długość: 150-160 znaków.",
       validation: (Rule) =>
         Rule.required()
           .max(170)
@@ -50,7 +52,8 @@ export default defineType({
       title: "Tytuł dla Social Media",
       type: "string",
       group: "social",
-      description: "Opcjonalny. Jeśli pusty, użyty zostanie Meta Tytuł. Możesz tu wpisać bardziej chwytliwy tytuł dla Facebooka, LinkedIn itp.",
+      description:
+        "Opcjonalny. Jeśli pusty, użyty zostanie Meta Tytuł. Możesz tu wpisać bardziej chwytliwy tytuł dla Facebooka, LinkedIn itp.",
       placeholder: "Domyślnie taki sam jak Meta Tytuł",
     }),
     defineField({
@@ -59,7 +62,8 @@ export default defineType({
       type: "text",
       rows: 3,
       group: "social",
-      description: "Opcjonalny. Jeśli pusty, użyty zostanie Meta Opis. Możesz tu wpisać krótszy, bardziej angażujący opis.",
+      description:
+        "Opcjonalny. Jeśli pusty, użyty zostanie Meta Opis. Możesz tu wpisać krótszy, bardziej angażujący opis.",
       placeholder: "Domyślnie taki sam jak Meta Opis",
     }),
     defineField({
@@ -67,7 +71,8 @@ export default defineType({
       title: "Obrazek dla Social Media",
       type: "image",
       group: "social",
-      description: "Najważniejszy element dla social media. Rekomendowany rozmiar: 1200x630 pikseli (proporcje 1.91:1).",
+      description:
+        "Najważniejszy element dla social media. Rekomendowany rozmiar: 1200x630 pikseli (proporcje 1.91:1).",
       options: {
         hotspot: true,
       },
@@ -77,7 +82,10 @@ export default defineType({
           title: "Tekst alternatywny",
           type: "string",
           description: "Opis obrazka dla dostępności i SEO.",
-          validation: (Rule) => Rule.required().error("Tekst alternatywny jest wymagany dla obrazka."),
+          validation: (Rule) =>
+            Rule.required().error(
+              "Tekst alternatywny jest wymagany dla obrazka.",
+            ),
         }),
       ],
       validation: (Rule) =>
@@ -88,8 +96,10 @@ export default defineType({
           }
 
           // ZMIANA: Używamy bezpośrednio zaimportowanego klienta
-          const asset = await client.fetch(`*[_id == $id][0]`, { id: value.asset._ref });
-          
+          const asset = await client.fetch(`*[_id == $id][0]`, {
+            id: value.asset._ref,
+          });
+
           const dimensions = asset?.metadata?.dimensions;
           if (!dimensions) {
             return "Nie można odczytać wymiarów obrazka. Spróbuj wgrać go ponownie.";
@@ -106,7 +116,8 @@ export default defineType({
       type: "boolean",
       initialValue: false,
       group: "advanced",
-      description: "Zaznacz, jeśli ta strona nie powinna pojawiać się w wynikach wyszukiwania. Używaj ostrożnie!",
+      description:
+        "Zaznacz, jeśli ta strona nie powinna pojawiać się w wynikach wyszukiwania. Używaj ostrożnie!",
     }),
     defineField({
       name: "noFollow",
@@ -114,14 +125,16 @@ export default defineType({
       type: "boolean",
       initialValue: false,
       group: "advanced",
-      description: 'Rzadko używane. Zaznacz, jeśli chcesz, aby roboty Google nie "klikały" w żadne linki na tej stronie.',
+      description:
+        'Rzadko używane. Zaznacz, jeśli chcesz, aby roboty Google nie "klikały" w żadne linki na tej stronie.',
     }),
     defineField({
       name: "canonicalUrl",
       title: "Kanoniczny Adres URL",
       type: "url",
       group: "advanced",
-      description: "Opcjonalne. Jeśli ta strona jest kopią innej, podaj tutaj oryginalny adres, aby uniknąć problemów z duplikacją treści.",
+      description:
+        "Opcjonalne. Jeśli ta strona jest kopią innej, podaj tutaj oryginalny adres, aby uniknąć problemów z duplikacją treści.",
       validation: (Rule) => Rule.uri({ allowRelative: true }),
     }),
   ],

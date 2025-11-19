@@ -1,8 +1,8 @@
 "use client";
 
 import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
-import type { GaleriaPageData } from "@/lib/types";
 import { premiumEase } from "@/lib/animations";
+import type { GaleriaPageData } from "@/lib/types";
 
 interface Props {
   heroData: GaleriaPageData["heroSection"];
@@ -68,10 +68,7 @@ export default function GalleryHeroSectionClient({ heroData }: Props) {
           </m.div>
 
           {/* Main Heading - responsive size */}
-          <m.h1
-            variants={fadeInUpVariant}
-            className="mb-6 space-y-1"
-          >
+          <m.h1 variants={fadeInUpVariant} className="mb-6 space-y-1">
             <span className="block font-youngest text-[clamp(3rem,7vw,6rem)] leading-[0.9] tracking-tight text-arylideYellow drop-shadow-2xl">
               {heroData.headingLine1}
             </span>

@@ -21,6 +21,18 @@ export interface SanitySlug {
 
 // --- GŁÓWNE REUŻYWALNE TYPY ---
 
+/**
+ * Definiuje podstawowy, bezpieczny typ dla bloków z edytora Portable Text.
+ * Zastępuje użycie `any[]`, eliminując błędy lintera. Każdy obiekt
+ * w tablicy musi mieć co najmniej właściwość `_type`.
+ */
+export type PortableTextBlock = {
+  _type: string;
+  [key: string]: unknown;
+};
+
+export type PortableTextContent = PortableTextBlock[];
+
 export interface SeoData {
   metaTitle: string;
   metaDescription: string;
@@ -39,14 +51,14 @@ export interface SeoData {
 export interface TimelineEvent {
   year: number;
   title: string;
-  description: string;
+  description: PortableTextContent;
   image: SanityImage;
   altText: string;
 }
 
 export interface ImpactCard {
   title: string;
-  description: string;
+  description: PortableTextContent;
   image: SanityImage;
   altText: string;
 }
@@ -62,12 +74,11 @@ export interface Stat {
 export interface HomePageData {
   seo: SeoData;
 
-  // ZAKTUALIZOWANE: Dodano typy dla przycisków w sekcji Hero.
   heroSection?: {
     badgeText: string;
     headingPart1: string;
     headingPart2: string;
-    description: any[];
+    description: PortableTextContent;
     videoWebmUrl: string;
     videoMp4Url: string;
     posterUrl: string;
@@ -86,8 +97,8 @@ export interface HomePageData {
     headingPart1: string;
     headingPart2: string;
     headingPart3: string;
-    paragraph1: string;
-    paragraph2: string;
+    paragraph1: PortableTextContent;
+    paragraph2: PortableTextContent;
     image: SanityImage;
     imageAlt: string;
     stats: Stat[];
@@ -109,7 +120,7 @@ export interface HomePageData {
 
   ctaSection?: {
     heading: string;
-    text?: string;
+    text?: PortableTextContent;
     primaryButton: {
       label: string;
       link: string;

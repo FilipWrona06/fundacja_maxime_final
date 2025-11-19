@@ -8,8 +8,8 @@ import { CTASection } from "@/components/home/CtaSection";
 import { HeroSection } from "@/components/home/HeroSection";
 import { ImpactSection } from "@/components/home/ImpactSection";
 import { TimelineSection } from "@/components/home/TimelineSection";
-import { getHomePageSeoData } from "@/sanity/lib/queries/home";
 import { urlFor } from "@/sanity/lib/image";
+import { getHomePageSeoData } from "@/sanity/lib/queries/home";
 
 export async function generateMetadata(): Promise<Metadata> {
   const seoData = await getHomePageSeoData();
@@ -17,7 +17,8 @@ export async function generateMetadata(): Promise<Metadata> {
   if (!seoData) {
     return {
       title: "Fundacja Maxime | Z Pasji do Muzyki",
-      description: "Odkryj historię naszej fundacji, sprawdź nadchodzące koncerty i dołącz do naszej muzycznej społeczności.",
+      description:
+        "Odkryj historię naszej fundacji, sprawdź nadchodzące koncerty i dołącz do naszej muzycznej społeczności.",
     };
   }
 

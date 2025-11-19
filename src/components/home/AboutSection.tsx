@@ -1,10 +1,40 @@
+// Plik: src/components/home/AboutSection.tsx (poprawiona wersja)
+
+// --- IMPORTY ---
+import type { PortableTextComponents } from "@portabletext/react";
+import { PortableText } from "@portabletext/react";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import Image from "next/image";
 import { FiAward, FiMusic, FiUsers } from "react-icons/fi";
-import type { Stat } from "@/lib/types";
-import { getAboutSectionData } from "@/sanity/lib/queries/home";
+// 1. Importujemy nowo zdefiniowany typ `PortableTextContent`
+import type { PortableTextContent, Stat } from "@/lib/types";
 import { urlFor } from "@/sanity/lib/image";
+import { getAboutSectionData } from "@/sanity/lib/queries/home";
 import { AboutSectionClient } from "./AboutSection.client";
+
+// --- KONFIGURACJA PORTABLE TEXT DLA TEJ SEKCJI ---
+const aboutPortableTextComponents: PortableTextComponents = {
+  types: {
+    horizontalRule: () => <hr className="my-8 border-white/20" />,
+    spacer: () => <div className="h-8" aria-hidden="true" />,
+  },
+  marks: {
+    link: ({ children, value }) => {
+      const rel = !value.href.startsWith("/")
+        ? "noreferrer noopener"
+        : undefined;
+      return (
+        <a
+          href={value.href}
+          rel={rel}
+          className="text-arylideYellow underline transition-colors hover:text-arylideYellow/80"
+        >
+          {children}
+        </a>
+      );
+    },
+  },
+};
 
 const ICONS_MAP: { [key: string]: React.ElementType } = {
   Koncertów: FiMusic,
@@ -12,14 +42,15 @@ const ICONS_MAP: { [key: string]: React.ElementType } = {
   Nagród: FiAward,
 };
 
-// Ta funkcja pozostaje bez zmian.
+// --- ZAKTUALIZOWANA FUNKCJA `createStaticContent` ---
 const createStaticContent = (data: {
   smallHeading: string;
   headingPart1: string;
   headingPart2: string;
   headingPart3: string;
-  paragraph1: string;
-  paragraph2: string;
+  // 2. Zastępujemy `any[]` typem `PortableTextContent`
+  paragraph1: PortableTextContent;
+  paragraph2?: PortableTextContent;
 }) => (
   <div className="space-y-6">
     {/* Small heading */}
@@ -40,14 +71,19 @@ const createStaticContent = (data: {
       <span className="block text-white">{data.headingPart3}</span>
     </h2>
 
-    {/* Paragraphs */}
-    <div className="space-y-4 pt-2 sm:space-y-6 sm:pt-4">
-      <p className="text-base leading-relaxed text-white/70 sm:text-lg sm:leading-relaxed lg:text-xl lg:leading-relaxed">
-        {data.paragraph1}
-      </p>
-      <p className="text-base leading-relaxed text-white/70 sm:text-lg sm:leading-relaxed lg:text-xl lg:leading-relaxed">
-        {data.paragraph2}
-      </p>
+    {/* Paragraphs - RENDEROWANE PRZEZ PORTABLETEXT */}
+    <div className="prose prose-invert max-w-none space-y-4 pt-2 text-base leading-relaxed text-white/70 sm:space-y-6 sm:pt-4 sm:text-lg sm:leading-relaxed lg:text-xl lg:leading-relaxed">
+      <PortableText
+        value={data.paragraph1}
+        components={aboutPortableTextComponents}
+      />
+      {/* Warunkowe renderowanie drugiego akapitu */}
+      {data.paragraph2 && (
+        <PortableText
+          value={data.paragraph2}
+          components={aboutPortableTextComponents}
+        />
+      )}
     </div>
   </div>
 );
@@ -70,8 +106,6 @@ const createStaticImage = (data: {
         blurDataURL={urlFor(data.image).width(20).height(25).blur(10).url()}
       />
     )}
-
-    {/* Gradient overlay */}
     <div className="absolute inset-0 bg-linear-to-t from-raisinBlack/60 via-raisinBlack/20 to-transparent" />
   </div>
 );
@@ -106,19 +140,14 @@ const createMiniStats = (statsData: Stat[]) => (
   </div>
 );
 
-// Główna logika komponentu została uproszczona.
+// Główna logika komponentu bez zmian.
 export async function AboutSection() {
-  // 1. Wykonujemy tylko JEDNO zapytanie, które pobiera wszystkie potrzebne dane.
   const aboutData = await getAboutSectionData();
 
-  // 2. Sprawdzamy, czy otrzymaliśmy dane dla sekcji ORAZ czy zawierają one statystyki.
-  //    Pole `stats` jest teraz częścią obiektu `aboutData`.
   if (!aboutData || !aboutData.stats) {
     return null;
   }
 
-  // 3. Przekazujemy dane do komponentu klienckiego.
-  //    Dane do `createMiniStats` pochodzą bezpośrednio z `aboutData.stats`.
   return (
     <AboutSectionClient
       staticContent={createStaticContent(aboutData)}

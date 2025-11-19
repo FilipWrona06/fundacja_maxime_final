@@ -20,7 +20,8 @@ export default defineType({
       title: "Tytuł (wewnętrzny)",
       type: "string",
       group: "content",
-      description: "Ten tytuł jest tylko dla Twojej orientacji w Sanity Studio.",
+      description:
+        "Ten tytuł jest tylko dla Twojej orientacji w Sanity Studio.",
       initialValue: "Strona Główna",
       validation: (Rule) => Rule.required(),
       readOnly: true,

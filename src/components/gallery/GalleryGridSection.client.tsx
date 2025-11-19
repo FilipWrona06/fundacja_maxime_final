@@ -21,7 +21,7 @@ import {
 // Dynamiczne ładowanie komponentu Lightbox.
 // Zostanie on załadowany dopiero, gdy będzie potrzebny (po kliknięciu zdjęcia).
 const DynamicLightbox = dynamic(() =>
-  import("./Lightbox").then((mod) => mod.Lightbox)
+  import("./Lightbox").then((mod) => mod.Lightbox),
 );
 
 interface ImageData {
@@ -93,7 +93,7 @@ export const GalleryGridSectionClient = ({
   const blurOpacity = useTransform(
     scrollYProgress,
     [0, 0.3, 0.7, 1],
-    [0, 1, 1, 0]
+    [0, 1, 1, 0],
   );
 
   const formattedDate = new Date(galleryData.date).toLocaleDateString("pl-PL", {

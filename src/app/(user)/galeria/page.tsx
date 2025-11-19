@@ -3,8 +3,8 @@ import { Suspense } from "react";
 
 import { GalleryGridSection } from "@/components/gallery/GalleryGridSection";
 import { GalleryHeroSection } from "@/components/gallery/GalleryHeroSection";
-import { getGalleryPageData } from "@/sanity/lib/queries/gallery";
 import { urlFor } from "@/sanity/lib/image";
+import { getGalleryPageData } from "@/sanity/lib/queries/gallery";
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getGalleryPageData();
@@ -68,7 +68,8 @@ export default async function GaleriaPage() {
         <div className="container mx-auto px-6 text-center">
           <h1 className="mb-4 text-4xl font-bold">Galeria Wydarzeń</h1>
           <p className="text-white/60">
-            Brak danych do wyświetlenia. Skonfiguruj stronę galerii w Sanity CMS.
+            Brak danych do wyświetlenia. Skonfiguruj stronę galerii w Sanity
+            CMS.
           </p>
         </div>
       </div>

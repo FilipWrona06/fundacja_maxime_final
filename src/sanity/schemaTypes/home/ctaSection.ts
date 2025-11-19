@@ -1,7 +1,7 @@
-// Plik: ctaSection.ts (wersja rozszerzona i poprawiona)
+// Plik: ctaSection.ts (wersja z zaawansowanym edytorem tekstu)
 
-import { defineField, defineType } from "sanity";
 import { FiMousePointer } from "react-icons/fi"; // Opcjonalnie: dodanie ikon dla lepszego UI w studio
+import { defineField, defineType } from "sanity";
 
 export default defineType({
   name: "ctaSection",
@@ -13,35 +13,76 @@ export default defineType({
     { name: "buttons", title: "Przyciski Akcji" },
   ],
   fields: [
-    // --- GRUPA: Treść sekcji (pola pozostają bez zmian) ---
+    // --- GRUPA: Treść sekcji ---
     defineField({
       name: "heading",
       title: "Główny nagłówek",
       type: "string",
-      description: "Chwytliwy tekst, który ma przyciągnąć uwagę, np. 'Pomóż nam się rozwijać!'.",
+      description:
+        "Chwytliwy tekst, który ma przyciągnąć uwagę, np. 'Pomóż nam się rozwijać!'.",
       validation: (Rule) => Rule.required().error("Nagłówek jest wymagany."),
       fieldset: "content",
     }),
+
+    // ZAKTUALIZOWANE POLE "text" Z ZAAWANSOWANYM EDYTOREM
     defineField({
       name: "text",
       title: "Tekst pomocniczy",
-      type: "text",
-      rows: 3,
-      description: "Dodatkowy, krótki tekst wyjaśniający, np. 'Twoje wsparcie pozwala nam organizować bezpłatne koncerty...'.",
-      validation: (Rule) => Rule.required().error("Tekst pomocniczy jest wymagany."),
+      type: "array",
       fieldset: "content",
+      description:
+        "Dodatkowy tekst wyjaśniający, np. 'Twoje wsparcie pozwala nam organizować bezpłatne koncerty...'.",
+      of: [
+        {
+          type: "block",
+          styles: [{ title: "Normal", value: "normal" }],
+          lists: [
+            { title: "Lista punktowana", value: "bullet" },
+            { title: "Lista numerowana", value: "number" },
+          ],
+          marks: {
+            decorators: [
+              { title: "Pogrubienie", value: "strong" },
+              { title: "Kursywa", value: "em" },
+              { title: "Podkreślenie", value: "underline" },
+              { title: "Przekreślenie", value: "strike-through" },
+            ],
+            annotations: [
+              {
+                name: "link",
+                type: "object",
+                title: "Link zewnętrzny",
+                fields: [
+                  {
+                    name: "href",
+                    type: "url",
+                    title: "URL",
+                    validation: (Rule) =>
+                      Rule.uri({
+                        scheme: ["http", "https", "mailto", "tel"],
+                      }),
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        // Możesz także dodać separatory, jeśli są potrzebne w tej sekcji
+        // { type: "horizontalRule" },
+        // { type: "spacer" },
+      ],
+      validation: (Rule) =>
+        Rule.required().error("Tekst pomocniczy jest wymagany."),
     }),
 
-    // --- GRUPA: Przyciski Akcji (zmodyfikowana i rozszerzona) ---
-
-    // ZMIANA: Przycisk główny został nazwany `primaryButton` dla większej czytelności.
-    // Jego struktura pozostaje taka sama.
+    // --- GRUPA: Przyciski Akcji (pozostaje bez zmian) ---
     defineField({
       name: "primaryButton",
       title: "Przycisk główny (np. 'Wesprzyj nas')",
       type: "object",
       description: "Główny przycisk akcji w sekcji.",
-      validation: (Rule) => Rule.required().error("Przycisk główny jest wymagany."),
+      validation: (Rule) =>
+        Rule.required().error("Przycisk główny jest wymagany."),
       fieldset: "buttons",
       fields: [
         defineField({
@@ -49,7 +90,8 @@ export default defineType({
           title: "Etykieta przycisku",
           type: "string",
           description: "Tekst na przycisku, np. 'Wesprzyj nas'.",
-          validation: (Rule) => Rule.required().error("Etykieta jest wymagana."),
+          validation: (Rule) =>
+            Rule.required().error("Etykieta jest wymagana."),
         }),
         defineField({
           name: "link",
@@ -65,15 +107,11 @@ export default defineType({
       ],
     }),
 
-    // NOWOŚĆ: Dodano pole dla drugiego, opcjonalnego przycisku.
-    // Jest to obiekt, który redaktor może dodać, ale nie musi.
-    // Dzięki temu komponent na froncie będzie mógł go warunkowo renderować.
     defineField({
       name: "secondaryButton",
       title: "Przycisk dodatkowy (np. 'Zobacz galerię')",
       type: "object",
       description: "Opcjonalny, drugi przycisk o mniejszym priorytecie.",
-      // Brak walidacji `required()` oznacza, że pole jest opcjonalne.
       fieldset: "buttons",
       fields: [
         defineField({
@@ -81,13 +119,15 @@ export default defineType({
           title: "Etykieta przycisku",
           type: "string",
           description: "Tekst na przycisku, np. 'Zobacz naszą galerię'.",
-          validation: (Rule) => Rule.required().error("Etykieta jest wymagana."),
+          validation: (Rule) =>
+            Rule.required().error("Etykieta jest wymagana."),
         }),
         defineField({
           name: "link",
           title: "Link docelowy",
-          type: "string", // Użycie 'string' zamiast 'url' pozwala na łatwe linkowanie wewnętrzne, np. '/galeria'
-          description: "Link wewnętrzny (np. '/galeria') lub zewnętrzny (np. 'https://google.com').",
+          type: "string",
+          description:
+            "Link wewnętrzny (np. '/galeria') lub zewnętrzny (np. 'https://google.com').",
           validation: (Rule) => Rule.required().error("Link jest wymagany."),
         }),
       ],

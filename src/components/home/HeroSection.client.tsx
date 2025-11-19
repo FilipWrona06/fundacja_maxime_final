@@ -1,8 +1,8 @@
 "use client";
 
+import type { PortableTextComponents } from "@portabletext/react";
 // --- IMPORTY ---
 import { PortableText } from "@portabletext/react";
-import type { PortableTextComponents } from "@portabletext/react";
 import {
   domAnimation,
   LazyMotion,

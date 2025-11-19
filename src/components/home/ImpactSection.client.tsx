@@ -1,5 +1,9 @@
 "use client";
 
+import type { PortableTextComponents } from "@portabletext/react";
+// 1. Dodajemy importy dla PortableText
+import { PortableText } from "@portabletext/react";
+// --- IMPORTY ---
 import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
 import Image from "next/image";
 
@@ -48,8 +52,26 @@ const headingVariant: Variants = {
   },
 };
 
-// --- KLUCZOWA ZMIANA W TYPACH ---
-// Gwarantujemy TypeScriptowi, że dane zawsze będą dostępne w tym komponencie.
+// 2. Definiujemy komponenty dla Portable Text (np. do stylizacji linków)
+const impactPortableTextComponents: PortableTextComponents = {
+  marks: {
+    link: ({ children, value }) => {
+      const rel = !value.href.startsWith("/")
+        ? "noreferrer noopener"
+        : undefined;
+      return (
+        <a
+          href={value.href}
+          rel={rel}
+          className="text-arylideYellow underline transition-colors hover:text-arylideYellow/80"
+        >
+          {children}
+        </a>
+      );
+    },
+  },
+};
+
 export const ImpactSectionClient = ({
   impactData,
   children,
@@ -60,7 +82,7 @@ export const ImpactSectionClient = ({
   return (
     <LazyMotion features={domAnimation}>
       <section
-        id="impact-section" // Dodane ID
+        id="impact-section"
         className="relative overflow-hidden py-16 sm:py-20 md:py-24 lg:py-32 xl:py-40"
         aria-labelledby="impact-heading"
       >
@@ -85,7 +107,6 @@ export const ImpactSectionClient = ({
             variants={staggerContainerVariant}
             className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3"
           >
-            {/* Teraz ten mapping jest w 100% bezpieczny */}
             {impactData.impactCards.map((card, index) => (
               <ImpactCardComponent key={card.title} card={card} index={index} />
             ))}
@@ -110,25 +131,24 @@ const ImpactCardComponent = ({
         y: -8,
         transition: ultraSmoothSpring,
       }}
-      className={`group relative overflow-hidden rounded-2xl shadow-xl transition-all duration-300 sm:rounded-3xl ${
+      className={`group relative flex flex-col overflow-hidden rounded-2xl shadow-xl transition-all duration-300 sm:rounded-3xl ${
         index === 2 ? "md:col-span-2 lg:col-span-1" : ""
       }`}
     >
-      <div className="relative aspect-3/4 overflow-hidden">
+      <div className="relative aspect-4/5 overflow-hidden">
         <div className="h-full w-full">
           {card.image && (
             <Image
-              src={urlFor(card.image).width(600).height(800).quality(90).url()}
-              // ZMIANA: Zaktualizowano nazwę pola
+              src={urlFor(card.image).width(600).height(750).quality(90).url()}
               alt={card.altText}
               fill
-              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 50vw, 400px"
+              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 400px"
               className="object-cover transition-transform duration-700 group-hover:scale-105"
               loading="lazy"
               placeholder="blur"
               blurDataURL={urlFor(card.image)
                 .width(20)
-                .height(27)
+                .height(25)
                 .blur(10)
                 .url()}
             />
@@ -139,15 +159,18 @@ const ImpactCardComponent = ({
         <div className="absolute inset-0 bg-arylideYellow/0 transition-colors duration-300 group-hover:bg-arylideYellow/10" />
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 md:p-8">
+      <div className="flex flex-1 flex-col bg-raisinBlack p-5 sm:p-6 md:p-8">
         <div className="mb-3 h-1 w-12 bg-arylideYellow/50 transition-all duration-300 group-hover:w-20 group-hover:bg-arylideYellow sm:mb-4" />
         <h3 className="mb-1 text-lg font-bold text-white transition-colors duration-300 group-hover:text-arylideYellow sm:mb-3 sm:text-2xl md:text-3xl">
           {card.title}
         </h3>
-        <p className="text-sm leading-relaxed text-white/90 sm:text-base md:leading-relaxed">
-          {/* ZMIANA: Zaktualizowano nazwę pola */}
-          {card.description}
-        </p>
+        {/* 3. Używamy komponentu PortableText do renderowania opisu */}
+        <div className="prose prose-invert max-w-none text-sm leading-relaxed text-white/90 sm:text-base md:leading-relaxed">
+          <PortableText
+            value={card.description}
+            components={impactPortableTextComponents}
+          />
+        </div>
       </div>
     </m.article>
   );
