@@ -10,7 +10,7 @@ import {
   viewportConfig,
 } from "@/lib/animations";
 
-const MotionLink = m(Link);
+const MotionLink = m.create(Link);
 
 // Warianty animacji pozostają bez zmian
 const fadeInUpVariant: Variants = {

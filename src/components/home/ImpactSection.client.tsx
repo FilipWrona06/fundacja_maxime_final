@@ -159,13 +159,13 @@ const ImpactCardComponent = ({
         <div className="absolute inset-0 bg-arylideYellow/0 transition-colors duration-300 group-hover:bg-arylideYellow/10" />
       </div>
 
-      <div className="flex flex-1 flex-col bg-raisinBlack p-5 sm:p-6 md:p-8">
+      <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 md:p-8">
         <div className="mb-3 h-1 w-12 bg-arylideYellow/50 transition-all duration-300 group-hover:w-20 group-hover:bg-arylideYellow sm:mb-4" />
         <h3 className="mb-1 text-lg font-bold text-white transition-colors duration-300 group-hover:text-arylideYellow sm:mb-3 sm:text-2xl md:text-3xl">
           {card.title}
         </h3>
         {/* 3. Używamy komponentu PortableText do renderowania opisu */}
-        <div className="prose prose-invert max-w-none text-sm leading-relaxed text-white/90 sm:text-base md:leading-relaxed">
+        <div className="text-sm leading-relaxed text-white/90 sm:text-base md:leading-relaxed">
           <PortableText
             value={card.description}
             components={impactPortableTextComponents}
