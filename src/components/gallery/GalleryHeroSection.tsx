@@ -1,4 +1,4 @@
-import type { GaleriaPageData } from "@/lib/types";
+import type { GaleriaPageData } from "@/lib/types/index";
 import GalleryHeroSectionClient from "./GalleryHeroSection.client";
 
 /**

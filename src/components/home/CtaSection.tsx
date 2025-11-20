@@ -2,7 +2,7 @@
 
 import type { PortableTextComponents } from "@portabletext/react";
 import { PortableText } from "@portabletext/react";
-import type { PortableTextContent } from "@/lib/types"; // Upewnij się, że ten import jest poprawny w Twoim projekcie
+import type { PortableTextContent } from "@/lib/types/index"; // Upewnij się, że ten import jest poprawny w Twoim projekcie
 import { getCTASectionData } from "@/sanity/lib/queries/home";
 import { CTASectionClient } from "./CtaSection.client";
 

@@ -17,7 +17,7 @@ import type {
   HomePageData,
   PortableTextContent,
   TimelineEvent,
-} from "@/lib/types";
+} from "@/lib/types/index";
 import { urlFor } from "@/sanity/lib/image";
 
 // Warianty animacji pozostają bez zmian.

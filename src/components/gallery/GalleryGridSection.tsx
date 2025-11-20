@@ -1,4 +1,4 @@
-import type { Gallery } from "@/lib/types";
+import type { Gallery } from "@/lib/types/index";
 import { urlFor } from "@/sanity/lib/image";
 import { GalleryGridSectionClient } from "./GalleryGridSection.client";
 

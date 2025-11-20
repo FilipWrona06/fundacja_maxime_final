@@ -16,7 +16,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { FiArrowDown } from "react-icons/fi";
 
 import { premiumEase, smoothEase, ultraSmoothSpring } from "@/lib/animations";
-import type { HomePageData } from "@/lib/types";
+import type { HomePageData } from "@/lib/types/index";
 
 // --- KONFIGURACJA KOMPONENTÓW PORTABLE TEXT ---
 const myPortableTextComponents: PortableTextComponents = {

@@ -25,16 +25,24 @@ export async function POST(req: NextRequest) {
       return new Response("Invalid signature", { status: 401 });
     }
 
-    if (!body?._type || !body?._id) {
+    if (!body?._type) {
       return new Response("Invalid payload", { status: 400 });
     }
 
-    // POPRAWKA: Dodanie drugiego argumentu 'page'
-    revalidateTag(body._type, "page");
-    revalidateTag(`${body._type}:${body._id}`, "page");
+    // POPRAWKA DLA NEXT.JS 16:
+    // W tej wersji revalidateTag wymaga drugiego argumentu 'profile'.
+    // Ustawiamy go na 'default'.
+    
+    // 1. Odśwież ogólny tag typu (np. "homePage")
+    revalidateTag(body._type, "default");
+
+    // 2. Odśwież konkretny tag ID (jeśli istnieje)
+    if (body._id) {
+      revalidateTag(`${body._type}:${body._id}`, "default");
+    }
 
     console.log(
-      `Revalidated tags: ${body._type} and ${body._type}:${body._id}`,
+      `Revalidated tags: ${body._type} ${body._id ? `and ${body._type}:${body._id}` : ""}`,
     );
 
     return NextResponse.json({ revalidated: true, now: Date.now() });

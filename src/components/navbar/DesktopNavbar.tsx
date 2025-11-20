@@ -3,7 +3,7 @@
 import { domAnimation, LazyMotion, m } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
-import type { NavLink as LinkItem } from "@/lib/types";
+import type { NavLink as LinkItem } from "@/lib/types/index";
 import { AnimatedNavLink } from "../ui/AnimatedNavLink";
 import { PatroniteLink } from "./PatroniteLink";
 

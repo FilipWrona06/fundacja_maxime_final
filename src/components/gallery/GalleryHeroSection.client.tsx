@@ -2,7 +2,7 @@
 
 import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
 import { premiumEase } from "@/lib/animations";
-import type { GaleriaPageData } from "@/lib/types";
+import type { GaleriaPageData } from "@/lib/types/index";
 
 interface Props {
   heroData: GaleriaPageData["heroSection"];

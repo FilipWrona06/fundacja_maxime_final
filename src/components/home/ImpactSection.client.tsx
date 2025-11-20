@@ -17,7 +17,7 @@ import type {
   HomePageData,
   ImpactCard,
   PortableTextContent,
-} from "@/lib/types";
+} from "@/lib/types/index";
 import { urlFor } from "@/sanity/lib/image";
 
 // Warianty animacji pozostają bez zmian.

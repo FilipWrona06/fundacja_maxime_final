@@ -5,7 +5,7 @@ import { m } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { memo } from "react";
 import { smoothSpring, staggerConfig } from "@/lib/animations";
-import type { NavLink } from "@/lib/types";
+import type { NavLink } from "@/lib/types/index";
 import { AnimatedNavLink } from "../ui/AnimatedNavLink";
 
 interface FooterNavProps {

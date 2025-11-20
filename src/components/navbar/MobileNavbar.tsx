@@ -17,7 +17,7 @@ import {
   useState,
 } from "react";
 
-import type { NavLink as LinkItem } from "@/lib/types";
+import type { NavLink as LinkItem } from "@/lib/types/index";
 import { AnimatedNavLink } from "../ui/AnimatedNavLink";
 import { AnimatedMenuButton } from "./AnimatedMenuButton";
 import { PatroniteLink } from "./PatroniteLink";

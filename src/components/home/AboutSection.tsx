@@ -7,7 +7,7 @@ import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import Image from "next/image";
 import { FiAward, FiMusic, FiUsers } from "react-icons/fi";
 // 1. Importujemy nowo zdefiniowany typ `PortableTextContent`
-import type { PortableTextContent, Stat } from "@/lib/types";
+import type { PortableTextContent, Stat } from "@/lib/types/index";
 import { urlFor } from "@/sanity/lib/image";
 import { getAboutSectionData } from "@/sanity/lib/queries/home";
 import { AboutSectionClient } from "./AboutSection.client";
