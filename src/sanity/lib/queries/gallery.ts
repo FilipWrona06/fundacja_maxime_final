@@ -39,42 +39,44 @@ export const getGalleryHeroData = cache(
 
 /**
  * Pobiera listę galerii (zdjęcia, opisy, wideo).
+ * Teraz pobiera OSOBNE dokumenty typu 'gallery'.
  */
 export const getGalleriesList = cache(
   async (): Promise<GaleriaPageData["galleries"] | null> => {
-    const data = await client.fetch<{
-      galleries: GaleriaPageData["galleries"];
-    }>(
-      groq`*[_type == "galeriaPage"][0]{
-        galleries[]{
-          // Mapujemy _key na _id (wymagane przez React)
-          "_id": _key,
-          
-          title,
-          slug,
-          date,
-          location,
-          
-          // Nowe pola (Storytelling, Wideo, Partnerzy)
-          description,
-          videoUrl,
-          partners,
+    const data = await client.fetch<GaleriaPageData["galleries"]>(
+      // ZMIANA: Pobieramy dokumenty typu "gallery" i sortujemy po dacie malejąco
+      groq`*[_type == "gallery"] | order(date desc) {
+        _id,
+        title,
+        slug,
+        date,
+        location,
+        description,
+        videoUrl,
+        
+        // Pobieramy sponsorów (wpisanych ręcznie w galerii)
+        sponsors[]{
+          name,
+          website,
+          // Wyciągamy URL do logo, aby frontend mógł go wyświetlić
+          "logoUrl": logo.asset->url
+        },
 
-          // Zdjęcia (bez rozwijania referencji ->, aby urlFor działał poprawnie)
-          images[]{
-            _key,
-            alt,
-            caption,
-            asset,
-            hotspot,
-            crop
-          }
+        // Zdjęcia (bez rozwijania referencji ->, aby urlFor działał poprawnie)
+        images[]{
+          _key,
+          alt,
+          caption,
+          asset,
+          hotspot,
+          crop
         }
       }`,
       {},
-      { next: { tags: ["gallery-page", "gallery"] } },
+      // Tagujemy "gallery", aby webhook mógł odświeżyć listę po dodaniu nowego koncertu
+      { next: { tags: ["gallery"] } },
     );
 
-    return data?.galleries ?? null;
+    return data || [];
   },
 );

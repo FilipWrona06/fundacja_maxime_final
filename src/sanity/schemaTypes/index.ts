@@ -13,6 +13,7 @@ import timelineSection from "./home/timelineSection";
 import horizontalRule from "./objects/horizontalRule";
 import seo from "./objects/seo";
 import spacer from "./objects/spacer";
+import { gallery } from "./gallery/gallery";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -32,5 +33,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     ctaSection,
     horizontalRule,
     spacer,
+    gallery,
   ],
 };

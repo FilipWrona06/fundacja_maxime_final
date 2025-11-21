@@ -11,12 +11,13 @@ import {
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { FiCalendar, FiMapPin, FiPlayCircle, FiAward } from "react-icons/fi";
+import { FiCalendar, FiMapPin, FiPlayCircle } from "react-icons/fi";
 import {
   premiumEase,
   ultraSmoothSpring,
   viewportConfig,
 } from "@/lib/animations";
+import type { Partner } from "@/lib/types";
 
 const DynamicLightbox = dynamic(() =>
   import("./Lightbox").then((mod) => mod.Lightbox),
@@ -33,7 +34,7 @@ interface GalleryGridData {
   title: string;
   description?: string;
   videoUrl?: string;
-  partners?: string;
+  sponsors?: Partner[];
   date: string;
   location: string;
   images: ImageData[];
@@ -124,10 +125,11 @@ export const GalleryGridSectionClient = ({
 
         <div className="relative z-10 container mx-auto px-4 sm:px-6">
           {/* --- HEADER --- */}
-          <m.div 
-            variants={fadeInUpVariant} 
+          <m.div
+            variants={fadeInUpVariant}
             className="mb-12 grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12 items-end"
           >
+            {/* Lewa kolumna: Tytuł i dane */}
             <div className="lg:col-span-5 xl:col-span-4 space-y-6">
               <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-arylideYellow">
                 <span className="flex items-center gap-2 rounded-full bg-arylideYellow/10 px-3 py-1 border border-arylideYellow/20">
@@ -149,7 +151,7 @@ export const GalleryGridSectionClient = ({
 
               {galleryData.videoUrl && (
                 <div className="pt-2">
-                  <a 
+                  <a
                     href={galleryData.videoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -166,6 +168,7 @@ export const GalleryGridSectionClient = ({
               )}
             </div>
 
+            {/* Prawa kolumna: Opis i LOGOTYPY PARTNERÓW */}
             <div className="lg:col-span-7 xl:col-span-8 flex flex-col gap-6 lg:pl-8 lg:border-l lg:border-white/10 pb-2">
               {galleryData.description && (
                 <p className="text-lg leading-relaxed text-white/70 md:text-xl max-w-3xl">
@@ -173,33 +176,53 @@ export const GalleryGridSectionClient = ({
                 </p>
               )}
 
-              {galleryData.partners && (
-                <div className="flex items-start gap-3 text-white/50">
-                  <FiAward className="mt-1 shrink-0 text-arylideYellow" />
-                  <p className="text-sm uppercase tracking-wider font-medium">
-                    {galleryData.partners}
+              {/* Sekcja Partnerów */}
+              {galleryData.sponsors && galleryData.sponsors.length > 0 && (
+                <div className="mt-2 border-t border-white/10 pt-4">
+                  <p className="mb-3 text-xs font-bold uppercase tracking-widest text-white/40">
+                    Partnerzy wydarzenia
                   </p>
+                  <div className="flex flex-wrap items-center gap-6">
+                    {/* POPRAWKA 1: Użycie unikalnego klucza zamiast indeksu */}
+                    {galleryData.sponsors.map((sponsor) => (
+                      <div
+                        key={sponsor.name}
+                        className="group relative"
+                        title={sponsor.name}
+                      >
+                        {sponsor.logoUrl ? (
+                          // POPRAWKA 2: min-w-20 zamiast min-w-[80px]
+                          <div className="relative h-10 w-auto min-w-20 max-w-[120px] opacity-60 transition-all duration-300 group-hover:opacity-100 grayscale group-hover:grayscale-0">
+                            <Image
+                              src={sponsor.logoUrl}
+                              alt={sponsor.name}
+                              height={40}
+                              width={120}
+                              className="h-full w-auto object-contain"
+                            />
+                          </div>
+                        ) : (
+                          <span className="text-sm font-medium text-white/60 transition-colors group-hover:text-arylideYellow">
+                            {sponsor.name}
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
           </m.div>
 
-          {/* --- GALERIA (Desktop Grid - UKŁAD Z RYSUNKU) --- */}
-          {/* auto-rows-[240px] ustawia stałą wysokość kafelka */}
+          {/* --- GALERIA (Desktop Grid) --- */}
           <m.div
             variants={staggerContainerVariant}
             className="hidden lg:grid grid-cols-4 gap-4 auto-rows-[240px]"
           >
             {galleryData.images.map((image, imageIndex) => {
-              // LOGIKA Z RYSUNKU:
-              // Powtarzamy wzór co 5 zdjęć (1 duże + 4 małe)
-              // Jeśli reszta z dzielenia przez 5 wynosi 0 -> to jest "Duże Lewe"
               const isBig = imageIndex % 5 === 0;
-
-              // col-span-2 row-span-2 = Duże zdjęcie (2x2)
-              // col-span-1 row-span-1 = Małe zdjęcie (1x1)
-              const gridClass = isBig 
-                ? "col-span-2 row-span-2" 
+              const gridClass = isBig
+                ? "col-span-2 row-span-2"
                 : "col-span-1 row-span-1";
 
               return (
@@ -213,18 +236,17 @@ export const GalleryGridSectionClient = ({
                   className={`group relative overflow-hidden rounded-xl bg-raisinBlack/50 shadow-xl ${gridClass}`}
                 >
                   <div className="relative h-full w-full">
-                     <Image
+                    <Image
                       src={image.src}
                       alt={image.alt}
                       fill
-                      // Jeśli duże: ładujemy większe zdjęcie (50vw), jeśli małe: mniejsze (25vw)
                       sizes={isBig ? "50vw" : "25vw"}
                       placeholder="blur"
                       blurDataURL={image.blurDataURL}
                       className="object-cover transition-transform duration-700 group-hover:scale-110"
                     />
                     <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/20" />
-                    
+
                     {image.caption && (
                       <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full bg-black/60 backdrop-blur-sm transition-transform duration-300 group-hover:translate-y-0 text-left">
                         <p className="text-sm text-white">{image.caption}</p>
@@ -236,7 +258,7 @@ export const GalleryGridSectionClient = ({
             })}
           </m.div>
 
-          {/* --- GALERIA (Mobile - Scroll poziomy bez zmian) --- */}
+          {/* --- GALERIA (Mobile) --- */}
           <div className="lg:hidden">
             <m.div
               ref={scrollContainerRef}
@@ -254,7 +276,7 @@ export const GalleryGridSectionClient = ({
                     style={{
                       width: imageIndex === 0 ? "85vw" : "70vw",
                       maxWidth: "400px",
-                      aspectRatio: "4/5"
+                      aspectRatio: "4/5",
                     }}
                   >
                     <div className="relative w-full h-full overflow-hidden rounded-2xl shadow-lg bg-raisinBlack">
@@ -267,11 +289,14 @@ export const GalleryGridSectionClient = ({
                         blurDataURL={image.blurDataURL}
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
                       />
+                      {/* POPRAWKA 3: bg-linear-to-t zamiast bg-gradient-to-t */}
                       <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent opacity-60" />
                       {image.caption && (
-                         <div className="absolute bottom-3 left-3 right-3 text-left">
-                            <p className="text-xs font-medium text-white/90 line-clamp-2">{image.caption}</p>
-                         </div>
+                        <div className="absolute bottom-3 left-3 right-3 text-left">
+                          <p className="text-xs font-medium text-white/90 line-clamp-2">
+                            {image.caption}
+                          </p>
+                        </div>
                       )}
                     </div>
                   </m.button>
@@ -279,7 +304,6 @@ export const GalleryGridSectionClient = ({
               </div>
             </m.div>
           </div>
-
         </div>
 
         {/* Lightbox */}

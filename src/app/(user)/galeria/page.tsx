@@ -4,7 +4,6 @@ import { Suspense } from "react";
 import { GalleryGridSection } from "@/components/gallery/GalleryGridSection";
 import { GalleryHeroSection } from "@/components/gallery/GalleryHeroSection";
 import { urlFor } from "@/sanity/lib/image";
-// IMPORTUJEMY NOWE FUNKCJE
 import { 
   getGallerySeoData, 
   getGalleryHeroData, 
@@ -49,29 +48,47 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+// POPRAWKA: Dopasowanie szkieletu do układu Bento Grid (auto-rows-240px)
+// Dzięki temu nie będzie "skoku" graficznego po załadowaniu zdjęć.
 const SectionSkeleton = () => (
-  <div className="animate-pulse space-y-8" aria-hidden="true">
-    <div className="space-y-4">
-      <div className="h-16 w-2/3 rounded-2xl bg-white/5" />
-      <div className="h-4 w-48 rounded-full bg-white/5" />
+  <div className="animate-pulse space-y-12 py-12 sm:py-20" aria-hidden="true">
+    {/* Header Skeleton */}
+    <div className="grid gap-8 lg:grid-cols-12">
+       <div className="lg:col-span-4 space-y-4">
+         <div className="h-6 w-32 rounded-full bg-white/5" />
+         <div className="h-16 w-3/4 rounded-2xl bg-white/5" />
+       </div>
+       <div className="lg:col-span-8 space-y-4 lg:border-l lg:border-white/10 lg:pl-8">
+         <div className="h-4 w-full rounded bg-white/5" />
+         <div className="h-4 w-5/6 rounded bg-white/5" />
+       </div>
     </div>
-    <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-      <div className="col-span-2 row-span-2 aspect-square rounded-2xl bg-white/5" />
-      {[1, 2, 3, 4, 5, 6].map((i) => (
-        <div key={i} className="aspect-square rounded-2xl bg-white/5" />
+
+    {/* Grid Skeleton (Matching Bento Layout) */}
+    <div className="hidden lg:grid grid-cols-4 gap-4 auto-rows-[240px]">
+      {/* Duży klocek (Hero) */}
+      <div className="col-span-2 row-span-2 rounded-xl bg-white/5" />
+      {/* 4 małe klocki */}
+      {[1, 2, 3, 4].map((i) => (
+        <div key={i} className="col-span-1 row-span-1 rounded-xl bg-white/5" />
       ))}
+    </div>
+    
+    {/* Mobile Skeleton */}
+    <div className="lg:hidden flex gap-4 overflow-hidden">
+      <div className="h-[400px] w-[85vw] shrink-0 rounded-2xl bg-white/5" />
+      <div className="h-[400px] w-[70vw] shrink-0 rounded-2xl bg-white/5" />
     </div>
   </div>
 );
 
 export default async function GaleriaPage() {
-  // Pobieramy dane równolegle (szybciej niż po kolei)
+  // Pobieramy dane równolegle
   const [heroData, galleries] = await Promise.all([
     getGalleryHeroData(),
     getGalleriesList(),
   ]);
 
-  // Filtrujemy galerie (zabezpieczenie przed nullami)
   const validGalleries = galleries?.filter((g) => g?._id) || [];
 
   return (
@@ -85,7 +102,7 @@ export default async function GaleriaPage() {
       <div className="container relative z-10 mx-auto px-6">
         {/* Hero Section */}
         {heroData ? (
-          <Suspense fallback={<div className="h-64 animate-pulse" />}>
+          <Suspense fallback={<div className="h-64 animate-pulse bg-white/5 rounded-xl" />}>
             <GalleryHeroSection heroData={heroData} />
           </Suspense>
         ) : (

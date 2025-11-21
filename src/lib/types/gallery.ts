@@ -10,6 +10,13 @@ export interface GalleryImage {
   _type: "image";
 }
 
+// --- NOWOŚĆ: Typ dla Partnera/Sponsora ---
+export interface Partner {
+  name: string;
+  website?: string;
+  logoUrl?: string; // URL do logo wyciągnięty w zapytaniu GROQ
+}
+
 export interface Gallery {
   _id: string;
   title: string;
@@ -18,10 +25,12 @@ export interface Gallery {
   slug: { current: string };
   images: GalleryImage[];
   
-  // --- Nowe pola dodane dla rozbudowanej galerii ---
-  description?: string; // Opcjonalny opis (storytelling)
-  videoUrl?: string;    // Opcjonalny link do wideo
-  partners?: string;    // Opcjonalni partnerzy/sponsorzy
+  description?: string; 
+  videoUrl?: string;    
+  
+  // --- ZMIANA ---
+  // Zamiast 'partners: string', mamy teraz tablicę obiektów
+  sponsors?: Partner[]; 
 }
 
 export interface GaleriaPageData {
