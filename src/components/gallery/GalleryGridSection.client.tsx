@@ -11,15 +11,13 @@ import {
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { FiCalendar, FiMapPin } from "react-icons/fi";
+import { FiCalendar, FiMapPin, FiPlayCircle, FiAward } from "react-icons/fi";
 import {
   premiumEase,
   ultraSmoothSpring,
   viewportConfig,
 } from "@/lib/animations";
 
-// Dynamiczne ładowanie komponentu Lightbox.
-// Zostanie on załadowany dopiero, gdy będzie potrzebny (po kliknięciu zdjęcia).
 const DynamicLightbox = dynamic(() =>
   import("./Lightbox").then((mod) => mod.Lightbox),
 );
@@ -33,6 +31,9 @@ interface ImageData {
 
 interface GalleryGridData {
   title: string;
+  description?: string;
+  videoUrl?: string;
+  partners?: string;
   date: string;
   location: string;
   images: ImageData[];
@@ -108,12 +109,12 @@ export const GalleryGridSectionClient = ({
         ref={sectionRef}
         initial="hidden"
         whileInView="visible"
-        viewport={{ ...viewportConfig.once, margin: "-100px" }}
+        viewport={{ ...viewportConfig.once, margin: "-50px" }}
         variants={staggerContainerVariant}
         aria-labelledby={`gallery-${index}`}
-        className="relative"
+        className="relative py-12 sm:py-20"
       >
-        {/* Decorative blur - alternating sides */}
+        {/* Decorative blur */}
         <m.div
           style={{ y: blurY, opacity: blurOpacity }}
           className={`pointer-events-none absolute ${
@@ -121,36 +122,128 @@ export const GalleryGridSectionClient = ({
           } top-1/3 h-80 w-80 rounded-full bg-arylideYellow/6 blur-3xl`}
         />
 
-        <div className="relative z-10">
-          {/* Event Header - compact & elegant */}
-          <m.div variants={fadeInUpVariant} className="mb-10 sm:mb-12">
-            <h2
-              id={`gallery-${index}`}
-              className="mb-8 font-youngest text-[clamp(2.5rem,6vw,5rem)] leading-[0.9] tracking-tight text-arylideYellow"
-            >
-              {galleryData.title}
-            </h2>
-            <div className="flex flex-wrap items-center gap-4 text-sm text-white/60">
-              <div className="flex items-center gap-2">
-                <FiCalendar className="text-arylideYellow" size={16} />
-                <time dateTime={galleryData.date}>{formattedDate}</time>
+        <div className="relative z-10 container mx-auto px-4 sm:px-6">
+          {/* --- HEADER --- */}
+          <m.div 
+            variants={fadeInUpVariant} 
+            className="mb-12 grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12 items-end"
+          >
+            <div className="lg:col-span-5 xl:col-span-4 space-y-6">
+              <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-arylideYellow">
+                <span className="flex items-center gap-2 rounded-full bg-arylideYellow/10 px-3 py-1 border border-arylideYellow/20">
+                  <FiCalendar />
+                  <time dateTime={galleryData.date}>{formattedDate}</time>
+                </span>
+                <span className="flex items-center gap-2 rounded-full bg-white/5 px-3 py-1 text-white/80 border border-white/10">
+                  <FiMapPin />
+                  <span>{galleryData.location}</span>
+                </span>
               </div>
-              <span className="h-1 w-1 rounded-full bg-arylideYellow/40" />
-              <div className="flex items-center gap-2">
-                <FiMapPin className="text-arylideYellow" size={16} />
-                <span>{galleryData.location}</span>
-              </div>
+
+              <h2
+                id={`gallery-${index}`}
+                className="font-youngest text-4xl leading-[0.95] tracking-tight text-white sm:text-5xl lg:text-6xl"
+              >
+                {galleryData.title}
+              </h2>
+
+              {galleryData.videoUrl && (
+                <div className="pt-2">
+                  <a 
+                    href={galleryData.videoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-3 text-white transition-colors hover:text-arylideYellow"
+                  >
+                    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-arylideYellow text-raisinBlack transition-transform duration-300 group-hover:scale-110">
+                      <FiPlayCircle size={24} className="ml-1" />
+                    </span>
+                    <span className="text-lg font-bold tracking-wide underline decoration-arylideYellow/30 underline-offset-4 transition-all group-hover:decoration-arylideYellow">
+                      Zobacz nagranie
+                    </span>
+                  </a>
+                </div>
+              )}
+            </div>
+
+            <div className="lg:col-span-7 xl:col-span-8 flex flex-col gap-6 lg:pl-8 lg:border-l lg:border-white/10 pb-2">
+              {galleryData.description && (
+                <p className="text-lg leading-relaxed text-white/70 md:text-xl max-w-3xl">
+                  {galleryData.description}
+                </p>
+              )}
+
+              {galleryData.partners && (
+                <div className="flex items-start gap-3 text-white/50">
+                  <FiAward className="mt-1 shrink-0 text-arylideYellow" />
+                  <p className="text-sm uppercase tracking-wider font-medium">
+                    {galleryData.partners}
+                  </p>
+                </div>
+              )}
             </div>
           </m.div>
 
-          {/* MOBILE/TABLET: Horizontal Scroll (< lg) */}
+          {/* --- GALERIA (Desktop Grid - UKŁAD Z RYSUNKU) --- */}
+          {/* auto-rows-[240px] ustawia stałą wysokość kafelka */}
+          <m.div
+            variants={staggerContainerVariant}
+            className="hidden lg:grid grid-cols-4 gap-4 auto-rows-[240px]"
+          >
+            {galleryData.images.map((image, imageIndex) => {
+              // LOGIKA Z RYSUNKU:
+              // Powtarzamy wzór co 5 zdjęć (1 duże + 4 małe)
+              // Jeśli reszta z dzielenia przez 5 wynosi 0 -> to jest "Duże Lewe"
+              const isBig = imageIndex % 5 === 0;
+
+              // col-span-2 row-span-2 = Duże zdjęcie (2x2)
+              // col-span-1 row-span-1 = Małe zdjęcie (1x1)
+              const gridClass = isBig 
+                ? "col-span-2 row-span-2" 
+                : "col-span-1 row-span-1";
+
+              return (
+                <m.button
+                  key={`${image.src}-${imageIndex}`}
+                  type="button"
+                  variants={imageRevealVariant}
+                  whileHover={{ y: -4 }}
+                  transition={ultraSmoothSpring}
+                  onClick={() => setLightboxIndex(imageIndex)}
+                  className={`group relative overflow-hidden rounded-xl bg-raisinBlack/50 shadow-xl ${gridClass}`}
+                >
+                  <div className="relative h-full w-full">
+                     <Image
+                      src={image.src}
+                      alt={image.alt}
+                      fill
+                      // Jeśli duże: ładujemy większe zdjęcie (50vw), jeśli małe: mniejsze (25vw)
+                      sizes={isBig ? "50vw" : "25vw"}
+                      placeholder="blur"
+                      blurDataURL={image.blurDataURL}
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/20" />
+                    
+                    {image.caption && (
+                      <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full bg-black/60 backdrop-blur-sm transition-transform duration-300 group-hover:translate-y-0 text-left">
+                        <p className="text-sm text-white">{image.caption}</p>
+                      </div>
+                    )}
+                  </div>
+                </m.button>
+              );
+            })}
+          </m.div>
+
+          {/* --- GALERIA (Mobile - Scroll poziomy bez zmian) --- */}
           <div className="lg:hidden">
             <m.div
               ref={scrollContainerRef}
               variants={staggerContainerVariant}
-              className="relative -mx-6 px-6"
+              className="relative -mx-4 px-4 sm:-mx-6 sm:px-6"
             >
-              <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
+              <div className="flex gap-4 overflow-x-auto pb-8 snap-x snap-mandatory scrollbar-hide">
                 {galleryData.images.map((image, imageIndex) => (
                   <m.button
                     key={image.src}
@@ -159,109 +252,37 @@ export const GalleryGridSectionClient = ({
                     onClick={() => setLightboxIndex(imageIndex)}
                     className="group relative shrink-0 snap-center"
                     style={{
-                      width: imageIndex === 0 ? "85vw" : "75vw",
-                      maxWidth: imageIndex === 0 ? "500px" : "400px",
+                      width: imageIndex === 0 ? "85vw" : "70vw",
+                      maxWidth: "400px",
+                      aspectRatio: "4/5"
                     }}
-                    aria-label={`Otwórz zdjęcie: ${image.alt}`}
                   >
-                    <div className="pointer-events-none absolute -inset-1 rounded-3xl bg-linear-to-br from-arylideYellow/20 to-transparent opacity-0 blur-lg transition-opacity duration-500 group-hover:opacity-100" />
-                    <div className="relative aspect-4/5 w-full overflow-hidden rounded-3xl shadow-2xl">
+                    <div className="relative w-full h-full overflow-hidden rounded-2xl shadow-lg bg-raisinBlack">
                       <Image
                         src={image.src}
                         alt={image.alt}
                         fill
-                        sizes="85vw"
+                        sizes="(max-width: 768px) 85vw, 50vw"
                         placeholder="blur"
                         blurDataURL={image.blurDataURL}
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        loading={imageIndex === 0 ? "eager" : "lazy"}
-                        priority={imageIndex === 0}
                       />
-                      <div className="absolute inset-0 bg-linear-to-t from-raisinBlack/60 via-transparent to-transparent" />
-                      <div className="absolute top-4 right-4 rounded-full bg-raisinBlack/80 backdrop-blur-sm px-3 py-1.5 text-xs font-bold text-white">
-                        {imageIndex + 1} / {galleryData.images.length}
-                      </div>
+                      <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent opacity-60" />
                       {image.caption && (
-                        <div className="absolute bottom-0 left-0 right-0 p-6">
-                          <p className="text-sm font-medium text-white drop-shadow-lg">
-                            {image.caption}
-                          </p>
-                        </div>
+                         <div className="absolute bottom-3 left-3 right-3 text-left">
+                            <p className="text-xs font-medium text-white/90 line-clamp-2">{image.caption}</p>
+                         </div>
                       )}
                     </div>
                   </m.button>
                 ))}
               </div>
-              {/* Wskaźnik scrolla - POPRAWIONY */}
-              <div className="mt-4 flex justify-center gap-1.5">
-                {galleryData.images.map((image, i) => (
-                  <div
-                    key={image.src}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${
-                      i === 0 ? "w-8 bg-arylideYellow" : "w-1.5 bg-white/20"
-                    }`}
-                  />
-                ))}
-              </div>
             </m.div>
           </div>
 
-          {/* DESKTOP: Masonry Grid (>= lg) */}
-          <m.div
-            variants={staggerContainerVariant}
-            className="hidden lg:grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-4 md:gap-6"
-          >
-            {galleryData.images.map((image, imageIndex) => {
-              const isHero = imageIndex === 0;
-              const gridClass = isHero ? "col-span-2 row-span-2" : "col-span-1";
-              const aspectClass = "aspect-square";
-
-              return (
-                <m.button
-                  key={image.src}
-                  type="button"
-                  variants={imageRevealVariant}
-                  whileHover={{ y: -6, scale: 1.02 }}
-                  transition={ultraSmoothSpring}
-                  onClick={() => setLightboxIndex(imageIndex)}
-                  className={`group relative overflow-hidden rounded-2xl shadow-xl ${gridClass}`}
-                  aria-label={`Otwórz zdjęcie: ${image.alt}`}
-                >
-                  <div className="pointer-events-none absolute -inset-1 rounded-2xl bg-linear-to-br from-arylideYellow/20 to-transparent opacity-0 blur-lg transition-opacity duration-500 group-hover:opacity-100" />
-                  <div
-                    className={`relative h-full w-full overflow-hidden rounded-2xl ${aspectClass}`}
-                  >
-                    <Image
-                      src={image.src}
-                      alt={image.alt}
-                      fill
-                      sizes={
-                        isHero
-                          ? "(max-width: 768px) 100vw, 50vw"
-                          : "(max-width: 768px) 50vw, 25vw"
-                      }
-                      placeholder="blur"
-                      blurDataURL={image.blurDataURL}
-                      className="object-cover transition-transform duration-700 group-hover:scale-110"
-                      loading={imageIndex === 0 ? "eager" : "lazy"}
-                      priority={imageIndex === 0}
-                    />
-                    <div className="absolute inset-0 bg-linear-to-t from-raisinBlack/80 via-raisinBlack/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                    {image.caption && (
-                      <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-4 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-                        <p className="text-sm font-medium text-white drop-shadow-lg">
-                          {image.caption}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </m.button>
-              );
-            })}
-          </m.div>
         </div>
 
-        {/* Lightbox - wspólny dla obu widoków, ładowany dynamicznie */}
+        {/* Lightbox */}
         {lightboxIndex !== null && (
           <DynamicLightbox
             images={galleryData.images}

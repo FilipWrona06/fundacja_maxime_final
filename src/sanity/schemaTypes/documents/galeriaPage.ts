@@ -7,15 +7,11 @@ export const galeriaPage = defineType({
   title: "Strona Galerii",
   type: "document",
   fields: [
-    // --- POPRAWKA ---
-    // Zamiast definiować pola SEO na nowo, używamy
-    // naszego reużywalnego typu obiektu "seo".
     defineField({
       name: "seo",
       title: "Ustawienia SEO i Social Media",
-      type: "seo", // Używamy typu zdefiniowanego w seo.ts
+      type: "seo",
     }),
-    // Reszta pól pozostaje bez zmian...
     defineField({
       name: "heroSection",
       title: "Sekcja Hero",
@@ -35,13 +31,36 @@ export const galeriaPage = defineType({
         {
           type: "object",
           fields: [
-            { name: "title", type: "string", title: "Tytuł" },
+            { name: "title", type: "string", title: "Tytuł Wydarzenia" },
+            
+            // --- NOWE POLA (Storytelling & Wideo) ---
+            { 
+              name: "description", 
+              type: "text", 
+              title: "Opis Wydarzenia",
+              description: "Krótka historia o koncercie, emocjach i atmosferze (wyświetlana obok zdjęć).",
+              rows: 4
+            },
+            {
+              name: "partners",
+              type: "string",
+              title: "Partnerzy / Sponsorzy",
+              description: "Np. 'Partnerzy: Miasto Warszawa, Yamaha Music'"
+            },
+            {
+              name: "videoUrl",
+              type: "url",
+              title: "Link do Wideo",
+              description: "Link do nagrania na YouTube lub Vimeo."
+            },
+            // ----------------------------------------
+
             { name: "date", type: "date", title: "Data" },
             { name: "location", type: "string", title: "Lokalizacja" },
             {
               name: "slug",
               type: "slug",
-              title: "Slug",
+              title: "Przyjazny link (opcjonalnie)",
               options: { source: "title" },
             },
             {
@@ -56,13 +75,14 @@ export const galeriaPage = defineType({
                     {
                       name: "alt",
                       type: "string",
-                      title: "Alt Text",
+                      title: "Tekst alternatywny (Alt)",
                       validation: (Rule) => Rule.required(),
                     },
                     {
                       name: "caption",
                       type: "string",
-                      title: "Podpis (opcjonalnie)",
+                      title: "Podpis pod zdjęciem",
+                      description: "Np. 'Jan Kowalski podczas solówki'"
                     },
                   ],
                 },

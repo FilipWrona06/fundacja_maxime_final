@@ -11,11 +11,17 @@ export interface GalleryImage {
 }
 
 export interface Gallery {
+  _id: string;
   title: string;
   date: string;
   location: string;
   slug: { current: string };
   images: GalleryImage[];
+  
+  // --- Nowe pola dodane dla rozbudowanej galerii ---
+  description?: string; // Opcjonalny opis (storytelling)
+  videoUrl?: string;    // Opcjonalny link do wideo
+  partners?: string;    // Opcjonalni partnerzy/sponsorzy
 }
 
 export interface GaleriaPageData {

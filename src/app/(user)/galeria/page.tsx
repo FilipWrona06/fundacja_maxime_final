@@ -4,12 +4,17 @@ import { Suspense } from "react";
 import { GalleryGridSection } from "@/components/gallery/GalleryGridSection";
 import { GalleryHeroSection } from "@/components/gallery/GalleryHeroSection";
 import { urlFor } from "@/sanity/lib/image";
-import { getGalleryPageData } from "@/sanity/lib/queries/gallery";
+// IMPORTUJEMY NOWE FUNKCJE
+import { 
+  getGallerySeoData, 
+  getGalleryHeroData, 
+  getGalleriesList 
+} from "@/sanity/lib/queries/gallery";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const data = await getGalleryPageData();
+  const seo = await getGallerySeoData();
 
-  if (!data?.seo) {
+  if (!seo) {
     return {
       title: "Galeria Wydarzeń | Fundacja Maxime",
       description: "Odkryj magiczne momenty z naszych koncertów",
@@ -17,26 +22,26 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 
   return {
-    title: data.seo.metaTitle || "Galeria Wydarzeń | Fundacja Maxime",
+    title: seo.metaTitle || "Galeria Wydarzeń | Fundacja Maxime",
     description:
-      data.seo.metaDescription || "Odkryj magiczne momenty z naszych koncertów",
+      seo.metaDescription || "Odkryj magiczne momenty z naszych koncertów",
     robots: {
-      index: !data.seo.noIndex,
-      follow: !data.seo.noFollow,
+      index: !seo.noIndex,
+      follow: !seo.noFollow,
     },
     alternates: {
-      canonical: data.seo.canonicalUrl || "/galeria",
+      canonical: seo.canonicalUrl || "/galeria",
     },
     openGraph: {
-      title: data.seo.ogTitle || data.seo.metaTitle,
-      description: data.seo.ogDescription || data.seo.metaDescription,
-      images: data.seo.ogImage
+      title: seo.ogTitle || seo.metaTitle,
+      description: seo.ogDescription || seo.metaDescription,
+      images: seo.ogImage
         ? [
             {
-              url: urlFor(data.seo.ogImage).width(1200).height(630).url(),
+              url: urlFor(seo.ogImage).width(1200).height(630).url(),
               width: 1200,
               height: 630,
-              alt: data.seo.metaTitle,
+              alt: seo.metaTitle,
             },
           ]
         : [],
@@ -60,25 +65,18 @@ const SectionSkeleton = () => (
 );
 
 export default async function GaleriaPage() {
-  const data = await getGalleryPageData();
+  // Pobieramy dane równolegle (szybciej niż po kolei)
+  const [heroData, galleries] = await Promise.all([
+    getGalleryHeroData(),
+    getGalleriesList(),
+  ]);
 
-  if (!data) {
-    return (
-      <div className="min-h-screen pt-32 pb-20">
-        <div className="container mx-auto px-6 text-center">
-          <h1 className="mb-4 text-4xl font-bold">Galeria Wydarzeń</h1>
-          <p className="text-white/60">
-            Brak danych do wyświetlenia. Skonfiguruj stronę galerii w Sanity
-            CMS.
-          </p>
-        </div>
-      </div>
-    );
-  }
+  // Filtrujemy galerie (zabezpieczenie przed nullami)
+  const validGalleries = galleries?.filter((g) => g?._id) || [];
 
   return (
     <div className="relative min-h-screen overflow-hidden pt-28 pb-20">
-      {/* Subtle background decoration */}
+      {/* Tło */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden opacity-40">
         <div className="absolute left-0 top-1/4 h-[500px] w-[500px] rounded-full bg-arylideYellow/10 blur-3xl" />
         <div className="absolute right-0 bottom-1/4 h-[400px] w-[400px] rounded-full bg-oxfordBlue/15 blur-3xl" />
@@ -86,17 +84,27 @@ export default async function GaleriaPage() {
 
       <div className="container relative z-10 mx-auto px-6">
         {/* Hero Section */}
-        <Suspense fallback={<div className="h-64 animate-pulse" />}>
-          <GalleryHeroSection heroData={data.heroSection} />
-        </Suspense>
+        {heroData ? (
+          <Suspense fallback={<div className="h-64 animate-pulse" />}>
+            <GalleryHeroSection heroData={heroData} />
+          </Suspense>
+        ) : (
+          <div className="py-10 text-center text-white/50">Brak sekcji Hero</div>
+        )}
 
-        {/* Gallery Sections */}
+        {/* Lista Galerii */}
         <div className="space-y-16 sm:space-y-24">
-          {data.galleries?.map((gallery, index) => (
-            <Suspense key={gallery.slug.current} fallback={<SectionSkeleton />}>
-              <GalleryGridSection gallery={gallery} index={index} />
-            </Suspense>
-          ))}
+          {validGalleries.length > 0 ? (
+            validGalleries.map((gallery, index) => (
+              <Suspense key={gallery._id} fallback={<SectionSkeleton />}>
+                <GalleryGridSection gallery={gallery} index={index} />
+              </Suspense>
+            ))
+          ) : (
+            <div className="text-center text-white/40 py-20">
+              Nie znaleziono żadnych galerii.
+            </div>
+          )}
         </div>
       </div>
     </div>
