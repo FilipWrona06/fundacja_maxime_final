@@ -126,7 +126,7 @@ export const GalleryGridSectionClient = ({
           <m.div variants={fadeInUpVariant} className="mb-10 sm:mb-12">
             <h2
               id={`gallery-${index}`}
-              className="mb-4 font-youngest text-[clamp(2.5rem,6vw,5rem)] leading-[0.9] tracking-tight text-arylideYellow"
+              className="mb-8 font-youngest text-[clamp(2.5rem,6vw,5rem)] leading-[0.9] tracking-tight text-arylideYellow"
             >
               {galleryData.title}
             </h2>
