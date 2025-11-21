@@ -3,7 +3,7 @@ import { groq } from "next-sanity";
 import type { EventType } from "@/lib/types";
 import { client } from "@/sanity/lib/client";
 import { eventsQuery } from "../page";
-import EventDetailClient from "./EventDetailClient";
+import EventDetailClient from "../../../../components/events/slug/EventDetailClient";
 
 const getEventFullDate = (event: EventType) =>
   new Date(`${event.date}T${event.time}:00`);
