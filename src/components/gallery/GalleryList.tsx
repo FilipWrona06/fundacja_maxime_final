@@ -1,0 +1,66 @@
+"use client";
+
+import { loadMoreGalleries, type ProcessedGalleryData } from "@/actions/galleryActions";
+import { useState } from "react";
+import { GalleryGridSectionClient } from "./GalleryGridSection.client";
+
+interface GalleryListProps {
+  initialGalleries: ProcessedGalleryData[];
+  initialTotalCount: number;
+}
+
+export default function GalleryList({ initialGalleries, initialTotalCount }: GalleryListProps) {
+  const [galleries, setGalleries] = useState<ProcessedGalleryData[]>(initialGalleries);
+  const [totalCount, setTotalCount] = useState(initialTotalCount);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Sprawdzamy, czy mamy już wszystkie galerie
+  const allLoaded = galleries.length >= totalCount;
+
+  const handleLoadMore = async () => {
+    setIsLoading(true);
+    
+    try {
+      const response = await loadMoreGalleries(galleries.length);
+
+      setGalleries((prev) => [...prev, ...response.data]);
+      setTotalCount(response.totalCount);
+      
+    } catch (error) {
+      console.error("Błąd podczas ładowania galerii:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-16 sm:space-y-24">
+      {galleries.map((gallery, index) => (
+        <GalleryGridSectionClient 
+          key={gallery._id} 
+          galleryData={gallery} 
+          index={index} 
+        />
+      ))}
+
+      {/* Przycisk Load More - widoczny tylko gdy są jeszcze jakieś galerie do pobrania */}
+      {!allLoaded && (
+        <div className="flex justify-center pt-8 pb-12">
+          <button
+            type="button"
+            onClick={handleLoadMore}
+            disabled={isLoading}
+            className="group relative overflow-hidden rounded-full border border-arylideYellow/30 bg-arylideYellow/10 px-8 py-3 text-sm font-bold uppercase tracking-widest text-arylideYellow transition-all hover:border-arylideYellow hover:bg-arylideYellow hover:text-raisinBlack disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span className="relative z-10">
+              {isLoading ? "Ładowanie..." : "Zobacz starsze wydarzenia"}
+            </span>
+            <div className="absolute inset-0 -z-10 bg-arylideYellow opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          </button>
+        </div>
+      )}
+      
+      {/* USUNIĘTO NAPIS KOŃCOWY */}
+    </div>
+  );
+}

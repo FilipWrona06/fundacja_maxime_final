@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
-import { GalleryGridSection } from "@/components/gallery/GalleryGridSection";
 import { GalleryHeroSection } from "@/components/gallery/GalleryHeroSection";
 import { urlFor } from "@/sanity/lib/image";
-import { 
-  getGallerySeoData, 
-  getGalleryHeroData, 
-  getGalleriesList 
+import {
+  getGallerySeoData,
+  getGalleryHeroData,
 } from "@/sanity/lib/queries/gallery";
+
+// IMPORTUJEMY NOWE ELEMENTY: Akcję serwerową i komponent listy
+import { loadMoreGalleries } from "@/actions/galleryActions";
+import GalleryList from "@/components/gallery/GalleryList";
 
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getGallerySeoData();
@@ -48,48 +50,13 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-// POPRAWKA: Dopasowanie szkieletu do układu Bento Grid (auto-rows-240px)
-// Dzięki temu nie będzie "skoku" graficznego po załadowaniu zdjęć.
-const SectionSkeleton = () => (
-  <div className="animate-pulse space-y-12 py-12 sm:py-20" aria-hidden="true">
-    {/* Header Skeleton */}
-    <div className="grid gap-8 lg:grid-cols-12">
-       <div className="lg:col-span-4 space-y-4">
-         <div className="h-6 w-32 rounded-full bg-white/5" />
-         <div className="h-16 w-3/4 rounded-2xl bg-white/5" />
-       </div>
-       <div className="lg:col-span-8 space-y-4 lg:border-l lg:border-white/10 lg:pl-8">
-         <div className="h-4 w-full rounded bg-white/5" />
-         <div className="h-4 w-5/6 rounded bg-white/5" />
-       </div>
-    </div>
-
-    {/* Grid Skeleton (Matching Bento Layout) */}
-    <div className="hidden lg:grid grid-cols-4 gap-4 auto-rows-[240px]">
-      {/* Duży klocek (Hero) */}
-      <div className="col-span-2 row-span-2 rounded-xl bg-white/5" />
-      {/* 4 małe klocki */}
-      {[1, 2, 3, 4].map((i) => (
-        <div key={i} className="col-span-1 row-span-1 rounded-xl bg-white/5" />
-      ))}
-    </div>
-    
-    {/* Mobile Skeleton */}
-    <div className="lg:hidden flex gap-4 overflow-hidden">
-      <div className="h-[400px] w-[85vw] shrink-0 rounded-2xl bg-white/5" />
-      <div className="h-[400px] w-[70vw] shrink-0 rounded-2xl bg-white/5" />
-    </div>
-  </div>
-);
-
 export default async function GaleriaPage() {
-  // Pobieramy dane równolegle
-  const [heroData, galleries] = await Promise.all([
-    getGalleryHeroData(),
-    getGalleriesList(),
-  ]);
+  // 1. Pobieramy dane Hero (Nagłówek)
+  const heroData = await getGalleryHeroData();
 
-  const validGalleries = galleries?.filter((g) => g?._id) || [];
+  // 2. Pobieramy PIERWSZĄ paczkę galerii (offset 0) oraz CAŁKOWITĄ LICZBĘ.
+  // Zmieniono to na destrukturyzację obiektu, bo akcja zwraca teraz { data, totalCount }
+  const { data: initialGalleries, totalCount } = await loadMoreGalleries(0);
 
   return (
     <div className="relative min-h-screen overflow-hidden pt-28 pb-20">
@@ -102,21 +69,26 @@ export default async function GaleriaPage() {
       <div className="container relative z-10 mx-auto px-6">
         {/* Hero Section */}
         {heroData ? (
-          <Suspense fallback={<div className="h-64 animate-pulse bg-white/5 rounded-xl" />}>
+          <Suspense
+            fallback={
+              <div className="h-64 animate-pulse bg-white/5 rounded-xl" />
+            }
+          >
             <GalleryHeroSection heroData={heroData} />
           </Suspense>
         ) : (
-          <div className="py-10 text-center text-white/50">Brak sekcji Hero</div>
+          <div className="py-10 text-center text-white/50">
+            Brak sekcji Hero
+          </div>
         )}
 
-        {/* Lista Galerii */}
-        <div className="space-y-16 sm:space-y-24">
-          {validGalleries.length > 0 ? (
-            validGalleries.map((gallery, index) => (
-              <Suspense key={gallery._id} fallback={<SectionSkeleton />}>
-                <GalleryGridSection gallery={gallery} index={index} />
-              </Suspense>
-            ))
+        {/* 3. Wyświetlamy komponent listy, który zarządza przyciskiem "Więcej" */}
+        <div className="mt-16 sm:mt-24">
+          {initialGalleries.length > 0 ? (
+            <GalleryList 
+              initialGalleries={initialGalleries} 
+              initialTotalCount={totalCount} // <--- Przekazujemy licznik do komponentu
+            />
           ) : (
             <div className="text-center text-white/40 py-20">
               Nie znaleziono żadnych galerii.

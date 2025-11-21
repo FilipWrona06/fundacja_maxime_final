@@ -38,14 +38,17 @@ export const getGalleryHeroData = cache(
 );
 
 /**
- * Pobiera listę galerii (zdjęcia, opisy, wideo).
- * Teraz pobiera OSOBNE dokumenty typu 'gallery'.
+ * NOWOŚĆ: Pobiera zakres galerii (paginacja).
+ * Zastępuje starą funkcję getGalleriesList.
+ *
+ * @param start Indeks początkowy (np. 0)
+ * @param end Indeks końcowy (np. 3)
  */
-export const getGalleriesList = cache(
-  async (): Promise<GaleriaPageData["galleries"] | null> => {
+export const getGalleriesRange = async (start: number, end: number) => {
+  try {
     const data = await client.fetch<GaleriaPageData["galleries"]>(
-      // ZMIANA: Pobieramy dokumenty typu "gallery" i sortujemy po dacie malejąco
-      groq`*[_type == "gallery"] | order(date desc) {
+      // Używamy operatora slice [$start...$end] do pobrania wycinka
+      groq`*[_type == "gallery"] | order(date desc)[$start...$end] {
         _id,
         title,
         slug,
@@ -58,7 +61,6 @@ export const getGalleriesList = cache(
         sponsors[]{
           name,
           website,
-          // Wyciągamy URL do logo, aby frontend mógł go wyświetlić
           "logoUrl": logo.asset->url
         },
 
@@ -72,11 +74,27 @@ export const getGalleriesList = cache(
           crop
         }
       }`,
-      {},
-      // Tagujemy "gallery", aby webhook mógł odświeżyć listę po dodaniu nowego koncertu
-      { next: { tags: ["gallery"] } },
+      { start, end }, // Przekazujemy zmienne do zapytania GROQ
+      { next: { tags: ["gallery"] } }, // Tagowanie dla rewalidacji
     );
 
     return data || [];
-  },
-);
+  } catch (error) {
+    console.error("Błąd pobierania galerii:", error);
+    return [];
+  }
+};
+
+export const getTotalGalleriesCount = async (): Promise<number> => {
+  try {
+    const count = await client.fetch<number>(
+      groq`count(*[_type == "gallery"])`,
+      {},
+      { next: { tags: ["gallery"] } }
+    );
+    return count;
+  } catch (error) {
+    console.error("Błąd pobierania liczby galerii:", error);
+    return 0;
+  }
+};
