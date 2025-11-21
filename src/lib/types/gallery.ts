@@ -1,4 +1,7 @@
 import type { SeoData } from "./common";
+import type { PortableTextContent } from "./sanity";
+
+// --- TYPY GALERII ---
 
 export interface GalleryImage {
   asset: {
@@ -10,7 +13,7 @@ export interface GalleryImage {
   _type: "image";
 }
 
-// --- NOWOŚĆ: Typ dla Partnera/Sponsora ---
+// Typ dla Partnera/Sponsora
 export interface Partner {
   name: string;
   website?: string;
@@ -24,13 +27,13 @@ export interface Gallery {
   location: string;
   slug: { current: string };
   images: GalleryImage[];
-  
-  description?: string; 
-  videoUrl?: string;    
-  
-  // --- ZMIANA ---
-  // Zamiast 'partners: string', mamy teraz tablicę obiektów
-  sponsors?: Partner[]; 
+
+  // ZMIANA: Używamy PortableTextContent zamiast string,
+  // ponieważ w Sanity pole description to teraz tablica bloków (richText)
+  description?: PortableTextContent;
+
+  videoUrl?: string;
+  sponsors?: Partner[];
 }
 
 export interface GaleriaPageData {
@@ -39,7 +42,8 @@ export interface GaleriaPageData {
     badge: string;
     headingLine1: string;
     headingLine2: string;
-    description: string;
+    // ZMIANA: Tutaj też description to teraz PortableTextContent
+    description: PortableTextContent;
   };
   galleries: Gallery[];
 }

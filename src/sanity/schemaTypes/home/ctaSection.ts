@@ -1,13 +1,13 @@
-// Plik: ctaSection.ts (wersja z zaawansowanym edytorem tekstu)
+// Plik: ctaSection.ts
 
-import { FiMousePointer } from "react-icons/fi"; // Opcjonalnie: dodanie ikon dla lepszego UI w studio
+import { FiMousePointer } from "react-icons/fi";
 import { defineField, defineType } from "sanity";
 
 export default defineType({
   name: "ctaSection",
   title: "Sekcja Wezwania do Działania (CTA)",
   type: "object",
-  icon: FiMousePointer, // Opcjonalna ikona dla typu
+  icon: FiMousePointer,
   fieldsets: [
     { name: "content", title: "Treść sekcji" },
     { name: "buttons", title: "Przyciski Akcji" },
@@ -24,58 +24,20 @@ export default defineType({
       fieldset: "content",
     }),
 
-    // ZAKTUALIZOWANE POLE "text" Z ZAAWANSOWANYM EDYTOREM
+    // --- ZAKTUALIZOWANE POLE "text" ---
+    // Używamy typu 'richText' zamiast ręcznej definicji tablicy bloków
     defineField({
       name: "text",
       title: "Tekst pomocniczy",
-      type: "array",
+      type: "richText",
       fieldset: "content",
       description:
         "Dodatkowy tekst wyjaśniający, np. 'Twoje wsparcie pozwala nam organizować bezpłatne koncerty...'.",
-      of: [
-        {
-          type: "block",
-          styles: [{ title: "Normal", value: "normal" }],
-          lists: [
-            { title: "Lista punktowana", value: "bullet" },
-            { title: "Lista numerowana", value: "number" },
-          ],
-          marks: {
-            decorators: [
-              { title: "Pogrubienie", value: "strong" },
-              { title: "Kursywa", value: "em" },
-              { title: "Podkreślenie", value: "underline" },
-              { title: "Przekreślenie", value: "strike-through" },
-            ],
-            annotations: [
-              {
-                name: "link",
-                type: "object",
-                title: "Link zewnętrzny",
-                fields: [
-                  {
-                    name: "href",
-                    type: "url",
-                    title: "URL",
-                    validation: (Rule) =>
-                      Rule.uri({
-                        scheme: ["http", "https", "mailto", "tel"],
-                      }),
-                  },
-                ],
-              },
-            ],
-          },
-        },
-        // Możesz także dodać separatory, jeśli są potrzebne w tej sekcji
-        // { type: "horizontalRule" },
-        // { type: "spacer" },
-      ],
       validation: (Rule) =>
         Rule.required().error("Tekst pomocniczy jest wymagany."),
     }),
 
-    // --- GRUPA: Przyciski Akcji (pozostaje bez zmian) ---
+    // --- GRUPA: Przyciski Akcji (bez zmian) ---
     defineField({
       name: "primaryButton",
       title: "Przycisk główny (np. 'Wesprzyj nas')",

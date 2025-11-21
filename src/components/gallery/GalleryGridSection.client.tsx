@@ -1,5 +1,7 @@
 "use client";
 
+// Import komponentu do renderowania tekstu z Sanity
+import { PortableText } from "@portabletext/react";
 import {
   domAnimation,
   LazyMotion,
@@ -17,7 +19,8 @@ import {
   ultraSmoothSpring,
   viewportConfig,
 } from "@/lib/animations";
-import type { Partner } from "@/lib/types";
+// Import typów (upewnij się, że zaktualizowałeś plik types/index.ts)
+import type { Partner, PortableTextContent } from "@/lib/types/index";
 
 const DynamicLightbox = dynamic(() =>
   import("./Lightbox").then((mod) => mod.Lightbox),
@@ -32,7 +35,8 @@ interface ImageData {
 
 interface GalleryGridData {
   title: string;
-  description?: string;
+  // ZMIANA: Jawny typ dla treści z edytora
+  description?: PortableTextContent;
   videoUrl?: string;
   sponsors?: Partner[];
   date: string;
@@ -170,10 +174,12 @@ export const GalleryGridSectionClient = ({
 
             {/* Prawa kolumna: Opis i LOGOTYPY PARTNERÓW */}
             <div className="lg:col-span-7 xl:col-span-8 flex flex-col gap-6 lg:pl-8 lg:border-l lg:border-white/10 pb-2">
+              {/* Opis z Portable Text */}
               {galleryData.description && (
-                <p className="text-lg leading-relaxed text-white/70 md:text-xl max-w-3xl">
-                  {galleryData.description}
-                </p>
+                // Dodajemy style dla akapitów wewnątrz PortableText ([&>p]:mb-4)
+                <div className="text-lg leading-relaxed text-white/70 md:text-xl max-w-3xl [&>p]:mb-4 last:[&>p]:mb-0">
+                  <PortableText value={galleryData.description} />
+                </div>
               )}
 
               {/* Sekcja Partnerów */}
@@ -183,7 +189,6 @@ export const GalleryGridSectionClient = ({
                     Partnerzy wydarzenia
                   </p>
                   <div className="flex flex-wrap items-center gap-6">
-                    {/* POPRAWKA 1: Użycie unikalnego klucza zamiast indeksu */}
                     {galleryData.sponsors.map((sponsor) => (
                       <div
                         key={sponsor.name}
@@ -191,7 +196,6 @@ export const GalleryGridSectionClient = ({
                         title={sponsor.name}
                       >
                         {sponsor.logoUrl ? (
-                          // POPRAWKA 2: min-w-20 zamiast min-w-[80px]
                           <div className="relative h-10 w-auto min-w-20 max-w-[120px] opacity-60 transition-all duration-300 group-hover:opacity-100 grayscale group-hover:grayscale-0">
                             <Image
                               src={sponsor.logoUrl}
@@ -214,12 +218,13 @@ export const GalleryGridSectionClient = ({
             </div>
           </m.div>
 
-          {/* --- GALERIA (Desktop Grid) --- */}
+          {/* --- GALERIA (Desktop Grid - Bento 1+4) --- */}
           <m.div
             variants={staggerContainerVariant}
             className="hidden lg:grid grid-cols-4 gap-4 auto-rows-[240px]"
           >
             {galleryData.images.map((image, imageIndex) => {
+              // Logika: Co 5 zdjęcie jest duże (0, 5, 10...)
               const isBig = imageIndex % 5 === 0;
               const gridClass = isBig
                 ? "col-span-2 row-span-2"
@@ -246,7 +251,6 @@ export const GalleryGridSectionClient = ({
                       className="object-cover transition-transform duration-700 group-hover:scale-110"
                     />
                     <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/20" />
-
                     {image.caption && (
                       <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full bg-black/60 backdrop-blur-sm transition-transform duration-300 group-hover:translate-y-0 text-left">
                         <p className="text-sm text-white">{image.caption}</p>
@@ -258,7 +262,7 @@ export const GalleryGridSectionClient = ({
             })}
           </m.div>
 
-          {/* --- GALERIA (Mobile) --- */}
+          {/* --- GALERIA (Mobile - Scroll poziomy) --- */}
           <div className="lg:hidden">
             <m.div
               ref={scrollContainerRef}
@@ -289,7 +293,6 @@ export const GalleryGridSectionClient = ({
                         blurDataURL={image.blurDataURL}
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
                       />
-                      {/* POPRAWKA 3: bg-linear-to-t zamiast bg-gradient-to-t */}
                       <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent opacity-60" />
                       {image.caption && (
                         <div className="absolute bottom-3 left-3 right-3 text-left">

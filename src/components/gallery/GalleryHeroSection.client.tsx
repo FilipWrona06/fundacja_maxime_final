@@ -1,10 +1,13 @@
 "use client";
 
+// Import komponentu do renderowania tekstu z edytora Sanity
+import { PortableText } from "@portabletext/react";
 import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
 import { premiumEase } from "@/lib/animations";
 import type { GaleriaPageData } from "@/lib/types/index";
 
 interface Props {
+  // TypeScript automatycznie pobierze poprawny typ 'description: PortableTextContent'
   heroData: GaleriaPageData["heroSection"];
 }
 
@@ -40,7 +43,7 @@ export default function GalleryHeroSectionClient({ heroData }: Props) {
         variants={staggerContainerVariant}
         className="relative overflow-hidden py-16 sm:py-20"
       >
-        {/* Background blurs - subtler */}
+        {/* Background blurs */}
         <m.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -67,7 +70,7 @@ export default function GalleryHeroSectionClient({ heroData }: Props) {
             <span className="h-px w-12 bg-linear-to-l from-transparent to-arylideYellow" />
           </m.div>
 
-          {/* Main Heading - responsive size */}
+          {/* Main Heading */}
           <m.h1 variants={fadeInUpVariant} className="mb-6 space-y-1">
             <span className="block mb-8 font-youngest text-[clamp(3rem,7vw,6rem)] leading-[0.9] tracking-tight text-arylideYellow drop-shadow-2xl">
               {heroData.headingLine1}
@@ -77,13 +80,16 @@ export default function GalleryHeroSectionClient({ heroData }: Props) {
             </span>
           </m.h1>
 
-          {/* Description */}
-          <m.p
+          {/* Description - PortableText */}
+          <m.div
             variants={fadeInUpVariant}
-            className="mx-auto max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg md:max-w-3xl md:text-xl"
+            // Dodano style dla akapitów [&>p]:mb-4, aby tekst z edytora wyglądał dobrze
+            className="mx-auto max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg md:max-w-3xl md:text-xl [&>p]:mb-4 last:[&>p]:mb-0"
           >
-            {heroData.description}
-          </m.p>
+            {heroData.description && (
+              <PortableText value={heroData.description} />
+            )}
+          </m.div>
 
           {/* Decorative line */}
           <m.div

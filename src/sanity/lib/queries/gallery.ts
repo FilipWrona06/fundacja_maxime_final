@@ -90,7 +90,7 @@ export const getTotalGalleriesCount = async (): Promise<number> => {
     const count = await client.fetch<number>(
       groq`count(*[_type == "gallery"])`,
       {},
-      { next: { tags: ["gallery"] } }
+      { next: { tags: ["gallery"] } },
     );
     return count;
   } catch (error) {

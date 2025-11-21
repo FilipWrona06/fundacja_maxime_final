@@ -1,16 +1,14 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-
-import { GalleryHeroSection } from "@/components/gallery/GalleryHeroSection";
-import { urlFor } from "@/sanity/lib/image";
-import {
-  getGallerySeoData,
-  getGalleryHeroData,
-} from "@/sanity/lib/queries/gallery";
-
 // IMPORTUJEMY NOWE ELEMENTY: Akcję serwerową i komponent listy
 import { loadMoreGalleries } from "@/actions/galleryActions";
+import { GalleryHeroSection } from "@/components/gallery/GalleryHeroSection";
 import GalleryList from "@/components/gallery/GalleryList";
+import { urlFor } from "@/sanity/lib/image";
+import {
+  getGalleryHeroData,
+  getGallerySeoData,
+} from "@/sanity/lib/queries/gallery";
 
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getGallerySeoData();
@@ -85,8 +83,8 @@ export default async function GaleriaPage() {
         {/* 3. Wyświetlamy komponent listy, który zarządza przyciskiem "Więcej" */}
         <div className="mt-16 sm:mt-24">
           {initialGalleries.length > 0 ? (
-            <GalleryList 
-              initialGalleries={initialGalleries} 
+            <GalleryList
+              initialGalleries={initialGalleries}
               initialTotalCount={totalCount} // <--- Przekazujemy licznik do komponentu
             />
           ) : (

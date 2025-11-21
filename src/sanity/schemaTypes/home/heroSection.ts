@@ -39,56 +39,13 @@ export default defineType({
       fieldset: "content",
     }),
 
-    // ZAKTUALIZOWANE POLE "description"
+    // --- ZAKTUALIZOWANE POLE "description" ---
+    // Używamy typu 'richText' zamiast ręcznej definicji
     defineField({
       name: "description",
       title: "Opis pod nagłówkiem",
-      type: "array",
+      type: "richText",
       fieldset: "content",
-      of: [
-        {
-          type: "block",
-          styles: [{ title: "Normal", value: "normal" }],
-          lists: [
-            { title: "Lista punktowana", value: "bullet" },
-            { title: "Lista numerowana", value: "number" },
-          ],
-          marks: {
-            decorators: [
-              { title: "Pogrubienie", value: "strong" },
-              { title: "Kursywa", value: "em" },
-              { title: "Podkreślenie", value: "underline" },
-              { title: "Przekreślenie", value: "strike-through" },
-            ],
-            annotations: [
-              {
-                name: "link",
-                type: "object",
-                title: "Link zewnętrzny",
-                fields: [
-                  {
-                    name: "href",
-                    type: "url",
-                    title: "URL",
-                    validation: (Rule) =>
-                      Rule.uri({
-                        scheme: ["http", "https", "mailto", "tel"],
-                      }),
-                  },
-                ],
-              },
-            ],
-          },
-        },
-        // --- Separator w formie linii ---
-        {
-          type: "horizontalRule",
-        },
-        // --- NOWOŚĆ: Separator w formie pustego odstępu ---
-        {
-          type: "spacer",
-        },
-      ],
       validation: (Rule) =>
         Rule.required().error("Opis pod nagłówkiem jest wymagany."),
     }),

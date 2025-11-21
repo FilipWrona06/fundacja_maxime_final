@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
     // POPRAWKA DLA NEXT.JS 16:
     // W tej wersji revalidateTag wymaga drugiego argumentu 'profile'.
     // Ustawiamy go na 'default'.
-    
+
     // 1. Odśwież ogólny tag typu (np. "homePage")
     revalidateTag(body._type, "default");
 

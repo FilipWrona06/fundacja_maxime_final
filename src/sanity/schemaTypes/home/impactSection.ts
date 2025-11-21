@@ -1,4 +1,4 @@
-// Plik: impactSection.ts (wersja z edytorem Portable Text w opisie karty)
+// Plik: impactSection.ts
 
 import { defineArrayMember, defineField, defineType } from "sanity";
 
@@ -36,7 +36,7 @@ export default defineType({
       fieldset: "header",
     }),
 
-    // --- Lista Kart Wpływu (zaktualizowana) ---
+    // --- Lista Kart Wpływu ---
     defineField({
       name: "impactCards",
       title: "Karty Wpływu",
@@ -61,49 +61,14 @@ export default defineType({
                 Rule.required().error("Tytuł karty jest wymagany."),
             }),
 
-            // --- ZAKTUALIZOWANE POLE "description" Z EDYTOREM TEKSTU ---
+            // --- ZAKTUALIZOWANE POLE "description" ---
+            // Używamy typu 'richText'
             defineField({
               name: "description",
               title: "Opis karty",
-              type: "array", // Zmieniono z 'text' na 'array'
+              type: "richText",
               validation: (Rule) =>
                 Rule.required().error("Opis karty jest wymagany."),
-              of: [
-                {
-                  type: "block",
-                  styles: [{ title: "Normal", value: "normal" }],
-                  lists: [
-                    { title: "Lista punktowana", value: "bullet" },
-                    { title: "Lista numerowana", value: "number" },
-                  ],
-                  marks: {
-                    decorators: [
-                      { title: "Pogrubienie", value: "strong" },
-                      { title: "Kursywa", value: "em" },
-                      { title: "Podkreślenie", value: "underline" },
-                      { title: "Przekreślenie", value: "strike-through" },
-                    ],
-                    annotations: [
-                      {
-                        name: "link",
-                        type: "object",
-                        title: "Link zewnętrzny",
-                        fields: [
-                          {
-                            name: "href",
-                            type: "url",
-                            title: "URL",
-                            validation: (Rule) =>
-                              Rule.uri({
-                                scheme: ["http", "https", "mailto", "tel"],
-                              }),
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                },
-              ],
             }),
 
             defineField({
@@ -127,13 +92,12 @@ export default defineType({
           preview: {
             select: {
               title: "title",
-              // Nie można już użyć 'description' jako subtitle, ponieważ jest to tablica
               media: "image",
             },
             prepare({ title, media }) {
               return {
                 title: title || "Brak tytułu",
-                subtitle: "Zawartość z edytora Portable Text",
+                subtitle: "Opis w edytorze",
                 media: media,
               };
             },

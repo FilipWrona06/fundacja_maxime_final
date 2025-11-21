@@ -5,7 +5,12 @@
  */
 
 // Importujemy typy, aby zapewnić spójność i bezpieczeństwo danych
-import type { ContactData, FaqItem, NavLink, SocialLink } from "@/lib/types/index";
+import type {
+  ContactData,
+  FaqItem,
+  NavLink,
+  SocialLink,
+} from "@/lib/types/index";
 
 // Linki nawigacyjne (używane w Navbar i Footer)
 export const navLinks: readonly NavLink[] = [

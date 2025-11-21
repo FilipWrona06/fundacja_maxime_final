@@ -95,15 +95,16 @@ export const ImpactSectionClient = ({
     const scrollLeft = container.scrollLeft;
     // Pobieramy szerokość pierwszej karty (lub przybliżoną szerokość widoku)
     // Dzielenie scrolla przez szerokość karty daje nam przybliżony indeks
-    const cardWidth = container.children[0]?.clientWidth || container.clientWidth * 0.75;
-    
+    const cardWidth =
+      container.children[0]?.clientWidth || container.clientWidth * 0.75;
+
     // Obliczamy indeks (Math.round zaokrągla do najbliższej liczby całkowitej)
     const newIndex = Math.round(scrollLeft / cardWidth);
 
     // Zabezpieczenie, aby indeks nie wyszedł poza zakres tablicy
     const clampedIndex = Math.min(
       Math.max(newIndex, 0),
-      impactData.impactCards.length - 1
+      impactData.impactCards.length - 1,
     );
 
     setActiveIndex(clampedIndex);
@@ -130,9 +131,9 @@ export const ImpactSectionClient = ({
           variants={staggerContainerVariant}
           className="relative -mx-6 px-6"
         >
-          <div 
+          <div
             ref={scrollContainerRef} // NOWE: Przypisanie Ref
-            onScroll={handleScroll}  // NOWE: Nasłuchiwanie scrolla
+            onScroll={handleScroll} // NOWE: Nasłuchiwanie scrolla
             className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
           >
             {impactData.impactCards.map((card, index) => (
@@ -192,7 +193,9 @@ export const ImpactSectionClient = ({
                 key={card.title}
                 className={`h-1.5 rounded-full transition-all duration-300 ${
                   // NOWE: Porównujemy z activeIndex zamiast sztywnego 0
-                  i === activeIndex ? "w-8 bg-arylideYellow" : "w-1.5 bg-white/20"
+                  i === activeIndex
+                    ? "w-8 bg-arylideYellow"
+                    : "w-1.5 bg-white/20"
                 }`}
               />
             ))}

@@ -84,7 +84,7 @@ export const Lightbox = ({
           aria-label="Lightbox ze zdjęciami"
         >
           {/* --- PRZYCISKI STERUJĄCE --- */}
-          
+
           {/* PRZYCISK ZAMKNIĘCIA (X) */}
           <m.button
             type="button"
@@ -175,6 +175,6 @@ export const Lightbox = ({
         </m.div>
       </AnimatePresence>
     </LazyMotion>,
-    document.body // <-- KLUCZOWA ZMIANA: Renderujemy do body
+    document.body, // <-- KLUCZOWA ZMIANA: Renderujemy do body
   );
 };

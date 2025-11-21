@@ -1,5 +1,5 @@
-import type { PortableTextContent, SanityImage } from "./sanity";
 import type { SeoData } from "./common";
+import type { PortableTextContent, SanityImage } from "./sanity";
 
 export interface TimelineEvent {
   year: number;

@@ -1,7 +1,10 @@
 "use client";
 
-import { loadMoreGalleries, type ProcessedGalleryData } from "@/actions/galleryActions";
 import { useState } from "react";
+import {
+  loadMoreGalleries,
+  type ProcessedGalleryData,
+} from "@/actions/galleryActions";
 import { GalleryGridSectionClient } from "./GalleryGridSection.client";
 
 interface GalleryListProps {
@@ -9,8 +12,12 @@ interface GalleryListProps {
   initialTotalCount: number;
 }
 
-export default function GalleryList({ initialGalleries, initialTotalCount }: GalleryListProps) {
-  const [galleries, setGalleries] = useState<ProcessedGalleryData[]>(initialGalleries);
+export default function GalleryList({
+  initialGalleries,
+  initialTotalCount,
+}: GalleryListProps) {
+  const [galleries, setGalleries] =
+    useState<ProcessedGalleryData[]>(initialGalleries);
   const [totalCount, setTotalCount] = useState(initialTotalCount);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -19,13 +26,12 @@ export default function GalleryList({ initialGalleries, initialTotalCount }: Gal
 
   const handleLoadMore = async () => {
     setIsLoading(true);
-    
+
     try {
       const response = await loadMoreGalleries(galleries.length);
 
       setGalleries((prev) => [...prev, ...response.data]);
       setTotalCount(response.totalCount);
-      
     } catch (error) {
       console.error("Błąd podczas ładowania galerii:", error);
     } finally {
@@ -36,10 +42,10 @@ export default function GalleryList({ initialGalleries, initialTotalCount }: Gal
   return (
     <div className="space-y-16 sm:space-y-24">
       {galleries.map((gallery, index) => (
-        <GalleryGridSectionClient 
-          key={gallery._id} 
-          galleryData={gallery} 
-          index={index} 
+        <GalleryGridSectionClient
+          key={gallery._id}
+          galleryData={gallery}
+          index={index}
         />
       ))}
 
@@ -59,7 +65,7 @@ export default function GalleryList({ initialGalleries, initialTotalCount }: Gal
           </button>
         </div>
       )}
-      
+
       {/* USUNIĘTO NAPIS KOŃCOWY */}
     </div>
   );

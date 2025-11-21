@@ -1,4 +1,4 @@
-// Plik: timelineSection.ts (wersja z edytorem Portable Text)
+// Plik: timelineSection.ts
 
 import { defineArrayMember, defineField, defineType } from "sanity";
 
@@ -36,7 +36,7 @@ export default defineType({
       fieldset: "header",
     }),
 
-    // --- Lista wydarzeń na osi czasu (zaktualizowana) ---
+    // --- Lista wydarzeń na osi czasu ---
     defineField({
       name: "timelineEvents",
       title: "Wydarzenia na osi czasu",
@@ -73,49 +73,14 @@ export default defineType({
                 Rule.required().error("Tytuł wydarzenia jest wymagany."),
             }),
 
-            // --- ZAKTUALIZOWANE POLE "description" Z EDYTOREM TEKSTU ---
+            // --- ZAKTUALIZOWANE POLE "description" ---
+            // Używamy typu 'richText'
             defineField({
               name: "description",
               title: "Opis wydarzenia",
-              type: "array", // Zmieniono z 'text' na 'array'
+              type: "richText",
               validation: (Rule) =>
                 Rule.required().error("Opis wydarzenia jest wymagany."),
-              of: [
-                {
-                  type: "block",
-                  styles: [{ title: "Normal", value: "normal" }],
-                  lists: [
-                    { title: "Lista punktowana", value: "bullet" },
-                    { title: "Lista numerowana", value: "number" },
-                  ],
-                  marks: {
-                    decorators: [
-                      { title: "Pogrubienie", value: "strong" },
-                      { title: "Kursywa", value: "em" },
-                      { title: "Podkreślenie", value: "underline" },
-                      { title: "Przekreślenie", value: "strike-through" },
-                    ],
-                    annotations: [
-                      {
-                        name: "link",
-                        type: "object",
-                        title: "Link zewnętrzny",
-                        fields: [
-                          {
-                            name: "href",
-                            type: "url",
-                            title: "URL",
-                            validation: (Rule) =>
-                              Rule.uri({
-                                scheme: ["http", "https", "mailto", "tel"],
-                              }),
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                },
-              ],
             }),
 
             defineField({
@@ -136,7 +101,6 @@ export default defineType({
                 Rule.required().error("Tekst alternatywny jest wymagany."),
             }),
           ],
-          // Konfiguracja podglądu nie wymaga zmian, ponieważ nie używała pola 'description'
           preview: {
             select: {
               title: "title",

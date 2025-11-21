@@ -29,45 +29,49 @@ export const gallery = defineType({
       type: "string",
       title: "Lokalizacja",
     }),
+
+    // --- ZMIANA: Używamy richText zamiast zwykłego text ---
     defineField({
       name: "description",
-      type: "text",
       title: "Opis Wydarzenia (Storytelling)",
-      rows: 3,
+      type: "richText", // <--- Tutaj używamy Twojego nowego typu
+      description: "Opisz emocje, repertuar i atmosferę wydarzenia.",
     }),
+    // ------------------------------------------------------
+
     defineField({
       name: "videoUrl",
       type: "url",
       title: "Link do Wideo (YouTube/Vimeo)",
     }),
-    
-    // --- ZMIANA: Partnerzy wpisywani ręcznie wewnątrz galerii ---
+
     defineField({
       name: "sponsors",
       title: "Partnerzy i Sponsorzy (Opcjonalnie)",
-      description: "Dodaj logotypy i nazwy firm, które wsparły TO konkretne wydarzenie.",
+      description:
+        "Dodaj logotypy i nazwy firm, które wsparły TO konkretne wydarzenie.",
       type: "array",
       of: [
         {
           type: "object",
           title: "Partner",
           fields: [
-            { 
-              name: "name", 
-              type: "string", 
+            {
+              name: "name",
+              type: "string",
               title: "Nazwa",
-              validation: (Rule) => Rule.required()
+              validation: (Rule) => Rule.required(),
             },
-            { 
-              name: "logo", 
-              type: "image", 
+            {
+              name: "logo",
+              type: "image",
               title: "Logo (Opcjonalnie)",
-              options: { hotspot: true }
+              options: { hotspot: true },
             },
-            { 
-              name: "website", 
-              type: "url", 
-              title: "Strona WWW (Opcjonalnie)" 
+            {
+              name: "website",
+              type: "url",
+              title: "Strona WWW (Opcjonalnie)",
             },
           ],
           preview: {
@@ -79,7 +83,6 @@ export const gallery = defineType({
         },
       ],
     }),
-    // ----------------------------------------------------------
 
     defineField({
       name: "images",
@@ -116,7 +119,9 @@ export const gallery = defineType({
     prepare({ title, date, media }) {
       return {
         title: title,
-        subtitle: date ? new Date(date).toLocaleDateString("pl-PL") : "Brak daty",
+        subtitle: date
+          ? new Date(date).toLocaleDateString("pl-PL")
+          : "Brak daty",
         media: media,
       };
     },

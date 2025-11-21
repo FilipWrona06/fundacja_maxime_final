@@ -1,4 +1,4 @@
-// Plik: aboutSection.ts (wersja ostateczna z edytorem Portable Text)
+// Plik: aboutSection.ts
 
 import { defineArrayMember, defineField, defineType } from "sanity";
 
@@ -49,99 +49,24 @@ export default defineType({
     }),
 
     // --- ZAKTUALIZOWANE POLE "paragraph1" ---
+    // Teraz używa typu 'richText', co usuwa style nagłówków i upraszcza kod
     defineField({
       name: "paragraph1",
       title: "Akapit 1 (główny)",
-      type: "array", // Zmieniono z 'text' na 'array'
+      type: "richText",
       fieldset: "content",
       validation: (Rule) =>
         Rule.required().error("Pierwszy, główny akapit jest wymagany."),
-      of: [
-        {
-          type: "block",
-          styles: [{ title: "Normal", value: "normal" }],
-          lists: [
-            { title: "Lista punktowana", value: "bullet" },
-            { title: "Lista numerowana", value: "number" },
-          ],
-          marks: {
-            decorators: [
-              { title: "Pogrubienie", value: "strong" },
-              { title: "Kursywa", value: "em" },
-              { title: "Podkreślenie", value: "underline" },
-              { title: "Przekreślenie", value: "strike-through" },
-            ],
-            annotations: [
-              {
-                name: "link",
-                type: "object",
-                title: "Link zewnętrzny",
-                fields: [
-                  {
-                    name: "href",
-                    type: "url",
-                    title: "URL",
-                    validation: (Rule) =>
-                      Rule.uri({
-                        scheme: ["http", "https", "mailto", "tel"],
-                      }),
-                  },
-                ],
-              },
-            ],
-          },
-        },
-        { type: "horizontalRule" },
-        { type: "spacer" },
-      ],
     }),
 
     // --- ZAKTUALIZOWANE POLE "paragraph2" ---
     defineField({
       name: "paragraph2",
       title: "Akapit 2 (opcjonalny)",
-      type: "array", // Zmieniono z 'text' na 'array'
+      type: "richText",
       fieldset: "content",
       description:
         "Dodatkowy akapit, jeśli potrzebne jest więcej miejsca na opis.",
-      of: [
-        {
-          type: "block",
-          styles: [{ title: "Normal", value: "normal" }],
-          lists: [
-            { title: "Lista punktowana", value: "bullet" },
-            { title: "Lista numerowana", value: "number" },
-          ],
-          marks: {
-            decorators: [
-              { title: "Pogrubienie", value: "strong" },
-              { title: "Kursywa", value: "em" },
-              { title: "Podkreślenie", value: "underline" },
-              { title: "Przekreślenie", value: "strike-through" },
-            ],
-            annotations: [
-              {
-                name: "link",
-                type: "object",
-                title: "Link zewnętrzny",
-                fields: [
-                  {
-                    name: "href",
-                    type: "url",
-                    title: "URL",
-                    validation: (Rule) =>
-                      Rule.uri({
-                        scheme: ["http", "https", "mailto", "tel"],
-                      }),
-                  },
-                ],
-              },
-            ],
-          },
-        },
-        { type: "horizontalRule" },
-        { type: "spacer" },
-      ],
     }),
 
     // --- GRUPA: Główny obraz (bez zmian) ---
