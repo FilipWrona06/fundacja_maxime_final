@@ -67,15 +67,15 @@ export default function HomePage() {
 
       <main>
         <Suspense fallback={<SectionSkeleton />}>
+          <ImpactSection />
+        </Suspense>
+
+        <Suspense fallback={<SectionSkeleton />}>
           <AboutSection />
         </Suspense>
 
         <Suspense fallback={<SectionSkeleton />}>
           <TimelineSection />
-        </Suspense>
-
-        <Suspense fallback={<SectionSkeleton />}>
-          <ImpactSection />
         </Suspense>
 
         <Suspense fallback={<SectionSkeleton />}>
