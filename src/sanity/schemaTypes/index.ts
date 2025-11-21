@@ -20,6 +20,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     // --- Dokumenty ---
     homePage,
     galeriaPage,
+    gallery,
     eventsPage,
     newsPage,
 
@@ -33,6 +34,5 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     ctaSection,
     horizontalRule,
     spacer,
-    gallery,
   ],
 };
