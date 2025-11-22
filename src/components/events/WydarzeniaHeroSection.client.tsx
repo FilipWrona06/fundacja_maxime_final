@@ -4,7 +4,7 @@
 
 import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
 import { FiCalendar, FiMusic } from "react-icons/fi";
-// Używamy Twojego easingu. Jeśli plik nie istnieje, Framer użyje domyślnego wariantu.
+// Upewnij się, że masz ten plik. Jeśli nie, usuń import i użyj wariantu zapasowego poniżej.
 import { premiumEase } from "@/lib/animations";
 
 interface WydarzeniaHeroProps {
@@ -22,7 +22,7 @@ const fadeInUpVariant: Variants = {
     y: 0,
     transition: {
       duration: 0.8,
-      // Fallback, jeśli premiumEase nie jest zdefiniowane
+      // Fallback: [0.25, 1, 0.5, 1] to standardowy "easeOutQuart/Quint"
       ease: premiumEase || [0.25, 1, 0.5, 1],
     },
   },
@@ -53,25 +53,20 @@ export const WydarzeniaHeroSectionClient = ({
         variants={staggerContainerVariant}
         className="relative flex min-h-[60vh] w-full items-center justify-center overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-32"
       >
-        {/* --- TŁO DEKORACYJNE (Background Blobs) --- */}
+        {/* --- TŁO DEKORACYJNE --- */}
         <div className="absolute inset-0 overflow-hidden">
-          {/* Górna plama (Żółta) */}
           <m.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.5, ease: "easeOut" }}
             className="pointer-events-none absolute -top-20 left-1/2 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-arylideYellow/10 blur-[120px]"
           />
-
-          {/* Dolna plama (Ciemniejsza/Niebieska) */}
           <m.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.5, delay: 0.2, ease: "easeOut" }}
             className="pointer-events-none absolute bottom-0 right-0 h-[600px] w-[600px] translate-x-1/4 translate-y-1/4 rounded-full bg-oxfordBlue/20 blur-[150px]"
           />
-
-          {/* Tekstura ziarna (opcjonalna, dodaje efektu premium) */}
           <div className="absolute inset-0 bg-noise opacity-[0.03] mix-blend-overlay pointer-events-none" />
         </div>
 
@@ -93,16 +88,13 @@ export const WydarzeniaHeroSectionClient = ({
 
           {/* --- NAGŁÓWEK H1 --- */}
           <m.h1 variants={fadeInUpVariant} className="relative mb-8">
-            {/* Linia 1 (Biała) */}
             <span className="block font-youngest text-[clamp(3.5rem,8vw,7rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl">
               {titleLine1}
             </span>
-            {/* Linia 2 (Żółta) */}
             <span className="block font-youngest text-[clamp(3.5rem,8vw,7rem)] leading-[0.9] tracking-tight text-arylideYellow drop-shadow-2xl">
               {titleLine2}
             </span>
 
-            {/* Dekoracyjna ikona w tle tekstu */}
             <m.div
               initial={{ opacity: 0, rotate: -10, scale: 0.8 }}
               animate={{ opacity: 1, rotate: 0, scale: 1 }}
@@ -116,7 +108,8 @@ export const WydarzeniaHeroSectionClient = ({
           {/* --- OPIS --- */}
           <m.p
             variants={fadeInUpVariant}
-            className="mx-auto max-w-2xl text-lg leading-relaxed text-white/70 sm:text-xl"
+            // DODANO: whitespace-pre-wrap, aby entery z CMS były widoczne
+            className="mx-auto max-w-2xl whitespace-pre-wrap text-lg leading-relaxed text-white/70 sm:text-xl"
           >
             {subtitle}
           </m.p>

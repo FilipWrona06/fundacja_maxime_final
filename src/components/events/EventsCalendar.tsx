@@ -17,6 +17,7 @@ import {
   FiChevronRight,
   FiClock,
   FiMapPin,
+  FiTag, // Ikona ceny
 } from "react-icons/fi";
 import type { EventType } from "@/lib/types";
 
@@ -40,12 +41,12 @@ const MONTHS_PL = [
 const DAYS_PL = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Nie"];
 
 const EVENT_COLORS = [
-  "#F4D06F", // arylideYellow
-  "#9DD9F3", // baby blue
-  "#FF9DBF", // pink
-  "#B794F6", // purple
-  "#6EE7B7", // green
-  "#FB923C", // orange
+  "#F4D06F", // Żółty
+  "#9DD9F3", // Niebieski
+  "#FF9DBF", // Różowy
+  "#B794F6", // Fioletowy
+  "#6EE7B7", // Zielony
+  "#FB923C", // Pomarańczowy
 ];
 
 const getEventColor = (eventId: string) => {
@@ -57,11 +58,26 @@ const getEventColor = (eventId: string) => {
   return EVENT_COLORS[index];
 };
 
-// --- WARIANTY ANIMACJI ---
+// --- WARIANTY ANIMACJI (To tutaj był problem) ---
+
+// 1. Animacja pojedynczego elementu (pojawienie się z dołu)
 const fadeVariant: Variants = {
   hidden: { opacity: 0, y: 10 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
   exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
+};
+
+// 2. Animacja kontenera listy (kaskadowe pojawianie się dzieci)
+const listContainerVariant: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1, // KLUCZOWE: Musi być 1, inaczej cała lista jest niewidoczna!
+    transition: {
+      staggerChildren: 0.1, // Opóźnienie między elementami
+      when: "beforeChildren",
+    },
+  },
+  exit: { opacity: 0 },
 };
 
 interface EventsCalendarClientProps {
@@ -74,7 +90,6 @@ export const EventsCalendarClient = ({
   upcomingEvents,
 }: EventsCalendarClientProps) => {
   // --- STAN ---
-  // isMounted pozwala uniknąć błędów hydratacji związanych z różnicą czasu serwer/klient
   const [isMounted, setIsMounted] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -82,7 +97,6 @@ export const EventsCalendarClient = ({
 
   useEffect(() => {
     setIsMounted(true);
-    // Opcjonalnie: Upewniamy się, że czas jest zgodny z klientem
     setCurrentDate(new Date());
   }, []);
 
@@ -132,12 +146,10 @@ export const EventsCalendarClient = ({
     }
   };
 
-  // Jeśli nie jesteśmy po stronie klienta, nie renderujemy dynamicznej zawartości kalendarza,
-  // aby uniknąć niezgodności HTML. Renderujemy placeholder lub pustą strukturę.
   if (!isMounted) {
     return (
       <section className="container mx-auto min-h-[600px] px-4 sm:px-6 lg:px-8">
-        {/* Pusty kontener o tej samej wysokości, aby uniknąć skoku Layout Shift */}
+        {/* Placeholder zapobiegający skokom layoutu */}
       </section>
     );
   }
@@ -231,7 +243,7 @@ export const EventsCalendarClient = ({
               {/* Siatka Dni */}
               <div className="grid grid-cols-7 gap-2 p-4 sm:gap-4 sm:p-8">
                 {[...Array(startingDay)].map((_, i) => (
-                  // biome-ignore lint/suspicious/noArrayIndexKey: Layout static spacers
+                  // biome-ignore lint/suspicious/noArrayIndexKey: static spacers
                   <div key={`empty-${i}`} />
                 ))}
 
@@ -264,13 +276,27 @@ export const EventsCalendarClient = ({
                             ? "border-arylideYellow bg-arylideYellow text-raisinBlack shadow-lg shadow-arylideYellow/30"
                             : "border-transparent text-white"
                         }
-                        ${!isSelected && hasEvents ? "bg-white/10 hover:border-arylideYellow/30 hover:bg-white/20" : ""}
-                        ${!isSelected && !hasEvents ? "bg-white/2 hover:bg-white/5" : ""}
-                        ${isToday && !isSelected ? "ring-1 ring-arylideYellow ring-inset" : ""}
+                        ${
+                          !isSelected && hasEvents
+                            ? "bg-white/10 hover:border-arylideYellow/30 hover:bg-white/20"
+                            : ""
+                        }
+                        ${
+                          !isSelected && !hasEvents
+                            ? "bg-white/2 hover:bg-white/5"
+                            : ""
+                        }
+                        ${
+                          isToday && !isSelected
+                            ? "ring-1 ring-arylideYellow ring-inset"
+                            : ""
+                        }
                       `}
                     >
                       <span
-                        className={`text-sm font-bold sm:text-lg ${!isSelected && !hasEvents ? "text-white/20" : ""}`}
+                        className={`text-sm font-bold sm:text-lg ${
+                          !isSelected && !hasEvents ? "text-white/20" : ""
+                        }`}
                       >
                         {day}
                       </span>
@@ -326,10 +352,10 @@ export const EventsCalendarClient = ({
                 <span>{selectedDate ? "W tym dniu" : "Nadchodzące"}</span>
               </h3>
 
-              {/* Dodaj klasę custom-scrollbar w globals.css! */}
               <div className="custom-scrollbar flex-1 overflow-y-auto pr-2">
                 <AnimatePresence mode="wait">
                   {selectedDate && selectedDateEvents.length > 0 ? (
+                    // PRZYPADEK 1: Wybrano dzień z wydarzeniami
                     <m.div
                       key="selected-list"
                       initial="hidden"
@@ -355,6 +381,7 @@ export const EventsCalendarClient = ({
                       </div>
                     </m.div>
                   ) : selectedDate && selectedDateEvents.length === 0 ? (
+                    // PRZYPADEK 2: Wybrano pusty dzień
                     <m.div
                       key="empty-list"
                       initial="hidden"
@@ -375,15 +402,15 @@ export const EventsCalendarClient = ({
                         Pokaż wszystkie nadchodzące
                       </button>
                     </m.div>
-                  ) : (
+                  ) : upcomingEvents.length > 0 ? (
+                    // PRZYPADEK 3: Lista nadchodzących (Domyślny widok)
+                    // Zmiana: Używamy listContainerVariant, który ma opacity: 1
                     <m.div
                       key="upcoming-list"
                       initial="hidden"
                       animate="visible"
                       exit="exit"
-                      variants={{
-                        visible: { transition: { staggerChildren: 0.05 } },
-                      }}
+                      variants={listContainerVariant}
                       className="space-y-3"
                     >
                       {upcomingEvents.slice(0, 10).map((event) => (
@@ -394,6 +421,24 @@ export const EventsCalendarClient = ({
                           />
                         </m.div>
                       ))}
+                    </m.div>
+                  ) : (
+                    // PRZYPADEK 4: Brak jakichkolwiek nadchodzących wydarzeń (Pusta baza)
+                    <m.div
+                      key="no-data"
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
+                      variants={fadeVariant}
+                      className="flex h-full flex-col items-center justify-center text-center text-white/50"
+                    >
+                      <div className="mb-4 rounded-full bg-white/5 p-4">
+                        <FiCalendar size={32} className="opacity-50" />
+                      </div>
+                      <p className="font-medium">Brak zaplanowanych wydarzeń</p>
+                      <p className="mt-2 text-xs text-white/30">
+                        Zajrzyj do nas wkrótce!
+                      </p>
                     </m.div>
                   )}
                 </AnimatePresence>
@@ -406,6 +451,7 @@ export const EventsCalendarClient = ({
   );
 };
 
+// --- KOMPONENT KARTY (Sidebar) ---
 function SidebarEventCard({
   event,
   color,
@@ -439,6 +485,12 @@ function SidebarEventCard({
             <FiMapPin className="shrink-0 text-arylideYellow/70" size={14} />
             <span className="truncate">{event.location}</span>
           </div>
+          {event.price && (
+            <div className="flex items-center gap-2 text-arylideYellow/90 font-medium">
+              <FiTag className="shrink-0" size={14} />
+              <span>{event.price}</span>
+            </div>
+          )}
         </div>
       </div>
     </Link>

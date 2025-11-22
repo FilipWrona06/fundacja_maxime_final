@@ -29,8 +29,7 @@ export const RelatedEvents = ({ events }: { events: EventType[] }) => {
   );
 };
 
-// --- KOMPONENT KARTY (Podrzędny, ale wciąż Server Component) ---
-// Wydzieliłem go dla czytelności kodu.
+// --- KOMPONENT KARTY ---
 function RelatedEventCard({
   event,
   index,
@@ -40,7 +39,7 @@ function RelatedEventCard({
 }) {
   return (
     <MotionWrapper
-      delay={index * 0.15} // Kaskadowe opóźnienie (stagger effect)
+      delay={index * 0.15}
       className="h-full"
     >
       <Link
@@ -57,12 +56,13 @@ function RelatedEventCard({
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
 
-          {/* Overlay gradientowy (dla czytelności tekstów na obrazku, jeśli by były) */}
+          {/* Overlay */}
           <div className="absolute inset-0 bg-linear-to-t from-raisinBlack via-transparent to-transparent opacity-60" />
 
           {/* Badge z datą na obrazku */}
           <div className="absolute left-4 top-4 rounded-lg border border-white/10 bg-raisinBlack/80 px-3 py-1.5 text-sm font-bold text-white backdrop-blur-md">
-            {event.date}
+            {/* ZMIANA: Używamy dateDisplay (ładniejszy format) z fallbackiem do date */}
+            {event.dateDisplay || event.date}
           </div>
         </div>
 

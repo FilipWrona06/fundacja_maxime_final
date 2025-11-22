@@ -8,6 +8,7 @@ import {
   FiClock,
   FiMapPin,
   FiMusic,
+  FiTag, // <--- 1. DODANO IMPORT IKONY
 } from "react-icons/fi";
 import { MotionWrapper } from "@/components/ui/MotionWrapper";
 import type { EventType } from "@/lib/types";
@@ -19,13 +20,13 @@ export const FeaturedEvent = ({ event }: { event: EventType }) => {
   return (
     <section className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
       <div className="group relative h-[500px] w-full overflow-hidden rounded-3xl border border-white/10 shadow-2xl md:h-[600px] xl:h-[650px]">
-        {/* 1. TŁO (Statyczne dla szybkiego ładowania) */}
+        {/* 1. TŁO */}
         <div className="absolute inset-0">
           <Image
             src={urlFor(event.image).width(1920).quality(90).url()}
             alt={event.title}
             fill
-            priority // KLUCZOWE: To jest główny element wizualny, ładujemy go priorytetowo
+            priority
             className="object-cover transition-transform duration-[1.5s] group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
             placeholder="blur"
@@ -35,13 +36,12 @@ export const FeaturedEvent = ({ event }: { event: EventType }) => {
               .blur(10)
               .url()}
           />
-          {/* Gradient Overlay dla czytelności tekstu */}
           <div className="absolute inset-0 bg-linear-to-t from-raisinBlack via-raisinBlack/60 to-transparent" />
         </div>
 
-        {/* 2. TREŚĆ (Animowana przy wejściu) */}
+        {/* 2. TREŚĆ */}
         <div className="absolute bottom-0 left-0 right-0 flex flex-col justify-end p-6 sm:p-10 md:p-16">
-          {/* Badge "Najbliższe wydarzenie" */}
+          {/* Badge */}
           <MotionWrapper delay={0.1}>
             <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-arylideYellow/30 bg-arylideYellow/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-arylideYellow backdrop-blur-md sm:text-sm">
               <FiMusic size={14} />
@@ -60,10 +60,10 @@ export const FeaturedEvent = ({ event }: { event: EventType }) => {
 
           {/* Szczegóły i Przycisk */}
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-            {/* Info (Data/Miejsce) */}
+            {/* Info (Data/Miejsce/Cena) */}
             <MotionWrapper
               delay={0.3}
-              className="flex flex-col gap-3 text-white/80 sm:flex-row sm:gap-6"
+              className="flex flex-wrap gap-y-3 gap-x-6 text-white/80"
             >
               <div className="flex items-center gap-2">
                 <FiCalendar className="text-arylideYellow" />
@@ -79,6 +79,14 @@ export const FeaturedEvent = ({ event }: { event: EventType }) => {
                 <FiMapPin className="text-arylideYellow" />
                 <span className="font-medium">{event.location}</span>
               </div>
+
+              {/* --- 2. DODANO WYŚWIETLANIE CENY --- */}
+              {event.price && (
+                <div className="flex items-center gap-2">
+                  <FiTag className="text-arylideYellow" />
+                  <span className="font-medium">{event.price}</span>
+                </div>
+              )}
             </MotionWrapper>
 
             {/* Przycisk CTA */}

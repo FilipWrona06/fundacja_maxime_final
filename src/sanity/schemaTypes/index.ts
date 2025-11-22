@@ -15,6 +15,7 @@ import horizontalRule from "./objects/horizontalRule";
 import { richText } from "./objects/richText";
 import seo from "./objects/seo";
 import spacer from "./objects/spacer";
+import event from "./events/event";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -23,6 +24,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     galeriaPage,
     gallery,
     eventsPage,
+    event,
     newsPage,
 
     // --- Reużywalne Obiekty i Sekcje ---

@@ -1,43 +1,76 @@
+// Plik: src/app/(user)/wydarzenia/[slug]/page.tsx
+
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { groq } from "next-sanity";
 import { FiArrowLeft } from "react-icons/fi";
-import { EventContent } from "@/components/events/slug/EventContent"; // Server
-// Import Wysp
-import { EventHeroAnimation } from "@/components/events/slug/EventHero";
-import { EventSidebar } from "@/components/events/slug/EventSidebar"; // Client
-import { RelatedEvents } from "@/components/events/slug/RelatedEvents"; // Server
-import { MotionWrapper } from "@/components/ui/MotionWrapper"; // Utility wrapper
-import type { EventType } from "@/lib/types";
-import { client } from "@/sanity/lib/client";
-import { urlFor } from "@/sanity/lib/image";
-import { eventsQuery } from "../page";
 
-const eventBySlugQuery = groq`*[_type == "event" && slug.current == $slug][0]`;
-const eventSlugsQuery = groq`*[_type == "event" && defined(slug.current)][].slug.current`;
+// Komponenty
+import { EventContent } from "@/components/events/slug/EventContent";
+import { EventHeroAnimation } from "@/components/events/slug/EventHero";
+import { EventSidebar } from "@/components/events/slug/EventSidebar";
+import { RelatedEvents } from "@/components/events/slug/RelatedEvents";
+import { MotionWrapper } from "@/components/ui/MotionWrapper";
+
+// Sanity & Typy
+import type { EventType } from "@/lib/types/index";
+import { urlFor } from "@/sanity/lib/image";
+import {
+  getAllEvents,
+  getEventBySlug,
+  getEventSlugs,
+} from "@/sanity/lib/queries/events";
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
 
+// 1. Generowanie statycznych ścieżek (SSG) dla szybkiego ładowania
+export async function generateStaticParams() {
+  const slugs = await getEventSlugs();
+  return slugs.map((slug) => ({ slug }));
+}
+
+// 2. Dynamiczne SEO dla konkretnego wydarzenia
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
+  const event = await getEventBySlug(params.slug);
+
+  if (!event) {
+    return {};
+  }
+
+  return {
+    title: event.seo?.metaTitle || `${event.title} | Fundacja Maxime`,
+    description:
+      event.seo?.metaDescription ||
+      event.subtitle ||
+      "Sprawdź szczegóły tego wydarzenia.",
+    openGraph: {
+      images: event.seo?.ogImage
+        ? [urlFor(event.seo.ogImage).width(1200).height(630).url()]
+        : [urlFor(event.image).width(1200).height(630).url()],
+    },
+  };
+}
+
+// 3. Główny komponent strony
 export default async function EventDetailPage(props: Props) {
   const params = await props.params;
 
-  if (!params?.slug) notFound();
-
-  const event = await client.fetch<EventType>(eventBySlugQuery, {
-    slug: params.slug,
-  });
+  // Pobieramy dane konkretnego wydarzenia
+  const event = await getEventBySlug(params.slug);
 
   if (!event) notFound();
 
-  // Logika "Inne wydarzenia" na serwerze
+  // Pobieramy wszystkie wydarzenia, aby wyfiltrować "Inne wydarzenia"
+  // (Pobieranie getAllEvents jest cache'owane, więc jest szybkie)
+  const allEvents = await getAllEvents();
   const now = new Date();
-  const allEvents = await client.fetch<EventType[]>(eventsQuery);
-
   const getFullDate = (e: EventType) => new Date(`${e.date}T${e.time}:00`);
 
+  // Filtrujemy: Tylko przyszłe I nie to samo co obecnie wyświetlane
   const otherUpcomingEvents = allEvents
     .filter((e) => getFullDate(e) >= now && e._id !== event._id)
     .sort((a, b) => getFullDate(a).getTime() - getFullDate(b).getTime())
@@ -45,7 +78,7 @@ export default async function EventDetailPage(props: Props) {
 
   return (
     <div className="min-h-screen pb-20 bg-raisinBlack text-white">
-      {/* 1. HERO IMAGE + TITLE (SEO Friendly) */}
+      {/* 1. HERO IMAGE + TITLE */}
       <section className="relative h-[60vh] min-h-[400px] w-full">
         <div className="absolute inset-0">
           <Image
@@ -58,7 +91,6 @@ export default async function EventDetailPage(props: Props) {
           <div className="absolute inset-0 bg-linear-to-t from-raisinBlack via-raisinBlack/70 to-transparent" />
         </div>
 
-        {/* Wrapper kliencki animuje tylko wejście tekstu, ale tekst jest w HTML */}
         <EventHeroAnimation>
           <h1 className="mb-3 text-5xl font-bold md:text-6xl lg:text-7xl drop-shadow-lg">
             {event.title}
@@ -71,7 +103,7 @@ export default async function EventDetailPage(props: Props) {
 
       {/* 2. MAIN CONTENT GRID */}
       <div className="container relative z-20 mx-auto mt-[-50px] px-4 sm:px-6">
-        {/* Back Button */}
+        {/* Przycisk powrotu */}
         <MotionWrapper className="mb-8 inline-block">
           <Link
             href="/wydarzenia"
@@ -83,19 +115,19 @@ export default async function EventDetailPage(props: Props) {
         </MotionWrapper>
 
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-          {/* LEWA KOLUMNA: OPIS (Server Component) */}
+          {/* LEWA KOLUMNA: TREŚĆ */}
           <div className="lg:col-span-2">
             <EventContent event={event} />
           </div>
 
-          {/* PRAWA KOLUMNA: SIDEBAR (Client Component) */}
+          {/* PRAWA KOLUMNA: SIDEBAR */}
           <div className="lg:sticky lg:top-28 lg:h-fit">
             <EventSidebar event={event} />
           </div>
         </div>
       </div>
 
-      {/* 3. RELATED EVENTS (Server Component) */}
+      {/* 3. RELATED EVENTS (Wyświetlamy tylko jeśli są jakieś inne wydarzenia) */}
       {otherUpcomingEvents.length > 0 && (
         <section className="mt-24">
           <RelatedEvents events={otherUpcomingEvents} />
@@ -103,9 +135,4 @@ export default async function EventDetailPage(props: Props) {
       )}
     </div>
   );
-}
-
-export async function generateStaticParams() {
-  const slugs = await client.fetch<string[]>(eventSlugsQuery);
-  return slugs.map((slug) => ({ slug }));
 }
