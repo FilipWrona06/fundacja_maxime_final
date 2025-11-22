@@ -1,24 +1,17 @@
-// Plik: src/components/wydarzenia/WydarzeniaHeroSection.tsx
+// Plik: src/components/events/WydarzeniaHeroSection.tsx
 
 import { WydarzeniaHeroSectionClient } from "./WydarzeniaHeroSection.client";
 
-// Opcjonalnie: import funkcji pobierającej dane z Sanity
-// import { getWydarzeniaPageData } from "@/sanity/lib/queries/wydarzenia";
-
-export async function WydarzeniaHeroSection() {
-  // 1. Tu możesz pobrać dane z Sanity, np.:
-  // const data = await getWydarzeniaPageData();
-  
-  // 2. Dane domyślne (fallback), jeśli nie używasz CMS dla nagłówka tej podstrony
-  const staticData = {
+export function WydarzeniaHeroSection() {
+  // Tutaj definiujemy treść statyczną lub pobraną z CMS.
+  // Dzięki temu Client Component zajmuje się tylko wyglądem, a nie danymi.
+  const content = {
     badgeText: "Sezon 2024 / 2025",
     titleLine1: "Poczuj Rytm",
     titleLine2: "Naszej Sceny",
-    subtitle: "Odkryj nadchodzące koncerty, festiwale i wydarzenia specjalne. Bądź częścią niezapomnianych muzycznych wrażeń.",
+    subtitle:
+      "Odkryj nadchodzące koncerty, festiwale i wydarzenia specjalne. Bądź częścią niezapomnianych muzycznych wrażeń w sercu miasta.",
   };
-
-  // Jeśli używasz Sanity, podmień staticData na data z CMS
-  const content = staticData;
 
   return (
     <WydarzeniaHeroSectionClient

@@ -1,9 +1,10 @@
-// Plik: src/components/wydarzenia/WydarzeniaHeroSection.client.tsx
+// Plik: src/components/events/WydarzeniaHeroSection.client.tsx
 
 "use client";
 
 import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
 import { FiCalendar, FiMusic } from "react-icons/fi";
+// Używamy Twojego easingu. Jeśli plik nie istnieje, Framer użyje domyślnego wariantu.
 import { premiumEase } from "@/lib/animations";
 
 interface WydarzeniaHeroProps {
@@ -13,7 +14,7 @@ interface WydarzeniaHeroProps {
   badgeText: string;
 }
 
-// Warianty animacji spójne z resztą projektu
+// --- WARIANTY ANIMACJI ---
 const fadeInUpVariant: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
@@ -21,7 +22,8 @@ const fadeInUpVariant: Variants = {
     y: 0,
     transition: {
       duration: 0.8,
-      ease: premiumEase,
+      // Fallback, jeśli premiumEase nie jest zdefiniowane
+      ease: premiumEase || [0.25, 1, 0.5, 1],
     },
   },
 };
@@ -49,26 +51,29 @@ export const WydarzeniaHeroSectionClient = ({
         initial="hidden"
         animate="visible"
         variants={staggerContainerVariant}
-        className="relative flex min-h-[50vh] w-full items-center justify-center overflow-hidden pt-32 pb-16 sm:pt-40 sm:pb-20"
+        className="relative flex min-h-[60vh] w-full items-center justify-center overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-32"
       >
-        {/* --- TŁO DEKORACYJNE --- */}
-        {/* Górna plama (zółta) */}
-        <m.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, ease: premiumEase }}
-          className="pointer-events-none absolute -top-20 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-arylideYellow/10 blur-[100px]"
-        />
-        {/* Dolna plama (ciemniejsza) */}
-        <m.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, delay: 0.2, ease: premiumEase }}
-          className="pointer-events-none absolute bottom-0 right-0 h-[500px] w-[500px] rounded-full bg-oxfordBlue/20 blur-[120px]"
-        />
-        
-        {/* Tekstura ziarna (opcjonalnie, jeśli używasz w projekcie) */}
-        <div className="absolute inset-0 bg-noise opacity-[0.03] mix-blend-overlay" />
+        {/* --- TŁO DEKORACYJNE (Background Blobs) --- */}
+        <div className="absolute inset-0 overflow-hidden">
+          {/* Górna plama (Żółta) */}
+          <m.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+            className="pointer-events-none absolute -top-20 left-1/2 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-arylideYellow/10 blur-[120px]"
+          />
+
+          {/* Dolna plama (Ciemniejsza/Niebieska) */}
+          <m.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.5, delay: 0.2, ease: "easeOut" }}
+            className="pointer-events-none absolute bottom-0 right-0 h-[600px] w-[600px] translate-x-1/4 translate-y-1/4 rounded-full bg-oxfordBlue/20 blur-[150px]"
+          />
+
+          {/* Tekstura ziarna (opcjonalna, dodaje efektu premium) */}
+          <div className="absolute inset-0 bg-noise opacity-[0.03] mix-blend-overlay pointer-events-none" />
+        </div>
 
         <div className="container relative z-10 mx-auto px-4 text-center sm:px-6">
           {/* --- BADGE --- */}
@@ -88,21 +93,23 @@ export const WydarzeniaHeroSectionClient = ({
 
           {/* --- NAGŁÓWEK H1 --- */}
           <m.h1 variants={fadeInUpVariant} className="relative mb-8">
-            <span className="block font-youngest text-[clamp(3.5rem,9vw,7.5rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl">
+            {/* Linia 1 (Biała) */}
+            <span className="block font-youngest text-[clamp(3.5rem,8vw,7rem)] leading-[0.9] tracking-tight text-white drop-shadow-2xl">
               {titleLine1}
             </span>
-            <span className="block font-youngest text-[clamp(3.5rem,9vw,7.5rem)] leading-[0.9] tracking-tight text-arylideYellow drop-shadow-2xl">
+            {/* Linia 2 (Żółta) */}
+            <span className="block font-youngest text-[clamp(3.5rem,8vw,7rem)] leading-[0.9] tracking-tight text-arylideYellow drop-shadow-2xl">
               {titleLine2}
             </span>
-            
+
             {/* Dekoracyjna ikona w tle tekstu */}
-            <m.div 
-              initial={{ opacity: 0, rotate: -10 }}
-              animate={{ opacity: 1, rotate: 0 }}
-              transition={{ duration: 1.2, delay: 0.5, ease: premiumEase }}
-              className="absolute -right-4 -top-8 -z-10 hidden text-white/5 lg:block"
+            <m.div
+              initial={{ opacity: 0, rotate: -10, scale: 0.8 }}
+              animate={{ opacity: 1, rotate: 0, scale: 1 }}
+              transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
+              className="absolute -right-8 -top-12 -z-10 hidden text-white/5 lg:block mix-blend-overlay pointer-events-none"
             >
-              <FiMusic size={200} />
+              <FiMusic size={250} />
             </m.div>
           </m.h1>
 
@@ -117,15 +124,24 @@ export const WydarzeniaHeroSectionClient = ({
           {/* --- SCROLL INDICATOR --- */}
           <m.div
             variants={fadeInUpVariant}
-            className="mt-16 flex justify-center"
+            className="mt-20 flex justify-center sm:mt-24"
           >
-            <m.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              className="flex h-12 w-7 justify-center rounded-full border-2 border-white/20 p-2 backdrop-blur-sm"
-            >
-              <div className="h-2 w-1 rounded-full bg-arylideYellow" />
-            </m.div>
+            <div className="flex flex-col items-center gap-3 opacity-50 transition-opacity hover:opacity-100">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-white">
+                Scrolluj w dół
+              </span>
+              <div className="flex h-12 w-7 justify-center rounded-full border-2 border-white/20 p-2 backdrop-blur-sm">
+                <m.div
+                  animate={{ y: [0, 12, 0] }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  className="h-2 w-1 rounded-full bg-arylideYellow"
+                />
+              </div>
+            </div>
           </m.div>
         </div>
       </m.section>

@@ -1,8 +1,12 @@
-/* src/app/globals.css */
+/* Plik: src/app/globals.css */
 @import "tailwindcss";
 
+/* 
+  Konfiguracja motywu Tailwind v4.
+  Zmienne CSS są mapowane bezpośrednio na klasy użytkowe.
+*/
 @theme {
-  /* Kolorów */
+  /* Kolory */
   --color-raisinBlack: rgb(38, 38, 38);
   --color-philippineSilver: rgb(178, 178, 178);
   --color-arylideYellow: rgb(239, 213, 111);
@@ -13,15 +17,33 @@
   --font-youngest: var(--font-youngest);
 }
 
+/* Warstwa bazowa - style ogólne */
 @layer base {
-  /* Podstawowe style body */
   body {
     @apply bg-raisinBlack text-white font-montserrat;
   }
 }
 
+/* Warstwa komponentów - własne klasy złożone */
 @layer components {
   .glass-effect {
     @apply bg-oxfordBlue/15 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/20;
+  }
+}
+
+/* Warstwa narzędziowa - np. scrollbar */
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(233, 215, 88, 0.3);
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(233, 215, 88, 0.6);
   }
 }
