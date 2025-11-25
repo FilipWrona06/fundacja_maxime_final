@@ -1,14 +1,15 @@
+// Plik: src/app/(user)/wydarzenia/page.tsx
+
 import type { Metadata } from "next";
+// Upewnij się, że importujesz właściwy plik (EventsCalendar.client)
 import { EventsCalendarClient } from "@/components/events/EventsCalendar";
 import { FeaturedEvent } from "@/components/events/FeaturedEvents";
-import { WydarzeniaHeroSectionClient as WydarzeniaHeroSection } from "@/components/events/WydarzeniaHeroSection.client";
-import type { EventType } from "@/lib/types/index";
+import { WydarzeniaHeroSectionClient as WydarzeniaHeroSection } from "@/components/events/WydarzeniaHeroSection";
 import {
   getAllEvents,
   getEventsPageSettings,
 } from "@/sanity/lib/queries/events";
 
-// 1. Dynamiczne generowanie metadanych SEO
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getEventsPageSettings();
 
@@ -21,34 +22,32 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function WydarzeniaPage() {
-  // 2. Pobieranie danych równolegle (Settings + Events)
   const [settings, allEvents] = await Promise.all([
     getEventsPageSettings(),
     getAllEvents(),
   ]);
 
-  // 3. Normalizacja danych Hero (CMS vs Fallback)
-  // Mapujemy nazwy z CMS (headingLine1) na nazwy propsów komponentu (titleLine1)
-  const badgeText =
-    settings?.heroSection?.badgeText || "Sezon 2024 / 2025";
-    
-  const titleLine1 =
-    settings?.heroSection?.headingLine1 || "Poczuj Rytm";
-    
-  const titleLine2 =
-    settings?.heroSection?.headingLine2 || "Naszej Sceny";
-    
+  const badgeText = settings?.heroSection?.badgeText || "Sezon 2024 / 2025";
+
+  const titleLine1 = settings?.heroSection?.headingLine1 || "Poczuj Rytm";
+
+  const titleLine2 = settings?.heroSection?.headingLine2 || "Naszej Sceny";
+
   const subtitle =
     settings?.heroSection?.description ||
     "Odkryj nadchodzące koncerty, festiwale i wydarzenia specjalne. Bądź częścią niezapomnianych muzycznych wrażeń w sercu miasta.";
 
-  // 4. Logika biznesowa (Sortowanie i filtrowanie)
+  // Nadal obliczamy upcomingEvents TUTAJ, ale tylko po to, by wybrać FeaturedEvent
   const now = new Date();
-  const getFullDate = (e: EventType) => new Date(`${e.date}T${e.time}:00`);
+  // Resetujemy czas na serwerze do północy, aby porównywanie było spójne
+  now.setHours(0, 0, 0, 0);
 
   const upcomingEvents = allEvents
-    .filter((e) => getFullDate(e) >= now)
-    .sort((a, b) => getFullDate(a).getTime() - getFullDate(b).getTime());
+    .filter((e) => {
+      const eDate = new Date(e.date);
+      return eDate >= now;
+    })
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   const featuredEvent = upcomingEvents.length > 0 ? upcomingEvents[0] : null;
 
@@ -67,10 +66,8 @@ export default async function WydarzeniaPage() {
         {featuredEvent && <FeaturedEvent event={featuredEvent} />}
 
         {/* SEKCJA 3: Kalendarz */}
-        <EventsCalendarClient
-          allEvents={allEvents}
-          upcomingEvents={upcomingEvents}
-        />
+        {/* POPRAWKA: Usunięto prop 'upcomingEvents', ponieważ komponent sam to teraz liczy */}
+        <EventsCalendarClient allEvents={allEvents} />
       </div>
     </main>
   );

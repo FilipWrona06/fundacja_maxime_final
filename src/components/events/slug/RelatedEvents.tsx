@@ -38,10 +38,7 @@ function RelatedEventCard({
   index: number;
 }) {
   return (
-    <MotionWrapper
-      delay={index * 0.15}
-      className="h-full"
-    >
+    <MotionWrapper delay={index * 0.15} className="h-full">
       <Link
         href={`/wydarzenia/${event.slug.current}`}
         className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition-all duration-500 hover:-translate-y-2 hover:border-arylideYellow/30 hover:shadow-2xl hover:shadow-arylideYellow/10"

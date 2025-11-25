@@ -55,9 +55,7 @@ export const EventSidebar = ({ event }: { event: EventType }) => {
   // Jeśli jest link w CMS -> użyj go.
   // Jeśli nie ma, a jest darmowe -> /kontakt (lub kotwica #rezerwacja).
   // Jeśli nie ma, a płatne (np. bilety na miejscu) -> /kontakt.
-  const buttonHref = hasTicketLink
-    ? event.ticketLink!
-    : "/kontakt"; 
+  const buttonHref = hasTicketLink ? event.ticketLink! : "/kontakt";
 
   const buttonLabel = hasTicketLink
     ? "Kup bilety online"

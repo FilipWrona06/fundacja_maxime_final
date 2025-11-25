@@ -36,7 +36,7 @@ export default defineType({
       type: "string",
       group: "details",
     }),
-    
+
     // Daty i Czas
     defineField({
       name: "date",
@@ -87,7 +87,8 @@ export default defineType({
       title: "Link do biletów",
       type: "url",
       group: "details",
-      description: "Link do zewnętrznego serwisu (np. Bilety24). Zostaw puste, jeśli wstęp wolny.",
+      description:
+        "Link do zewnętrznego serwisu (np. Bilety24). Zostaw puste, jeśli wstęp wolny.",
     }),
 
     // Artysta
@@ -128,7 +129,8 @@ export default defineType({
       title: "SEO wydarzenia",
       type: "seo", // <--- Dodanie Twojego typu SEO
       group: "seo",
-      description: "Opcjonalne nadpisanie globalnych ustawień SEO dla tego wydarzenia.",
+      description:
+        "Opcjonalne nadpisanie globalnych ustawień SEO dla tego wydarzenia.",
     }),
   ],
   preview: {

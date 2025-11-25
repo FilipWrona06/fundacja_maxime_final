@@ -7,8 +7,8 @@ export interface EventType {
   slug: SanitySlug;
   title: string;
   subtitle?: string; // ? oznacza pole opcjonalne
-  
-  date: string;        // format YYYY-MM-DD (do sortowania)
+
+  date: string; // format YYYY-MM-DD (do sortowania)
   dateDisplay: string; // np. "12 Grudnia 2025"
   time: string;
 
@@ -22,14 +22,14 @@ export interface EventType {
   description: PortableTextContent;
 
   image: SanityImage;
-  
+
   price: string;
-  
+
   // NOWE POLE: Link do zewnętrznej bileterii
-  ticketLink?: string; 
+  ticketLink?: string;
 
   // NOWE POLE: SEO dedykowane dla wydarzenia
-  seo?: SeoData; 
+  seo?: SeoData;
 }
 
 // 2. NOWY Typ dla Singletonu (Ustawienia Strony Wydarzeń)
