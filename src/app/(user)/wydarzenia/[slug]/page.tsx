@@ -71,63 +71,76 @@ export default async function EventDetailPage(props: Props) {
 
   return (
     <div className="min-h-screen bg-raisinBlack pb-24 text-white">
-      {/* HERO IMAGE + TITLE - bardziej elegancki */}
-      <section className="relative h-[65vh] min-h-[500px] w-full">
+      {/* PREMIUM HERO SECTION */}
+      <section className="relative h-[70vh] min-h-[550px] w-full overflow-hidden">
+        {/* Image layer */}
         <div className="absolute inset-0">
           <Image
-            src={urlFor(event.image).url()}
+            src={urlFor(event.image).width(1920).quality(90).url()}
             alt={event.title}
             fill
-            className="object-cover"
+            className="object-cover transition-transform duration-[2s] ease-out"
             priority
+            placeholder="blur"
+            blurDataURL={urlFor(event.image).width(20).quality(20).blur(10).url()}
           />
-          {/* Gradient overlay - bardziej subtelny i smooth */}
-          <div className="absolute inset-0 bg-linear-to-t from-raisinBlack via-raisinBlack/80 to-raisinBlack/30" />
-          <div className="absolute inset-0 bg-linear-to-b from-raisinBlack/50 via-transparent to-transparent" />
+          
+          {/* Multi-layer premium gradients */}
+          <div className="absolute inset-0 bg-linear-to-t from-raisinBlack via-raisinBlack/85 to-raisinBlack/30" />
+          <div className="absolute inset-0 bg-linear-to-b from-raisinBlack/60 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-radial-gradient from-transparent via-transparent to-raisinBlack/70" />
+          
+          {/* Subtle animated overlay */}
+          <div className="absolute inset-0 bg-linear-to-br from-arylideYellow/2 via-transparent to-transparent" />
+          
+          {/* Noise texture */}
+          <div className="absolute inset-0 bg-noise opacity-[0.02] mix-blend-overlay" />
         </div>
 
+        {/* Hero animation wrapper */}
         <EventHeroAnimation>
-          <h1 className="mb-4 text-5xl font-bold leading-[1.05] drop-shadow-2xl md:text-6xl lg:text-7xl">
+          <h1 className="mb-5 font-youngest text-5xl font-bold leading-[1.05] drop-shadow-2xl transition-all duration-500 hover:drop-shadow-[0_0_30px_rgba(239,213,111,0.3)] md:text-6xl lg:text-7xl xl:text-8xl">
             {event.title}
           </h1>
-          <p className="max-w-3xl text-lg leading-relaxed text-white/80 drop-shadow-lg md:text-xl">
+          <p className="max-w-3xl text-lg leading-relaxed text-white/85 drop-shadow-lg transition-colors duration-300 hover:text-white/95 md:text-xl">
             {event.subtitle}
           </p>
         </EventHeroAnimation>
       </section>
 
-      {/* MAIN CONTENT GRID */}
-      <div className="container relative z-20 mx-auto mt-[-60px] px-4 sm:px-6">
-        {/* Przycisk powrotu - bardziej elegancki */}
-        <MotionWrapper className="mb-10 inline-block">
+      {/* MAIN CONTENT SECTION */}
+      <div className="container relative z-20 mx-auto -mt-20 px-4 sm:px-6">
+        {/* Premium back button */}
+        <MotionWrapper delay={0.1} className="mb-12 inline-block">
           <Link
             href="/wydarzenia"
-            className="group inline-flex items-center gap-2.5 rounded-lg bg-white/5 px-4 py-2.5 font-semibold text-white/70 backdrop-blur-sm transition-all duration-300 hover:bg-white/10 hover:text-white hover:shadow-lg"
+            className="group inline-flex items-center gap-3 rounded-2xl border border-white/6 bg-linear-to-r from-white/8 to-white/4 px-5 py-3 font-semibold text-white/80 backdrop-blur-xl shadow-lg transition-all duration-500 hover:border-arylideYellow/20 hover:from-white/12 hover:to-white/8 hover:text-white hover:shadow-xl hover:shadow-arylideYellow/5"
           >
             <FiArrowLeft
-              className="text-arylideYellow transition-transform duration-300 group-hover:-translate-x-1"
+              className="text-arylideYellow transition-transform duration-500 group-hover:-translate-x-1"
               size={18}
             />
             Wróć do kalendarza
           </Link>
         </MotionWrapper>
 
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-3 lg:gap-16">
-          {/* LEWA KOLUMNA: TREŚĆ */}
+        {/* Content grid with optimal spacing */}
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-3 lg:gap-16 xl:gap-20">
+          {/* LEFT COLUMN: CONTENT */}
           <div className="lg:col-span-2">
             <EventContent event={event} />
           </div>
 
-          {/* PRAWA KOLUMNA: SIDEBAR */}
+          {/* RIGHT COLUMN: STICKY SIDEBAR */}
           <div className="lg:sticky lg:top-28 lg:h-fit">
             <EventSidebar event={event} />
           </div>
         </div>
       </div>
 
-      {/* RELATED EVENTS */}
+      {/* RELATED EVENTS SECTION */}
       {otherUpcomingEvents.length > 0 && (
-        <section className="mt-28">
+        <section className="mt-32">
           <RelatedEvents events={otherUpcomingEvents} />
         </section>
       )}

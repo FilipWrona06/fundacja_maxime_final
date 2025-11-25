@@ -3,9 +3,12 @@
 "use client";
 
 import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
-// Importujemy Twój easing. Jeśli ścieżka jest inna, dostosuj ją.
-// Jeśli nie masz tego pliku, na dole dodałem fallback.
-import { premiumEase } from "@/lib/animations";
+import { 
+  premiumEase, 
+  durations,
+  blurValues,
+  viewportConfig 
+} from "@/lib/animations";
 
 interface MotionWrapperProps {
   children: React.ReactNode;
@@ -19,25 +22,86 @@ interface MotionWrapperProps {
    * Ile % elementu musi być widoczne, aby odpalić animację (0-1)
    */
   amount?: number;
+  /**
+   * Typ animacji wejścia
+   */
+  variant?: "fadeUp" | "fade" | "scale" | "slideLeft" | "slideRight";
+  /**
+   * Długość animacji (można nadpisać defaultową)
+   */
+  duration?: number;
 }
 
-// Domyślny wariant animacji (Fade Up)
-const defaultVariants: Variants = {
+// Różne warianty animacji
+const fadeUpVariants: Variants = {
   hidden: {
     opacity: 0,
-    y: 20, // Lekkie przesunięcie w dół
-    filter: "blur(4px)", // Opcjonalnie: delikatny blur na start wygląda bardzo "premium"
+    y: 20,
+    filter: blurValues.normal,
   },
   visible: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
-    transition: {
-      duration: 0.8,
-      // Używamy Twojego premiumEase lub fallbacka
-      ease: premiumEase || [0.25, 1, 0.5, 1],
-    },
+    filter: blurValues.none,
   },
+};
+
+const fadeVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    filter: blurValues.subtle,
+  },
+  visible: {
+    opacity: 1,
+    filter: blurValues.none,
+  },
+};
+
+const scaleVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.95,
+    filter: blurValues.normal,
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    filter: blurValues.none,
+  },
+};
+
+const slideLeftVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    x: 30,
+    filter: blurValues.normal,
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+    filter: blurValues.none,
+  },
+};
+
+const slideRightVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    x: -30,
+    filter: blurValues.normal,
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+    filter: blurValues.none,
+  },
+};
+
+const variantMap = {
+  fadeUp: fadeUpVariants,
+  fade: fadeVariants,
+  scale: scaleVariants,
+  slideLeft: slideLeftVariants,
+  slideRight: slideRightVariants,
 };
 
 export const MotionWrapper = ({
@@ -45,18 +109,65 @@ export const MotionWrapper = ({
   className = "",
   delay = 0,
   once = true,
-  amount = 0.2, // Element zacznie się animować, gdy 20% będzie widoczne
+  amount = 0.2,
+  variant = "fadeUp",
+  duration,
 }: MotionWrapperProps) => {
+  const selectedVariants = variantMap[variant];
+  const animationDuration = duration || durations.slow;
+  
   return (
-    // LazyMotion drastycznie zmniejsza rozmiar bundle'a JS,
-    // ładując tylko funkcje potrzebne do animacji DOM.
     <LazyMotion features={domAnimation}>
       <m.div
         initial="hidden"
         whileInView="visible"
-        viewport={{ once, amount, margin: "0px 0px -50px 0px" }}
-        transition={{ delay }}
-        variants={defaultVariants}
+        viewport={{
+          once,
+          amount,
+          margin: viewportConfig.once.margin,
+        }}
+        variants={selectedVariants}
+        transition={{
+          delay,
+          duration: animationDuration,
+          ease: premiumEase,
+        }}
+        className={className}
+      >
+        {children}
+      </m.div>
+    </LazyMotion>
+  );
+};
+
+// Export dodatkowy helper dla stagger container
+export const StaggerContainer = ({
+  children,
+  className = "",
+  staggerDelay = 0.1,
+  delayChildren = 0.1,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  staggerDelay?: number;
+  delayChildren?: number;
+}) => {
+  return (
+    <LazyMotion features={domAnimation}>
+      <m.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewportConfig.once}
+        variants={{
+          hidden: { opacity: 0 },
+          visible: {
+            opacity: 1,
+            transition: {
+              staggerChildren: staggerDelay,
+              delayChildren,
+            },
+          },
+        }}
         className={className}
       >
         {children}

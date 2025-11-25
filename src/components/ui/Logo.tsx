@@ -3,7 +3,7 @@
 import { m } from "framer-motion";
 import Link from "next/link";
 import { memo } from "react";
-import { premiumEase } from "@/lib/animations";
+import { premiumEase, durations, hoverScales } from "@/lib/animations";
 
 interface LogoProps {
   className?: string;
@@ -14,19 +14,24 @@ export const Logo = memo(({ className = "" }: LogoProps) => {
     <Link
       href="/"
       aria-label="Fundacja Maxime - strona główna"
-      className={`relative font-youngest text-arylideYellow transition-all duration-300 ease-out ${className}`}
+      className={`group relative font-youngest text-arylideYellow transition-all duration-500 ease-out ${className}`}
     >
       <m.span
         className="relative inline-block"
         whileHover={{
-          scale: 1.02,
+          scale: hoverScales.subtle,
+        }}
+        whileTap={{
+          scale: 0.98,
         }}
         transition={{
-          duration: 0.4,
+          duration: durations.fast,
           ease: premiumEase,
         }}
       >
-        Fundacja Maxime
+        {/* Subtelny glow effect na hover */}
+        <span className="relative z-10">Fundacja Maxime</span>
+        <span className="absolute inset-0 blur-lg bg-arylideYellow/0 group-hover:bg-arylideYellow/20 transition-all duration-500 -z-10" />
       </m.span>
     </Link>
   );
