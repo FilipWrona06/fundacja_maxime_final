@@ -36,7 +36,7 @@ export const EventContent = ({ event }: { event: EventType }) => {
           <div className="relative z-10 mt-12 overflow-hidden rounded-2xl border border-white/6 bg-linear-to-br from-white/6 to-white/2 p-6 backdrop-blur-xl transition-all duration-500 hover:border-arylideYellow/20 hover:from-white/8 hover:to-white/4">
             {/* Subtle accent gradient */}
             <div className="pointer-events-none absolute inset-0 bg-linear-to-r from-arylideYellow/2 via-transparent to-transparent" />
-            
+
             <div className="relative flex items-start gap-5 sm:items-center">
               <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-arylideYellow/30 bg-linear-to-br from-arylideYellow/15 to-arylideYellow/5 text-arylideYellow shadow-lg shadow-arylideYellow/10 transition-transform duration-500 hover:scale-110">
                 <FiUser size={26} />

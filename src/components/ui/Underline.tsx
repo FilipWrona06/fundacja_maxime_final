@@ -2,7 +2,7 @@
 
 import { m } from "framer-motion";
 import { memo } from "react";
-import { premiumEase, durations } from "@/lib/animations";
+import { durations, premiumEase } from "@/lib/animations";
 
 interface UnderlineProps {
   isActive?: boolean;
@@ -25,10 +25,13 @@ export const Underline = memo(
 
     // Różne warianty stylów
     const variantStyles = {
-      default: "bg-gradient-to-r from-transparent via-arylideYellow to-transparent",
-      prominent: "bg-gradient-to-r from-transparent via-arylideYellow to-transparent",
+      default:
+        "bg-gradient-to-r from-transparent via-arylideYellow to-transparent",
+      prominent:
+        "bg-gradient-to-r from-transparent via-arylideYellow to-transparent",
       subtle: "bg-arylideYellow/60",
-      gradient: "bg-gradient-to-r from-arylideYellow/60 via-arylideYellow to-arylideYellow/60",
+      gradient:
+        "bg-gradient-to-r from-arylideYellow/60 via-arylideYellow to-arylideYellow/60",
       glow: "bg-gradient-to-r from-transparent via-arylideYellow to-transparent shadow-lg shadow-arylideYellow/30",
     };
 

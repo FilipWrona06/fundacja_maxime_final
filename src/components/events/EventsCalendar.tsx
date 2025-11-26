@@ -17,13 +17,13 @@ import {
   FiMapPin,
   FiTag,
 } from "react-icons/fi";
-import type { EventType } from "@/lib/types";
-import { 
-  premiumEase, 
-  durations, 
+import {
+  blurValues,
+  durations,
+  premiumEase,
   staggerConfig,
-  blurValues 
 } from "@/lib/animations";
+import type { EventType } from "@/lib/types";
 
 // --- STAŁE I KONFIGURACJA ---
 
@@ -193,10 +193,10 @@ export const EventsCalendarClient = ({
                   key={event._id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ 
-                    delay: idx * staggerConfig.normal, 
+                  transition={{
+                    delay: idx * staggerConfig.normal,
                     duration: durations.normal,
-                    ease: premiumEase
+                    ease: premiumEase,
                   }}
                 >
                   <SidebarEventCard
@@ -320,7 +320,7 @@ export const EventsCalendarClient = ({
               <div className="relative flex items-center justify-between border-b border-white/4 bg-linear-to-b from-white/3 to-transparent p-6 sm:p-8 backdrop-blur-xl">
                 {/* Top accent line */}
                 <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-arylideYellow/20 to-transparent" />
-                
+
                 <button
                   type="button"
                   onClick={previousMonth}
@@ -329,7 +329,7 @@ export const EventsCalendarClient = ({
                 >
                   <FiChevronLeft size={20} />
                 </button>
-                
+
                 <div className="text-center">
                   <AnimatePresence mode="wait">
                     <m.h3
@@ -337,7 +337,10 @@ export const EventsCalendarClient = ({
                       initial={{ opacity: 0, y: -8, filter: blurValues.normal }}
                       animate={{ opacity: 1, y: 0, filter: blurValues.none }}
                       exit={{ opacity: 0, y: 8, filter: blurValues.normal }}
-                      transition={{ duration: durations.fast, ease: premiumEase }}
+                      transition={{
+                        duration: durations.fast,
+                        ease: premiumEase,
+                      }}
                       className="font-youngest text-3xl capitalize text-arylideYellow sm:text-4xl drop-shadow-lg"
                     >
                       {MONTHS_PL[currentDate.getMonth()]}
@@ -347,7 +350,7 @@ export const EventsCalendarClient = ({
                     {currentDate.getFullYear()}
                   </p>
                 </div>
-                
+
                 <button
                   type="button"
                   onClick={nextMonth}
@@ -398,18 +401,26 @@ export const EventsCalendarClient = ({
                       onMouseLeave={() => setHoveredDay(null)}
                       className={`
                         relative flex aspect-square flex-col items-center justify-center rounded-xl border transition-all duration-500 ease-out
-                        ${isSelected 
-                          ? "border-arylideYellow/40 bg-linear-to-br from-arylideYellow/95 to-arylideYellow text-raisinBlack shadow-xl shadow-arylideYellow/15 scale-105" 
-                          : "border-white/3 text-white/80"}
-                        ${!isSelected && hasEvents 
-                          ? "bg-linear-to-br from-white/6 to-white/3 hover:from-white/10 hover:to-white/6 hover:border-arylideYellow/15 hover:shadow-lg hover:shadow-arylideYellow/5" 
-                          : ""}
-                        ${!isSelected && !hasEvents 
-                          ? "bg-white/1.5 hover:bg-white/4 hover:border-white/6" 
-                          : ""}
-                        ${isToday && !isSelected 
-                          ? "ring-1 ring-arylideYellow/30 ring-offset-2 ring-offset-raisinBlack/50" 
-                          : ""}
+                        ${
+                          isSelected
+                            ? "border-arylideYellow/40 bg-linear-to-br from-arylideYellow/95 to-arylideYellow text-raisinBlack shadow-xl shadow-arylideYellow/15 scale-105"
+                            : "border-white/3 text-white/80"
+                        }
+                        ${
+                          !isSelected && hasEvents
+                            ? "bg-linear-to-br from-white/6 to-white/3 hover:from-white/10 hover:to-white/6 hover:border-arylideYellow/15 hover:shadow-lg hover:shadow-arylideYellow/5"
+                            : ""
+                        }
+                        ${
+                          !isSelected && !hasEvents
+                            ? "bg-white/1.5 hover:bg-white/4 hover:border-white/6"
+                            : ""
+                        }
+                        ${
+                          isToday && !isSelected
+                            ? "ring-1 ring-arylideYellow/30 ring-offset-2 ring-offset-raisinBlack/50"
+                            : ""
+                        }
                       `}
                     >
                       <span
@@ -417,7 +428,7 @@ export const EventsCalendarClient = ({
                       >
                         {day}
                       </span>
-                      
+
                       {/* Event dots z pulsowaniem */}
                       {hasEvents && (
                         <div className="absolute bottom-1.5 left-1/2 flex -translate-x-1/2 gap-1">
@@ -426,9 +437,9 @@ export const EventsCalendarClient = ({
                               key={event._id}
                               initial={{ scale: 0.8, opacity: 0 }}
                               animate={{ scale: 1, opacity: 1 }}
-                              transition={{ 
+                              transition={{
                                 delay: idx * 0.05,
-                                duration: 0.3
+                                duration: 0.3,
                               }}
                               whileHover={{ scale: 1.3 }}
                               className="h-1 w-1 rounded-full transition-all duration-300 sm:h-1.5 sm:w-1.5"
@@ -436,7 +447,9 @@ export const EventsCalendarClient = ({
                                 backgroundColor: isSelected
                                   ? "rgba(26, 26, 26, 0.7)"
                                   : getEventColor(event._id),
-                                boxShadow: !isSelected ? `0 0 8px ${getEventColor(event._id)}40` : 'none',
+                                boxShadow: !isSelected
+                                  ? `0 0 8px ${getEventColor(event._id)}40`
+                                  : "none",
                               }}
                             />
                           ))}
@@ -450,7 +463,10 @@ export const EventsCalendarClient = ({
                             initial={{ opacity: 0, y: 8, scale: 0.95 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
-                            transition={{ duration: durations.normal, ease: premiumEase }}
+                            transition={{
+                              duration: durations.normal,
+                              ease: premiumEase,
+                            }}
                             className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-3 hidden w-max max-w-[200px] -translate-x-1/2 lg:block"
                           >
                             <div className="relative rounded-2xl border border-white/8 bg-raisinBlack/98 px-4 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.4)] backdrop-blur-2xl">
@@ -509,13 +525,13 @@ function SidebarEventCard({
       className="group relative block overflow-hidden rounded-xl border border-white/4 bg-linear-to-br from-white/4 to-white/1 p-4 backdrop-blur-sm transition-all duration-500 ease-out hover:-translate-y-1 hover:border-arylideYellow/15 hover:from-white/8 hover:to-white/4 hover:shadow-2xl hover:shadow-arylideYellow/5"
     >
       {/* Glow effect overlay */}
-      <div 
+      <div
         className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 pointer-events-none"
         style={{
           background: `radial-gradient(circle at top left, ${color}15, transparent 70%)`,
         }}
       />
-      
+
       {/* Color accent bar */}
       <div
         className="absolute bottom-0 left-0 top-0 w-[3px] rounded-r-full transition-all duration-500 group-hover:w-1"
@@ -524,7 +540,7 @@ function SidebarEventCard({
           opacity: 0.6,
         }}
       />
-      
+
       <div className="relative pl-4">
         <h4 className="mb-3 line-clamp-1 text-base font-semibold text-white transition-colors duration-500 group-hover:text-arylideYellow">
           {event.title}

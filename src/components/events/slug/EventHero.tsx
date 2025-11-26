@@ -4,12 +4,12 @@
 
 import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
 import { FiMusic } from "react-icons/fi";
-import { 
-  premiumEase, 
-  elegantEase,
-  durations, 
+import {
   blurValues,
-  staggerConfig 
+  durations,
+  elegantEase,
+  premiumEase,
+  staggerConfig,
 } from "@/lib/animations";
 
 interface EventHeroAnimationProps {
@@ -76,22 +76,34 @@ export const EventHeroAnimation = ({ children }: EventHeroAnimationProps) => {
             {/* Floating decorative icon z smooth animation */}
             <m.div
               initial={{ opacity: 0, rotate: -20, scale: 0.8 }}
-              animate={{ 
-                opacity: [0, 0.1, 0.1], 
-                rotate: 0, 
+              animate={{
+                opacity: [0, 0.1, 0.1],
+                rotate: 0,
                 scale: 1,
-                y: [0, -15, 0]
+                y: [0, -15, 0],
               }}
-              transition={{ 
-                opacity: { duration: durations.ultra, delay: 0.5, ease: elegantEase },
-                rotate: { duration: durations.ultra, delay: 0.5, ease: elegantEase },
-                scale: { duration: durations.ultra, delay: 0.5, ease: elegantEase },
+              transition={{
+                opacity: {
+                  duration: durations.ultra,
+                  delay: 0.5,
+                  ease: elegantEase,
+                },
+                rotate: {
+                  duration: durations.ultra,
+                  delay: 0.5,
+                  ease: elegantEase,
+                },
+                scale: {
+                  duration: durations.ultra,
+                  delay: 0.5,
+                  ease: elegantEase,
+                },
                 y: {
                   duration: 4,
                   repeat: Infinity,
                   ease: "easeInOut",
-                  delay: 2
-                }
+                  delay: 2,
+                },
               }}
               className="pointer-events-none absolute -left-20 -top-24 -z-10 hidden text-arylideYellow/8 mix-blend-overlay md:block"
             >

@@ -36,11 +36,11 @@ export const FeaturedEvent = ({ event }: { event: EventType }) => {
               .blur(10)
               .url()}
           />
-          
+
           {/* Multi-layer gradient overlay */}
           <div className="absolute inset-0 bg-linear-to-t from-raisinBlack via-raisinBlack/80 to-raisinBlack/20" />
           <div className="absolute inset-0 bg-radial-gradient from-transparent via-transparent to-raisinBlack/60" />
-          
+
           {/* Subtelny glow effect */}
           <div className="absolute inset-0 bg-linear-to-br from-arylideYellow/3 via-transparent to-transparent opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
         </div>
@@ -103,7 +103,7 @@ export const FeaturedEvent = ({ event }: { event: EventType }) => {
               >
                 {/* Hover overlay effect */}
                 <span className="absolute inset-0 bg-linear-to-r from-white to-white/90 opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100" />
-                
+
                 <span className="relative z-10 transition-transform duration-500">
                   Sprawdź szczegóły
                 </span>

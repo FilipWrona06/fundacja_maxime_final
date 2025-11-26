@@ -82,17 +82,21 @@ export default async function EventDetailPage(props: Props) {
             className="object-cover transition-transform duration-[2s] ease-out"
             priority
             placeholder="blur"
-            blurDataURL={urlFor(event.image).width(20).quality(20).blur(10).url()}
+            blurDataURL={urlFor(event.image)
+              .width(20)
+              .quality(20)
+              .blur(10)
+              .url()}
           />
-          
+
           {/* Multi-layer premium gradients */}
           <div className="absolute inset-0 bg-linear-to-t from-raisinBlack via-raisinBlack/85 to-raisinBlack/30" />
           <div className="absolute inset-0 bg-linear-to-b from-raisinBlack/60 via-transparent to-transparent" />
           <div className="absolute inset-0 bg-radial-gradient from-transparent via-transparent to-raisinBlack/70" />
-          
+
           {/* Subtle animated overlay */}
           <div className="absolute inset-0 bg-linear-to-br from-arylideYellow/2 via-transparent to-transparent" />
-          
+
           {/* Noise texture */}
           <div className="absolute inset-0 bg-noise opacity-[0.02] mix-blend-overlay" />
         </div>

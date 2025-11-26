@@ -3,11 +3,11 @@
 "use client";
 
 import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
-import { 
-  premiumEase, 
-  durations,
+import {
   blurValues,
-  viewportConfig 
+  durations,
+  premiumEase,
+  viewportConfig,
 } from "@/lib/animations";
 
 interface MotionWrapperProps {
@@ -115,7 +115,7 @@ export const MotionWrapper = ({
 }: MotionWrapperProps) => {
   const selectedVariants = variantMap[variant];
   const animationDuration = duration || durations.slow;
-  
+
   return (
     <LazyMotion features={domAnimation}>
       <m.div

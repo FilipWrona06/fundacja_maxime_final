@@ -19,19 +19,19 @@ export const RelatedEvents = ({ events }: { events: EventType[] }) => {
           </span>
           <span className="h-px w-12 bg-gradient-to-l from-transparent to-arylideYellow/60" />
         </div>
-        
+
         <h2 className="text-3xl font-bold text-white md:text-4xl lg:text-5xl">
           Inne{" "}
           <span className="font-youngest text-arylideYellow">Wydarzenia</span>
         </h2>
-        
+
         <p className="mx-auto mt-4 max-w-2xl text-base text-white/60">
           Sprawdź nadchodzące koncerty i wydarzenia muzyczne
         </p>
       </MotionWrapper>
 
       {/* GRID KAFLI Z STAGGER ANIMATION */}
-      <StaggerContainer 
+      <StaggerContainer
         staggerDelay={0.12}
         delayChildren={0.2}
         className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3"

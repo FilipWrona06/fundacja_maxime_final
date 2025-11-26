@@ -3,11 +3,11 @@
 import { m, type Variants } from "framer-motion";
 import Link from "next/link";
 import { memo } from "react";
-import { 
-  premiumEase, 
-  tapScales, 
-  ultraSmoothSpring,
+import {
   durations,
+  premiumEase,
+  tapScales,
+  ultraSmoothSpring,
 } from "@/lib/animations";
 
 // Warianty dla wersji mobilnej
@@ -74,7 +74,7 @@ export const AnimatedNavLink = memo(
             >
               {name}
             </m.span>
-            
+
             {/* Mobile underline */}
             <m.span
               className="absolute -bottom-0.5 left-0 h-0.5 w-full rounded-full bg-linear-to-r from-transparent via-arylideYellow to-transparent"
@@ -97,10 +97,7 @@ export const AnimatedNavLink = memo(
     // Wersja desktopowa z ultra-smooth transitions
     return (
       <li>
-        <m.div
-          animate={isActive ? "active" : "initial"}
-          whileHover="hovered"
-        >
+        <m.div animate={isActive ? "active" : "initial"} whileHover="hovered">
           <Link
             href={href}
             className={`group block py-1 relative transition-all duration-500 ease-out ${
@@ -112,7 +109,7 @@ export const AnimatedNavLink = memo(
           >
             <span className="inline-block relative">
               {name}
-              
+
               {/* Premium underline z smooth shadow */}
               <m.span
                 className="absolute -bottom-0.5 left-0 h-0.5 w-full rounded-full bg-linear-to-r from-transparent via-arylideYellow to-transparent shadow-lg shadow-arylideYellow/20"

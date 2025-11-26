@@ -3,7 +3,7 @@
 import { m } from "framer-motion";
 import Link from "next/link";
 import { memo } from "react";
-import { premiumEase, durations, hoverScales } from "@/lib/animations";
+import { durations, hoverScales, premiumEase } from "@/lib/animations";
 
 interface LogoProps {
   className?: string;

@@ -2,7 +2,7 @@
 
 "use client";
 
-import { LazyMotion, domAnimation, m, type Variants } from "framer-motion";
+import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
 import Link from "next/link";
 import {
   FiAlertCircle,
@@ -14,11 +14,7 @@ import {
   FiTag,
 } from "react-icons/fi";
 
-import {
-  durations,
-  premiumEase,
-  staggerConfig,
-} from "@/lib/animations";
+import { durations, premiumEase, staggerConfig } from "@/lib/animations";
 import type { EventType } from "@/lib/types";
 
 // --- WARIANTY ANIMACJI ---
@@ -62,7 +58,8 @@ export const EventSidebar = ({ event }: { event: EventType }) => {
     event.price === "0";
 
   // Poprawiono logikę, aby uniknąć non-null assertion (!)
-  const buttonHref = hasTicketLink && event.ticketLink ? event.ticketLink : "/kontakt";
+  const buttonHref =
+    hasTicketLink && event.ticketLink ? event.ticketLink : "/kontakt";
 
   const buttonLabel = hasTicketLink
     ? "Kup bilety online"
@@ -95,12 +92,11 @@ export const EventSidebar = ({ event }: { event: EventType }) => {
               label="Data"
               value={event.dateDisplay || event.date}
             />
-            <DetailRow
-              icon={<FiClock />}
-              label="Godzina"
-              value={event.time}
-            />
-            <m.li variants={itemVariants} className="group flex gap-4 transition-all duration-500">
+            <DetailRow icon={<FiClock />} label="Godzina" value={event.time} />
+            <m.li
+              variants={itemVariants}
+              className="group flex gap-4 transition-all duration-500"
+            >
               <div className="mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-white/8 to-white/3 text-arylideYellow transition-all duration-500 group-hover:from-arylideYellow/15 group-hover:to-arylideYellow/5 group-hover:shadow-lg group-hover:shadow-arylideYellow/10">
                 <FiMapPin size={20} />
               </div>
@@ -147,7 +143,9 @@ export const EventSidebar = ({ event }: { event: EventType }) => {
                   {/* Hover overlay effect */}
                   <span className="absolute inset-0 bg-linear-to-r from-white to-white/90 opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100" />
 
-                  <span className="relative z-10 transition-transform duration-300">{buttonLabel}</span>
+                  <span className="relative z-10 transition-transform duration-300">
+                    {buttonLabel}
+                  </span>
                   <FiArrowRight className="relative z-10 transition-transform duration-500 group-hover/btn:translate-x-1" />
                 </Link>
 
@@ -169,10 +167,7 @@ export const EventSidebar = ({ event }: { event: EventType }) => {
         </div>
 
         {/* Contact link */}
-        <m.div
-          variants={itemVariants}
-          className="mt-6 text-center"
-        >
+        <m.div variants={itemVariants} className="mt-6 text-center">
           <p className="text-sm text-white/50">
             Masz pytania?{" "}
             <Link

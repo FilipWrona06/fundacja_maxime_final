@@ -106,19 +106,19 @@ export const transitionPresets = {
     duration: durations.slow,
     ease: premiumEase,
   },
-  
+
   // Quick responsive
   quickResponse: {
     duration: durations.fast,
     ease: smoothEase,
   },
-  
+
   // Premium slow motion
   slowMotion: {
     duration: durations.ultra,
     ease: elegantEase,
   },
-  
+
   // Smooth scale
   smoothScale: {
     duration: durations.normal,
@@ -128,10 +128,10 @@ export const transitionPresets = {
 
 // ===== COMMON VARIANTS =====
 export const fadeInUpVariant = {
-  hidden: { 
-    opacity: 0, 
-    y: 30, 
-    filter: blurValues.normal 
+  hidden: {
+    opacity: 0,
+    y: 30,
+    filter: blurValues.normal,
   },
   visible: {
     opacity: 1,
@@ -142,7 +142,7 @@ export const fadeInUpVariant = {
 } as const;
 
 export const fadeInVariant = {
-  hidden: { 
+  hidden: {
     opacity: 0,
     filter: blurValues.subtle,
   },
@@ -154,8 +154,8 @@ export const fadeInVariant = {
 } as const;
 
 export const scaleInVariant = {
-  hidden: { 
-    opacity: 0, 
+  hidden: {
+    opacity: 0,
     scale: 0.95,
     filter: blurValues.normal,
   },
@@ -183,9 +183,9 @@ export const staggerContainer = (delayChildren = 0.1, stagger = 0.1) => ({
 export const createFadeVariant = (
   duration = durations.normal,
   ease = premiumEase,
-  blur = true
+  blur = true,
 ) => ({
-  hidden: { 
+  hidden: {
     opacity: 0,
     ...(blur && { filter: blurValues.normal }),
   },
@@ -199,11 +199,12 @@ export const createFadeVariant = (
 export const createSlideVariant = (
   direction: "up" | "down" | "left" | "right" = "up",
   distance = 30,
-  duration = durations.slow
+  duration = durations.slow,
 ) => {
   const axis = direction === "up" || direction === "down" ? "y" : "x";
-  const value = direction === "up" || direction === "left" ? distance : -distance;
-  
+  const value =
+    direction === "up" || direction === "left" ? distance : -distance;
+
   return {
     hidden: {
       opacity: 0,
