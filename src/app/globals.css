@@ -4,7 +4,7 @@
 /* 
   Konfiguracja motywu Tailwind v4.
   Zmienne CSS są mapowane bezpośrednio na klasy użytkowe.
-*/
+  */
 @theme {
   /* Kolory */
   --color-raisinBlack: rgb(38, 38, 38);
