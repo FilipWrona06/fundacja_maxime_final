@@ -107,7 +107,7 @@
 
   /* Premium shadow */
   .shadow-premium {
-    box-shadow: 
+    box-shadow:
       0 4px 24px -2px rgba(0, 0, 0, 0.3),
       0 2px 8px -2px rgba(0, 0, 0, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.04);
@@ -121,7 +121,8 @@
 
 /* Animacje keyframes dla efektów specjalnych */
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px);
   }
   50% {
@@ -130,7 +131,8 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.6;
     box-shadow: 0 0 8px rgba(239, 213, 111, 0.3);
   }

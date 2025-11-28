@@ -1,109 +1,32 @@
-// Plik: impactSection.ts
-
-import { defineArrayMember, defineField, defineType } from "sanity";
+import { defineField, defineType } from "sanity";
 
 export default defineType({
   name: "impactSection",
   title: 'Sekcja "Nasz Wpływ"',
   type: "object",
-  fieldsets: [{ name: "header", title: "Nagłówek sekcji" }],
+  description:
+    "Karty będą generowane automatycznie z najnowszych treści (wydarzenie, news, galeria)",
   fields: [
-    // --- Nagłówek sekcji (bez zmian) ---
     defineField({
       name: "headingPrefix",
       title: "Nagłówek - część standardowa",
       type: "string",
       description: 'Standardowy tekst przed wyróżnieniem, np. "Nasz".',
-      fieldset: "header",
     }),
     defineField({
       name: "headingHighlighted",
       title: "Nagłówek - część wyróżniona",
       type: "string",
-      description:
-        'Część nagłówka, która zostanie wyróżniona kolorem, np. "Wpływ".',
+      description: 'Część nagłówka wyróżniona kolorem, np. "Wpływ".',
       validation: (Rule) =>
         Rule.required().error("Wyróżniona część nagłówka jest wymagana."),
-      fieldset: "header",
     }),
     defineField({
       name: "subheading",
       title: "Podtytuł",
       type: "string",
-      description:
-        "Krótki tekst wyjaśniający, wyświetlany pod głównym nagłówkiem.",
+      description: "Tekst wyjaśniający pod głównym nagłówkiem.",
       validation: (Rule) => Rule.required().error("Podtytuł jest wymagany."),
-      fieldset: "header",
-    }),
-
-    // --- Lista Kart Wpływu ---
-    defineField({
-      name: "impactCards",
-      title: "Karty Wpływu",
-      type: "array",
-      description:
-        "Lista kart prezentujących kluczowe obszary działalności lub osiągnięcia.",
-      validation: (Rule) =>
-        Rule.required()
-          .min(1)
-          .error("Należy dodać przynajmniej jedną Kartę Wpływu."),
-      of: [
-        defineArrayMember({
-          name: "impactCard",
-          title: "Karta Wpływu",
-          type: "object",
-          fields: [
-            defineField({
-              name: "title",
-              title: "Tytuł karty",
-              type: "string",
-              validation: (Rule) =>
-                Rule.required().error("Tytuł karty jest wymagany."),
-            }),
-
-            // --- ZAKTUALIZOWANE POLE "description" ---
-            // Używamy typu 'richText'
-            defineField({
-              name: "description",
-              title: "Opis karty",
-              type: "richText",
-              validation: (Rule) =>
-                Rule.required().error("Opis karty jest wymagany."),
-            }),
-
-            defineField({
-              name: "image",
-              title: "Zdjęcie",
-              type: "image",
-              options: { hotspot: true },
-              validation: (Rule) =>
-                Rule.required().error("Zdjęcie na karcie jest wymagane."),
-            }),
-            defineField({
-              name: "altText",
-              title: "Tekst alternatywny",
-              type: "string",
-              description:
-                "Ważne dla SEO i dostępności. Opisz zwięźle, co przedstawia zdjęcie.",
-              validation: (Rule) =>
-                Rule.required().error("Tekst alternatywny jest wymagany."),
-            }),
-          ],
-          preview: {
-            select: {
-              title: "title",
-              media: "image",
-            },
-            prepare({ title, media }) {
-              return {
-                title: title || "Brak tytułu",
-                subtitle: "Opis w edytorze",
-                media: media,
-              };
-            },
-          },
-        }),
-      ],
     }),
   ],
 });

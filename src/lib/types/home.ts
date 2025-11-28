@@ -61,7 +61,7 @@ export interface HomePageData {
     headingPrefix?: string;
     headingHighlighted: string;
     subheading: string;
-    impactCards: ImpactCard[];
+    // usunięto: impactCards - będą generowane dynamicznie
   };
 
   timelineSection?: {

@@ -1,3 +1,7 @@
+// ===================================================================
+// Plik: src/components/gallery/GalleryGridSection.client.tsx
+// PEŁNY KOD Z NAPRZEMIENNY LAYOUTEM
+
 "use client";
 
 // Import komponentu do renderowania tekstu z Sanity
@@ -19,7 +23,6 @@ import {
   ultraSmoothSpring,
   viewportConfig,
 } from "@/lib/animations";
-// Import typów (upewnij się, że zaktualizowałeś plik types/index.ts)
 import type { Partner, PortableTextContent } from "@/lib/types/index";
 
 const DynamicLightbox = dynamic(() =>
@@ -35,7 +38,6 @@ interface ImageData {
 
 interface GalleryGridData {
   title: string;
-  // ZMIANA: Jawny typ dla treści z edytora
   description?: PortableTextContent;
   videoUrl?: string;
   sponsors?: Partner[];
@@ -95,6 +97,9 @@ export const GalleryGridSectionClient = ({
     offset: ["start end", "end start"],
   });
 
+  // ZMIANA: Sprawdzamy czy galeria jest parzysta (0, 2, 4...) czy nieparzysta (1, 3, 5...)
+  const isEven = index % 2 === 0;
+  
   const blurY = useTransform(scrollYProgress, [0, 1], [80, -80]);
   const blurOpacity = useTransform(
     scrollYProgress,
@@ -119,22 +124,24 @@ export const GalleryGridSectionClient = ({
         aria-labelledby={`gallery-${index}`}
         className="relative py-12 sm:py-20"
       >
-        {/* Decorative blur */}
+        {/* ZMIANA: Decorative blur naprzemiennie lewo-prawo */}
         <m.div
           style={{ y: blurY, opacity: blurOpacity }}
           className={`pointer-events-none absolute ${
-            index % 2 === 0 ? "right-0" : "left-0"
+            isEven ? "right-0" : "left-0"
           } top-1/3 h-80 w-80 rounded-full bg-arylideYellow/6 blur-3xl`}
         />
 
         <div className="relative z-10 container mx-auto px-4 sm:px-6">
-          {/* --- HEADER --- */}
+          {/* --- HEADER - ZMIANA: Naprzemiennie lewa/prawa kolumna --- */}
           <m.div
             variants={fadeInUpVariant}
             className="mb-12 grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12 items-end"
           >
-            {/* Lewa kolumna: Tytuł i dane */}
-            <div className="lg:col-span-5 xl:col-span-4 space-y-6">
+            {/* ZMIANA: Kolumna z tytułem - dodano conditional ordering */}
+            <div className={`lg:col-span-5 xl:col-span-4 space-y-6 ${
+              !isEven ? 'lg:order-2' : ''
+            }`}>
               <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-arylideYellow">
                 <span className="flex items-center gap-2 rounded-full bg-arylideYellow/10 px-3 py-1 border border-arylideYellow/20">
                   <FiCalendar />
@@ -172,11 +179,14 @@ export const GalleryGridSectionClient = ({
               )}
             </div>
 
-            {/* Prawa kolumna: Opis i LOGOTYPY PARTNERÓW */}
-            <div className="lg:col-span-7 xl:col-span-8 flex flex-col gap-6 lg:pl-8 lg:border-l lg:border-white/10 pb-2">
+            {/* ZMIANA: Kolumna z opisem - border i order zmieniają się naprzemiennie */}
+            <div className={`lg:col-span-7 xl:col-span-8 flex flex-col gap-6 pb-2 ${
+              isEven 
+                ? 'lg:pl-8 lg:border-l' 
+                : 'lg:pr-8 lg:border-r lg:order-1'
+            } lg:border-white/10`}>
               {/* Opis z Portable Text */}
               {galleryData.description && (
-                // Dodajemy style dla akapitów wewnątrz PortableText ([&>p]:mb-4)
                 <div className="text-lg leading-relaxed text-white/70 md:text-xl max-w-3xl [&>p]:mb-4 last:[&>p]:mb-0">
                   <PortableText value={galleryData.description} />
                 </div>
@@ -218,10 +228,13 @@ export const GalleryGridSectionClient = ({
             </div>
           </m.div>
 
-          {/* --- GALERIA (Desktop Grid - Bento 1+4) --- */}
+          {/* --- GALERIA (Desktop Grid - Bento 1+4) - ZMIANA: Naprzemiennie --- */}
           <m.div
             variants={staggerContainerVariant}
-            className="hidden lg:grid grid-cols-4 gap-4 auto-rows-[240px]"
+            className={`hidden lg:grid grid-cols-4 gap-4 auto-rows-[240px] ${
+              !isEven ? 'direction-rtl' : ''
+            }`}
+            style={!isEven ? { direction: 'rtl' } : undefined}
           >
             {galleryData.images.map((image, imageIndex) => {
               // Logika: Co 5 zdjęcie jest duże (0, 5, 10...)
@@ -239,6 +252,7 @@ export const GalleryGridSectionClient = ({
                   transition={ultraSmoothSpring}
                   onClick={() => setLightboxIndex(imageIndex)}
                   className={`group relative overflow-hidden rounded-xl bg-raisinBlack/50 shadow-xl ${gridClass}`}
+                  style={!isEven ? { direction: 'ltr' } : undefined}
                 >
                   <div className="relative h-full w-full">
                     <Image

@@ -1,6 +1,6 @@
 import { groq } from "next-sanity";
 import { cache } from "react";
-import type { HomePageData } from "@/lib/types";
+import type { HomePageData, SanityImage } from "@/lib/types";
 import { client } from "../client";
 
 /**
@@ -135,3 +135,101 @@ export const getCTASectionData = cache(
     return data?.ctaSection ?? null;
   },
 );
+
+/**
+ * NOWA FUNKCJA: Pobiera dynamiczne dane dla sekcji Impact
+ */
+export const getImpactDynamicData = cache(async () => {
+  // Pobieramy nagłówek sekcji z CMS
+  const sectionData = await client.fetch<{
+    impactSection: Pick<
+      NonNullable<HomePageData["impactSection"]>,
+      "headingPrefix" | "headingHighlighted" | "subheading"
+    >;
+  }>(
+    groq`*[_type == "homePage"][0]{
+      impactSection {
+        headingPrefix,
+        headingHighlighted,
+        subheading
+      }
+    }`,
+    {},
+    { next: { tags: ["homePage"] } },
+  );
+
+  // Pobieramy dynamiczne dane równolegle
+  const [upcomingEvent, latestNews, latestGallery] = await Promise.all([
+    // Najbliższe wydarzenie
+    client.fetch<{
+      _id: string;
+      title: string;
+      dateDisplay: string;
+      location: string;
+      image: SanityImage;
+      slug: { current: string };
+    } | null>(
+      groq`*[_type == "event" && date >= now()] | order(date asc) [0] {
+        _id,
+        title,
+        dateDisplay,
+        location,
+        image,
+        slug
+      }`,
+      {},
+      { next: { tags: ["events"] } },
+    ),
+
+    // Najnowszy news
+    client.fetch<{
+      _id: string;
+      title: string;
+      excerpt: string;
+      dateDisplay: string;
+      category: string;
+      image: SanityImage;
+      slug: { current: string };
+    } | null>(
+      groq`*[_type == "newsArticle"] | order(date desc) [0] {
+        _id,
+        title,
+        excerpt,
+        dateDisplay,
+        category,
+        image,
+        slug
+      }`,
+      {},
+      { next: { tags: ["newsArticle"] } },
+    ),
+
+    // Najnowsza galeria
+    client.fetch<{
+      _id: string;
+      title: string;
+      date: string;
+      location: string;
+      images: SanityImage[];
+      slug: { current: string };
+    } | null>(
+      groq`*[_type == "gallery"] | order(date desc) [0] {
+        _id,
+        title,
+        date,
+        location,
+        images,
+        slug
+      }`,
+      {},
+      { next: { tags: ["gallery"] } },
+    ),
+  ]);
+
+  return {
+    ...sectionData?.impactSection,
+    upcomingEvent,
+    latestNews,
+    latestGallery,
+  };
+});

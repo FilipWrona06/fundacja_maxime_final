@@ -1,18 +1,17 @@
-// Plik: src/components/home/ImpactSection.tsx (wersja zrefaktoryzowana)
+// Plik: src/components/home/ImpactSection.tsx (zaktualizuj)
 
-import { getImpactSectionData } from "@/sanity/lib/queries/home";
+import { getImpactDynamicData } from "@/sanity/lib/queries/home";
 import { ImpactSectionClient } from "./ImpactSection.client";
 
 export async function ImpactSection() {
-  // 1. Pobieranie danych na serwerze
-  const impactData = await getImpactSectionData();
+  // Pobieramy dynamiczne dane
+  const impactData = await getImpactDynamicData();
 
-  // 2. Zabezpieczenie na wypadek braku danych
   if (!impactData) {
     return null;
   }
 
-  // 3. Przygotowanie statycznego JSX dla nagłówka i podtytułu
+  // Przygotowanie statycznego JSX dla nagłówka
   const headingContent = (
     <div className="space-y-4 sm:space-y-6">
       <h2
@@ -30,19 +29,17 @@ export async function ImpactSection() {
     </div>
   );
 
-  // 4. Renderowanie statycznej otoczki i przekazanie danych do komponentu klienckiego
   return (
     <section
       id="impact-section"
       className="relative overflow-hidden py-16 sm:py-20 md:py-24 lg:py-32 xl:py-40"
       aria-labelledby="impact-heading"
     >
-      {/* Dekoracyjne tła renderowane na serwerze */}
+      {/* Dekoracyjne tła */}
       <div className="absolute right-0 top-1/3 h-96 w-96 rounded-full bg-arylideYellow/5 blur-3xl" />
       <div className="absolute bottom-1/3 left-0 h-96 w-96 rounded-full bg-arylideYellow/5 blur-3xl" />
 
       <div className="container relative z-10 mx-auto px-6 lg:px-8">
-        {/* Komponent kliencki renderuje już tylko animowaną treść */}
         <ImpactSectionClient impactData={impactData}>
           {headingContent}
         </ImpactSectionClient>
