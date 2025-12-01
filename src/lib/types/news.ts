@@ -1,5 +1,5 @@
-import type { PortableTextContent, SanityImage, SanitySlug } from "./sanity";
 import type { SeoData } from "./common";
+import type { PortableTextContent, SanityImage, SanitySlug } from "./sanity";
 
 export interface NewsArticleType {
   _id: string;

@@ -12,11 +12,11 @@ import ctaSection from "./home/ctaSection";
 import heroSection from "./home/heroSection";
 import impactSection from "./home/impactSection";
 import timelineSection from "./home/timelineSection";
+import newsArticle from "./news/newsArticle";
 import horizontalRule from "./objects/horizontalRule";
 import { richText } from "./objects/richText";
 import seo from "./objects/seo";
 import spacer from "./objects/spacer";
-import newsArticle from "./news/newsArticle";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [

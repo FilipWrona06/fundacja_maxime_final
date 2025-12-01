@@ -29,7 +29,8 @@ export default defineType({
       title: "Opis pod nagłówkiem",
       type: "text",
       rows: 3,
-      initialValue: "Najnowsze wiadomości, wydarzenia i relacje z naszych koncertów",
+      initialValue:
+        "Najnowsze wiadomości, wydarzenia i relacje z naszych koncertów",
     }),
   ],
 });

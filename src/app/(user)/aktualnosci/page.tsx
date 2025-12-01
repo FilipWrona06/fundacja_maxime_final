@@ -1,9 +1,9 @@
 // Plik: src/app/(user)/aktualnosci/page.tsx
 
 import type { Metadata } from "next";
-import { NewsHeroClient } from "@/components/news/NewsHero";
 import { FeaturedNewsClient } from "@/components/news/FeaturedNews";
-import { NewsFilterGridClient } from "@/components/news/NewsFilterGrid";
+import { NewsFilterGridClient } from "@/components/news/NewsGrid";
+import { NewsHeroClient } from "@/components/news/NewsHero";
 import { NewsNewsletterClient } from "@/components/news/NewsNewsletter";
 import { getAllNews, getNewsPageSettings } from "@/sanity/lib/queries/news";
 
@@ -11,7 +11,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const settings = await getNewsPageSettings();
   return {
     title: settings?.seo?.metaTitle || "Aktualności | Fundacja Maxime",
-    description: settings?.seo?.metaDescription || "Najnowsze wiadomości ze świata fundacji.",
+    description:
+      settings?.seo?.metaDescription ||
+      "Najnowsze wiadomości ze świata fundacji.",
   };
 }
 
@@ -27,7 +29,9 @@ export default async function AktualnosciPage() {
     badge: "Bądź na bieżąco",
     line1: settings?.heroHeading || "Aktualności",
     line2: settings?.heroSubheading || "Fundacji",
-    desc: settings?.heroDescription || "Najnowsze wiadomości, wydarzenia i relacje z naszych koncertów",
+    desc:
+      settings?.heroDescription ||
+      "Najnowsze wiadomości, wydarzenia i relacje z naszych koncertów",
   };
 
   const newestArticle = allNews.length > 0 ? allNews[0] : null;
@@ -42,20 +46,20 @@ export default async function AktualnosciPage() {
   return (
     <div className="min-h-screen pt-32 pb-20 overflow-x-hidden">
       {/* Przekazujemy dane z CMS do Hero */}
-      <NewsHeroClient 
+      <NewsHeroClient
         badge={heroData.badge}
         titleLine1={heroData.line1}
         titleLine2={heroData.line2}
         description={heroData.desc}
       />
 
-      <FeaturedNewsClient 
-        highlightedNews={highlightedNews} 
+      <FeaturedNewsClient
+        highlightedNews={highlightedNews}
         newestId={newestArticle?._id || ""}
       />
 
-      <NewsFilterGridClient 
-        allNews={allNews} 
+      <NewsFilterGridClient
+        allNews={allNews}
         newestId={newestArticle?._id}
         featuredId={featuredArticle?._id}
       />

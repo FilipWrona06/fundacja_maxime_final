@@ -1,14 +1,14 @@
 "use client";
 
+// Import PortableText i konfiguracji
+import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import { domAnimation, LazyMotion, m } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import { FiArrowLeft, FiUser } from "react-icons/fi";
 import { premiumEase } from "@/lib/animations";
 import type { NewsArticleType } from "@/lib/types";
-// Import PortableText i konfiguracji
-import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import { urlFor } from "@/sanity/lib/image";
-import Image from "next/image";
 
 // Konfiguracja renderowania PortableText
 const newsPortableTextComponents: PortableTextComponents = {
@@ -39,30 +39,52 @@ const newsPortableTextComponents: PortableTextComponents = {
   },
   block: {
     // Style dla nagłówków
-    h2: ({ children }) => <h2 className="mt-10 mb-6 text-3xl font-bold text-arylideYellow font-youngest">{children}</h2>,
-    h3: ({ children }) => <h3 className="mt-8 mb-4 text-2xl font-bold text-white">{children}</h3>,
-    h4: ({ children }) => <h4 className="mt-6 mb-3 text-xl font-bold text-white/90">{children}</h4>,
+    h2: ({ children }) => (
+      <h2 className="mt-10 mb-6 text-3xl font-bold text-arylideYellow font-youngest">
+        {children}
+      </h2>
+    ),
+    h3: ({ children }) => (
+      <h3 className="mt-8 mb-4 text-2xl font-bold text-white">{children}</h3>
+    ),
+    h4: ({ children }) => (
+      <h4 className="mt-6 mb-3 text-xl font-bold text-white/90">{children}</h4>
+    ),
     blockquote: ({ children }) => (
       <blockquote className="border-l-4 border-arylideYellow pl-4 italic text-white/80 my-6 py-2 bg-white/5 rounded-r-lg">
         {children}
       </blockquote>
     ),
-    normal: ({ children }) => <p className="mb-4 text-lg leading-relaxed text-white/80">{children}</p>,
+    normal: ({ children }) => (
+      <p className="mb-4 text-lg leading-relaxed text-white/80">{children}</p>
+    ),
   },
   marks: {
     link: ({ children, value }) => {
-      const rel = !value.href.startsWith("/") ? "noreferrer noopener" : undefined;
+      const rel = !value.href.startsWith("/")
+        ? "noreferrer noopener"
+        : undefined;
       return (
-        <a href={value.href} rel={rel} className="text-arylideYellow underline hover:text-white transition-colors">
+        <a
+          href={value.href}
+          rel={rel}
+          className="text-arylideYellow underline hover:text-white transition-colors"
+        >
           {children}
         </a>
       );
     },
-    strong: ({ children }) => <strong className="font-bold text-white">{children}</strong>,
+    strong: ({ children }) => (
+      <strong className="font-bold text-white">{children}</strong>
+    ),
   },
 };
 
-export const ArticleContentClient = ({ article }: { article: NewsArticleType }) => {
+export const ArticleContentClient = ({
+  article,
+}: {
+  article: NewsArticleType;
+}) => {
   return (
     <LazyMotion features={domAnimation}>
       <div className="container relative z-20 mx-auto mt-[-50px] px-6">
@@ -94,19 +116,21 @@ export const ArticleContentClient = ({ article }: { article: NewsArticleType }) 
                 {article.excerpt}
               </p>
             )}
-            
-            <PortableText 
-              value={article.content} 
-              components={newsPortableTextComponents} 
+
+            <PortableText
+              value={article.content}
+              components={newsPortableTextComponents}
             />
           </div>
-          
+
           <div className="mt-12 border-t border-white/10 pt-8">
             <div className="flex items-center justify-end gap-3 text-sm font-medium text-white/60">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10">
                 <FiUser size={14} className="text-arylideYellow" />
               </div>
-              <span>Autor: <span className="text-white">{article.author}</span></span>
+              <span>
+                Autor: <span className="text-white">{article.author}</span>
+              </span>
             </div>
           </div>
         </m.div>

@@ -9,19 +9,21 @@ import { client } from "../client";
  * Pobiera ustawienia strony aktualności (Hero, SEO).
  * Pobiera dane z singletonu "newsPage".
  */
-export const getNewsPageSettings = cache(async (): Promise<NewsPageSettings | null> => {
-  const data = await client.fetch<NewsPageSettings>(
-    groq`*[_type == "newsPage"][0]{
+export const getNewsPageSettings = cache(
+  async (): Promise<NewsPageSettings | null> => {
+    const data = await client.fetch<NewsPageSettings>(
+      groq`*[_type == "newsPage"][0]{
       seo,
       heroHeading,
       heroSubheading,
       heroDescription
     }`,
-    {},
-    { next: { tags: ["newsPage"] } }
-  );
-  return data ?? null;
-});
+      {},
+      { next: { tags: ["newsPage"] } },
+    );
+    return data ?? null;
+  },
+);
 
 /**
  * Pobiera wszystkie artykuły posortowane od najnowszego.
@@ -42,7 +44,7 @@ export const getAllNews = cache(async (): Promise<NewsArticleType[]> => {
       featured
     }`,
     {},
-    { next: { tags: ["newsArticle"] } }
+    { next: { tags: ["newsArticle"] } },
   );
   return data || [];
 });
@@ -51,9 +53,10 @@ export const getAllNews = cache(async (): Promise<NewsArticleType[]> => {
  * Pobiera pojedynczy artykuł po slugu.
  * Pobiera pełną treść (content) w formacie PortableText.
  */
-export const getNewsBySlug = cache(async (slug: string): Promise<NewsArticleType | null> => {
-  const data = await client.fetch<NewsArticleType>(
-    groq`*[_type == "newsArticle" && slug.current == $slug][0] {
+export const getNewsBySlug = cache(
+  async (slug: string): Promise<NewsArticleType | null> => {
+    const data = await client.fetch<NewsArticleType>(
+      groq`*[_type == "newsArticle" && slug.current == $slug][0] {
       ...,
       // Rozwijamy content, jeśli są tam jakieś referencje (np. zdjęcia w tekście)
       content[]{
@@ -65,11 +68,12 @@ export const getNewsBySlug = cache(async (slug: string): Promise<NewsArticleType
       },
       seo
     }`,
-    { slug },
-    { next: { tags: ["newsArticle"] } }
-  );
-  return data ?? null;
-});
+      { slug },
+      { next: { tags: ["newsArticle"] } },
+    );
+    return data ?? null;
+  },
+);
 
 /**
  * Pobiera listę wszystkich slugów.
@@ -79,7 +83,7 @@ export const getNewsSlugs = cache(async (): Promise<string[]> => {
   const data = await client.fetch<string[]>(
     groq`*[_type == "newsArticle" && defined(slug.current)][].slug.current`,
     {},
-    { next: { tags: ["newsArticle"] } }
+    { next: { tags: ["newsArticle"] } },
   );
   return data || [];
 });

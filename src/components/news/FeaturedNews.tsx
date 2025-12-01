@@ -8,9 +8,8 @@ import { premiumEase } from "@/lib/animations";
 import type { NewsArticleType } from "@/lib/types";
 import { urlFor } from "@/sanity/lib/image";
 
-// Lokalna funkcja pomocnicza
+// Helper daty (lokalny)
 const formatDate = (dateString: string) => {
-  if (!dateString) return "";
   return new Date(dateString).toLocaleDateString("pl-PL", {
     day: "numeric",
     month: "long",
@@ -27,6 +26,9 @@ export const FeaturedNewsClient = ({
 }) => {
   if (highlightedNews.length === 0) return null;
 
+  // Sprawdzamy, czy mamy jeden czy dwa elementy, aby dostosować wygląd
+  const isSingleMode = highlightedNews.length === 1;
+
   return (
     <LazyMotion features={domAnimation}>
       <section className="mb-32">
@@ -40,7 +42,17 @@ export const FeaturedNewsClient = ({
           >
             Na Czasie
           </m.h2>
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+
+          {/* 
+            ZMIANA: Dynamiczna klasa grida.
+            Jeśli 2 elementy -> lg:grid-cols-2 (50%/50%)
+            Jeśli 1 element -> lg:grid-cols-1 (100% szerokości)
+          */}
+          <div
+            className={`grid grid-cols-1 gap-8 ${
+              isSingleMode ? "lg:grid-cols-1" : "lg:grid-cols-2"
+            }`}
+          >
             {highlightedNews.map((item, index) => (
               <m.article
                 key={item._id}
@@ -55,35 +67,59 @@ export const FeaturedNewsClient = ({
                 whileHover={{ y: -8 }}
                 className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-500 hover:border-arylideYellow/30"
               >
-                <div className="relative h-96 overflow-hidden">
+                {/* 
+                  ZMIANA: Dostosowanie wysokości zdjęcia.
+                  Jeśli kafel jest na całą szerokość (isSingleMode), zdjęcie jest wyższe (h-[500px]),
+                  żeby wyglądało jak piękny baner. W przeciwnym razie standardowe h-96.
+                */}
+                <div
+                  className={`relative overflow-hidden ${
+                    isSingleMode ? "h-96 md:h-[500px]" : "h-96"
+                  }`}
+                >
                   <Image
-                    src={urlFor(item.image).width(800).url()}
+                    // Jeśli to duży baner, ładujemy większe zdjęcie (1200px), jeśli mały kafel - 800px
+                    src={urlFor(item.image)
+                      .width(isSingleMode ? 1200 : 800)
+                      .url()}
                     alt={item.title}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    priority={index === 0} // Priorytet ładowania dla pierwszego elementu
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-raisinBlack via-raisinBlack/60 to-transparent" />
-                  
+
                   {/* Badge */}
                   <span className="absolute left-6 top-6 rounded-full border border-arylideYellow/40 bg-arylideYellow/20 px-4 py-2 text-xs font-semibold text-arylideYellow backdrop-blur-md shadow-lg">
                     {item._id === newestId ? "Najnowszy" : "Wyróżniony"}
                   </span>
                 </div>
-                
+
                 <div className="absolute bottom-0 left-0 right-0 p-8">
                   <div className="mb-4 flex items-center gap-4 text-sm text-white/60">
                     <span className="flex items-center gap-2">
                       <FiCalendar size={14} className="text-arylideYellow" />
-                      {/* Użycie lokalnej funkcji formatowania */}
                       {formatDate(item.date)}
                     </span>
                   </div>
-                  <h3 className="mb-3 text-3xl font-bold transition-colors duration-300 group-hover:text-arylideYellow">
+
+                  {/* Większy tytuł dla pojedynczego kafla */}
+                  <h3
+                    className={`mb-3 font-bold transition-colors duration-300 group-hover:text-arylideYellow ${
+                      isSingleMode ? "text-3xl md:text-5xl" : "text-3xl"
+                    }`}
+                  >
                     {item.title}
                   </h3>
-                  <p className="mb-6 line-clamp-2 text-white/70 leading-relaxed">
+
+                  <p
+                    className={`mb-6 text-white/70 leading-relaxed ${
+                      isSingleMode ? "text-lg max-w-3xl" : "line-clamp-2"
+                    }`}
+                  >
                     {item.excerpt}
                   </p>
+
                   <Link
                     href={`/aktualnosci/${item.slug.current}`}
                     className="group/btn inline-flex items-center gap-2 font-semibold text-arylideYellow transition-all duration-300 hover:gap-3"

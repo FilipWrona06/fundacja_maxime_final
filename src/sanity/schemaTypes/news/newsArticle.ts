@@ -44,7 +44,7 @@ export default defineType({
     }),
     // USUNIĘTO: dateDisplay (będziemy formatować datę na frontendzie)
     // USUNIĘTO: category (zgodnie z życzeniem)
-    
+
     defineField({
       name: "image",
       title: "Główne zdjęcie artykułu",

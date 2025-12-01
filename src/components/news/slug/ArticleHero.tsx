@@ -17,7 +17,11 @@ const formatDate = (dateString: string) => {
   });
 };
 
-export const ArticleHeroClient = ({ article }: { article: NewsArticleType }) => {
+export const ArticleHeroClient = ({
+  article,
+}: {
+  article: NewsArticleType;
+}) => {
   return (
     <LazyMotion features={domAnimation}>
       <m.section

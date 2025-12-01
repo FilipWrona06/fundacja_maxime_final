@@ -2,7 +2,10 @@
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-
+// Importy nowych komponentów klienckich
+import { ArticleContentClient } from "@/components/news/slug/ArticleContent";
+import { ArticleHeroClient } from "@/components/news/slug/ArticleHero";
+import { RelatedNewsClient } from "@/components/news/slug/RelatedNews";
 // Importy typów i narzędzi Sanity
 import { urlFor } from "@/sanity/lib/image";
 import {
@@ -10,11 +13,6 @@ import {
   getNewsBySlug,
   getNewsSlugs,
 } from "@/sanity/lib/queries/news";
-
-// Importy nowych komponentów klienckich
-import { ArticleContentClient } from "@/components/news/slug/ArticleContent";
-import { ArticleHeroClient } from "@/components/news/slug/ArticleHero";
-import { RelatedNewsClient } from "@/components/news/slug/RelatedNews";
 
 type Props = {
   params: Promise<{ slug: string }>;

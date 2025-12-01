@@ -19,7 +19,7 @@ export const NewsNewsletterClient = () => {
             {/* Decorations */}
             <div className="absolute -left-32 -top-32 h-64 w-64 rounded-full bg-arylideYellow/10 blur-3xl pointer-events-none" />
             <div className="absolute -bottom-32 -right-32 h-64 w-64 rounded-full bg-arylideYellow/10 blur-3xl pointer-events-none" />
-            
+
             <div className="relative z-10">
               <h2 className="mb-6 text-4xl font-bold md:text-5xl">
                 Nie przegap żadnej <br />{" "}
