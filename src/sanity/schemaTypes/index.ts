@@ -17,6 +17,7 @@ import horizontalRule from "./objects/horizontalRule";
 import { richText } from "./objects/richText";
 import seo from "./objects/seo";
 import spacer from "./objects/spacer";
+import contactPage from "./documents/contactPage";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -28,6 +29,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     event,
     newsPage,
     newsArticle,
+    contactPage,
 
     // --- Reużywalne Obiekty i Sekcje ---
     // Na liście nie ma już `statsSection`
