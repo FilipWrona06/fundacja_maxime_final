@@ -1,4 +1,4 @@
-// Plik: src/components/home/ImpactSection.client.tsx (zaktualizuj)
+// Plik: src/components/home/ImpactSection.client.tsx
 
 "use client";
 
@@ -6,6 +6,8 @@ import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
+// Dodajemy import typu dla ikon
+import type { IconType } from "react-icons";
 import { FiArrowRight, FiCalendar, FiCamera, FiFileText } from "react-icons/fi";
 
 import {
@@ -14,6 +16,12 @@ import {
   ultraSmoothSpring,
   viewportConfig,
 } from "@/lib/animations";
+import type {
+  EventType,
+  Gallery,
+  NewsArticleType,
+  SanityImage,
+} from "@/lib/types";
 import { urlFor } from "@/sanity/lib/image";
 
 // Warianty animacji
@@ -52,13 +60,24 @@ const mobileCardVariant: Variants = {
   },
 };
 
+// --- POPRAWIONA DEFINICJA TYPU KARTY ---
+interface ImpactCardItem {
+  title: string;
+  subtitle: string;
+  description: string;
+  image: SanityImage;
+  link: string;
+  icon: IconType; // Zmiana z React.ElementType na IconType
+  color?: string;
+}
+
 interface ImpactDynamicData {
   headingPrefix?: string;
   headingHighlighted: string;
   subheading: string;
-  upcomingEvent: any;
-  latestNews: any;
-  latestGallery: any;
+  upcomingEvent: EventType | null;
+  latestNews: NewsArticleType | null;
+  latestGallery: Gallery | null;
 }
 
 export const ImpactSectionClient = ({
@@ -71,38 +90,49 @@ export const ImpactSectionClient = ({
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Przygotowanie kart z dynamicznych danych
-  const cards = [
+  // Przygotowanie surowej tablicy z danymi (może zawierać null)
+  const rawCards = [
     // Karta 1: Najbliższe Wydarzenie
-    impactData.upcomingEvent && {
-      title: "Najbliższe Wydarzenie",
-      subtitle: impactData.upcomingEvent.title,
-      description: `${impactData.upcomingEvent.dateDisplay} • ${impactData.upcomingEvent.location}`,
-      image: impactData.upcomingEvent.image,
-      link: `/wydarzenia/${impactData.upcomingEvent.slug.current}`,
-      icon: FiCalendar,
-    },
+    impactData.upcomingEvent
+      ? {
+          title: "Najbliższe Wydarzenie",
+          subtitle: impactData.upcomingEvent.title,
+          description: `${impactData.upcomingEvent.dateDisplay} • ${impactData.upcomingEvent.location}`,
+          image: impactData.upcomingEvent.image,
+          link: `/wydarzenia/${impactData.upcomingEvent.slug.current}`,
+          icon: FiCalendar,
+        }
+      : null,
 
     // Karta 2: Najnowszy News
-    impactData.latestNews && {
-      title: "Najnowszy Artykuł",
-      subtitle: impactData.latestNews.title,
-      description: `${impactData.latestNews.excerpt.slice(0, 80)}...`,
-      image: impactData.latestNews.image,
-      link: `/aktualnosci/${impactData.latestNews.slug.current}`,
-      icon: FiFileText,
-    },
+    impactData.latestNews
+      ? {
+          title: "Najnowszy Artykuł",
+          subtitle: impactData.latestNews.title,
+          description: `${impactData.latestNews.excerpt.slice(0, 80)}...`,
+          image: impactData.latestNews.image,
+          link: `/aktualnosci/${impactData.latestNews.slug.current}`,
+          icon: FiFileText,
+        }
+      : null,
 
     // Karta 3: Najnowsza Galeria
-    impactData.latestGallery && {
-      title: "Ostatnie Wydarzenie",
-      subtitle: impactData.latestGallery.title,
-      description: `${new Date(impactData.latestGallery.date).toLocaleDateString("pl-PL")} • ${impactData.latestGallery.location}`,
-      image: impactData.latestGallery.images?.[0],
-      link: `/galeria#${impactData.latestGallery.slug.current}`,
-      icon: FiCamera,
-    },
-  ].filter(Boolean); // Usuń null jeśli brakuje danych
+    impactData.latestGallery
+      ? {
+          title: "Ostatnie Wydarzenie",
+          subtitle: impactData.latestGallery.title,
+          description: `${new Date(impactData.latestGallery.date).toLocaleDateString("pl-PL")} • ${impactData.latestGallery.location}`,
+          image: impactData.latestGallery.images?.[0] as SanityImage,
+          link: `/galeria#${impactData.latestGallery.slug.current}`,
+          icon: FiCamera,
+        }
+      : null,
+  ];
+
+  // Filtrowanie nulli i przypisanie poprawnego typu
+  const cards: ImpactCardItem[] = rawCards.filter(
+    (card): card is ImpactCardItem => Boolean(card),
+  );
 
   const handleScroll = () => {
     if (!scrollContainerRef.current) return;
@@ -114,6 +144,9 @@ export const ImpactSectionClient = ({
     const clampedIndex = Math.min(Math.max(newIndex, 0), cards.length - 1);
     setActiveIndex(clampedIndex);
   };
+
+  // Jeśli nie ma żadnych kart, nie renderujemy sekcji (opcjonalne zabezpieczenie)
+  if (cards.length === 0) return null;
 
   return (
     <LazyMotion features={domAnimation}>
@@ -173,7 +206,7 @@ export const ImpactSectionClient = ({
                         .url()}
                     />
                     <div
-                      className={`absolute inset-0 bg-linear-to-t ${card.color} to-raisinBlack/95`}
+                      className={`absolute inset-0 bg-linear-to-t ${card.color || ""} to-raisinBlack/95`}
                     />
                   </div>
 
@@ -232,7 +265,12 @@ export const ImpactSectionClient = ({
 };
 
 // Komponent karty Desktop
-const ImpactCardComponent = ({ card }: { card: any; index: number }) => {
+const ImpactCardComponent = ({
+  card,
+}: {
+  card: ImpactCardItem;
+  index: number;
+}) => {
   return (
     <m.article
       variants={fadeInUpVariant}
@@ -252,7 +290,7 @@ const ImpactCardComponent = ({ card }: { card: any; index: number }) => {
             blurDataURL={urlFor(card.image).width(20).height(25).blur(10).url()}
           />
           <div
-            className={`absolute inset-0 bg-linear-to-t ${card.color} to-raisinBlack/90`}
+            className={`absolute inset-0 bg-linear-to-t ${card.color || ""} to-raisinBlack/90`}
           />
           <div className="absolute inset-0 bg-arylideYellow/0 transition-colors duration-300 group-hover:bg-arylideYellow/10" />
         </div>
