@@ -1,11 +1,12 @@
+// Plik: src/components/news/slug/ArticleContent.client.tsx
+
 "use client";
 
-// Import PortableText i konfiguracji
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import { domAnimation, LazyMotion, m } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { FiArrowLeft, FiUser } from "react-icons/fi";
+import { FiArrowLeft } from "react-icons/fi"; // Usunięto FiUser
 import { premiumEase } from "@/lib/animations";
 import type { NewsArticleType } from "@/lib/types";
 import { urlFor } from "@/sanity/lib/image";
@@ -13,7 +14,6 @@ import { urlFor } from "@/sanity/lib/image";
 // Konfiguracja renderowania PortableText
 const newsPortableTextComponents: PortableTextComponents = {
   types: {
-    // Obsługa obrazków wewnątrz tekstu
     image: ({ value }) => {
       if (!value?.asset?._ref) {
         return null;
@@ -38,7 +38,6 @@ const newsPortableTextComponents: PortableTextComponents = {
     spacer: () => <div className="h-8" aria-hidden="true" />,
   },
   block: {
-    // Style dla nagłówków
     h2: ({ children }) => (
       <h2 className="mt-10 mb-6 text-3xl font-bold text-arylideYellow font-youngest">
         {children}
@@ -109,7 +108,6 @@ export const ArticleContentClient = ({
           transition={{ duration: 0.8, delay: 0.6, ease: premiumEase }}
           className="mx-auto max-w-4xl rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl shadow-2xl lg:p-12"
         >
-          {/* Używamy PortableText zamiast div z white-space */}
           <div className="prose prose-invert prose-lg max-w-none">
             {article.excerpt && (
               <p className="lead mb-8 border-l-4 border-arylideYellow pl-6 text-xl italic text-white/90">
@@ -123,16 +121,7 @@ export const ArticleContentClient = ({
             />
           </div>
 
-          <div className="mt-12 border-t border-white/10 pt-8">
-            <div className="flex items-center justify-end gap-3 text-sm font-medium text-white/60">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10">
-                <FiUser size={14} className="text-arylideYellow" />
-              </div>
-              <span>
-                Autor: <span className="text-white">{article.author}</span>
-              </span>
-            </div>
-          </div>
+          {/* USUNIĘTO SEKCJĘ AUTORA CAŁKOWICIE */}
         </m.div>
       </div>
     </LazyMotion>

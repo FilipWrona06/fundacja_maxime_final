@@ -1,3 +1,5 @@
+// Plik: src/sanity/schemaTypes/documents/newsArticle.ts
+
 import { DocumentTextIcon } from "@sanity/icons";
 import { defineField, defineType } from "sanity";
 
@@ -29,7 +31,6 @@ export default defineType({
       },
       validation: (Rule) => Rule.required(),
     }),
-    // --- ZMIANA: Automatyczna data dzisiejsza ---
     defineField({
       name: "date",
       title: "Data publikacji",
@@ -38,13 +39,10 @@ export default defineType({
       options: {
         dateFormat: "YYYY-MM-DD",
       },
-      // Funkcja ustawiająca dzisiejszą datę przy tworzeniu nowego dokumentu
+      // Automatyczna data dzisiejsza
       initialValue: () => new Date().toISOString().split("T")[0],
       validation: (Rule) => Rule.required(),
     }),
-    // USUNIĘTO: dateDisplay (będziemy formatować datę na frontendzie)
-    // USUNIĘTO: category (zgodnie z życzeniem)
-
     defineField({
       name: "image",
       title: "Główne zdjęcie artykułu",
@@ -72,14 +70,7 @@ export default defineType({
       description: "Główna zawartość artykułu.",
       validation: (Rule) => Rule.required(),
     }),
-    defineField({
-      name: "author",
-      title: "Autor",
-      type: "string",
-      group: "content",
-      initialValue: "Fundacja Maxime",
-      validation: (Rule) => Rule.required(),
-    }),
+    // USUNIĘTO POLE AUTHOR
     defineField({
       name: "featured",
       title: "Wyróżniony artykuł?",
@@ -103,7 +94,7 @@ export default defineType({
     prepare({ title, date, media }) {
       return {
         title,
-        subtitle: date, // Wyświetli surową datę w panelu admina
+        subtitle: date,
         media,
       };
     },

@@ -1,10 +1,15 @@
 // Plik: src/app/(user)/aktualnosci/page.tsx
 
 import type { Metadata } from "next";
+
+// Komponenty wewnętrzne
 import { FeaturedNewsClient } from "@/components/news/FeaturedNews";
 import { NewsFilterGridClient } from "@/components/news/NewsGrid";
 import { NewsHeroClient } from "@/components/news/NewsHero";
 import { NewsNewsletterClient } from "@/components/news/NewsNewsletter";
+
+// Typy i zapytania
+import type { NewsArticleType } from "@/lib/types";
 import { getAllNews, getNewsPageSettings } from "@/sanity/lib/queries/news";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -24,7 +29,7 @@ export default async function AktualnosciPage() {
     getAllNews(),
   ]);
 
-  // Fallbacki dla danych tekstowych, jeśli jeszcze nie ma ich w CMS
+  // Fallbacki dla Hero
   const heroData = {
     badge: "Bądź na bieżąco",
     line1: settings?.heroHeading || "Aktualności",
@@ -34,18 +39,26 @@ export default async function AktualnosciPage() {
       "Najnowsze wiadomości, wydarzenia i relacje z naszych koncertów",
   };
 
+  // Fallbacki dla Newslettera
+  const newsletterData = {
+    heading: settings?.newsletter?.heading || "Nie przegap żadnej Wiadomości",
+    text:
+      settings?.newsletter?.text ||
+      "Zapisz się do naszego newslettera i otrzymuj najnowsze informacje...",
+    buttonLabel: settings?.newsletter?.buttonLabel || "Zapisz się",
+  };
+
   const newestArticle = allNews.length > 0 ? allNews[0] : null;
   const featuredArticle = allNews.find((item) => item.featured) || null;
 
-  const highlightedNews = [];
+  const highlightedNews: NewsArticleType[] = [];
   if (newestArticle) highlightedNews.push(newestArticle);
   if (featuredArticle && featuredArticle._id !== newestArticle?._id) {
     highlightedNews.push(featuredArticle);
   }
 
   return (
-    <div className="min-h-screen pt-32 pb-20 overflow-x-hidden">
-      {/* Przekazujemy dane z CMS do Hero */}
+    <div className="min-h-screen overflow-x-hidden pb-20 pt-32">
       <NewsHeroClient
         badge={heroData.badge}
         titleLine1={heroData.line1}
@@ -64,7 +77,11 @@ export default async function AktualnosciPage() {
         featuredId={featuredArticle?._id}
       />
 
-      <NewsNewsletterClient />
+      <NewsNewsletterClient
+        heading={newsletterData.heading}
+        text={newsletterData.text}
+        buttonLabel={newsletterData.buttonLabel}
+      />
     </div>
   );
 }

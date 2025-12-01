@@ -6,8 +6,7 @@ import type { NewsArticleType, NewsPageSettings } from "@/lib/types";
 import { client } from "../client";
 
 /**
- * Pobiera ustawienia strony aktualności (Hero, SEO).
- * Pobiera dane z singletonu "newsPage".
+ * Pobiera ustawienia strony aktualności (Hero, Newsletter, SEO).
  */
 export const getNewsPageSettings = cache(
   async (): Promise<NewsPageSettings | null> => {
@@ -16,7 +15,8 @@ export const getNewsPageSettings = cache(
       seo,
       heroHeading,
       heroSubheading,
-      heroDescription
+      heroDescription,
+      newsletter // <--- Pobieramy dane newslettera
     }`,
       {},
       { next: { tags: ["newsPage"] } },
@@ -27,8 +27,7 @@ export const getNewsPageSettings = cache(
 
 /**
  * Pobiera wszystkie artykuły posortowane od najnowszego.
- * Używane na głównej liście aktualności.
- * Zoptymalizowane: nie pobiera ciężkiego pola "content".
+ * USUNIĘTO: author, category, dateDisplay
  */
 export const getAllNews = cache(async (): Promise<NewsArticleType[]> => {
   const data = await client.fetch<NewsArticleType[]>(
@@ -36,11 +35,9 @@ export const getAllNews = cache(async (): Promise<NewsArticleType[]> => {
       _id,
       title,
       slug,
-      date, 
-      // dateDisplay i category zostały usunięte
+      date,
       image,
       excerpt,
-      author,
       featured
     }`,
     {},
@@ -51,14 +48,13 @@ export const getAllNews = cache(async (): Promise<NewsArticleType[]> => {
 
 /**
  * Pobiera pojedynczy artykuł po slugu.
- * Pobiera pełną treść (content) w formacie PortableText.
+ * Rozwija content (PortableText).
  */
 export const getNewsBySlug = cache(
   async (slug: string): Promise<NewsArticleType | null> => {
     const data = await client.fetch<NewsArticleType>(
       groq`*[_type == "newsArticle" && slug.current == $slug][0] {
       ...,
-      // Rozwijamy content, jeśli są tam jakieś referencje (np. zdjęcia w tekście)
       content[]{
         ...,
         _type == "image" => {
@@ -76,8 +72,7 @@ export const getNewsBySlug = cache(
 );
 
 /**
- * Pobiera listę wszystkich slugów.
- * Używane do generateStaticParams w celu statycznego generowania stron.
+ * Pobiera slug'i do generowania statycznego.
  */
 export const getNewsSlugs = cache(async (): Promise<string[]> => {
   const data = await client.fetch<string[]>(

@@ -1,10 +1,23 @@
+// Plik: src/components/news/NewsNewsletter.client.tsx
+
 "use client";
 
 import { domAnimation, LazyMotion, m } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
 import { premiumEase } from "@/lib/animations";
 
-export const NewsNewsletterClient = () => {
+// Definicja typów propsów
+interface NewsNewsletterProps {
+  heading: string;
+  text: string;
+  buttonLabel: string;
+}
+
+export const NewsNewsletterClient = ({
+  heading,
+  text,
+  buttonLabel,
+}: NewsNewsletterProps) => {
   return (
     <LazyMotion features={domAnimation}>
       <section className="mt-32">
@@ -21,16 +34,9 @@ export const NewsNewsletterClient = () => {
             <div className="absolute -bottom-32 -right-32 h-64 w-64 rounded-full bg-arylideYellow/10 blur-3xl pointer-events-none" />
 
             <div className="relative z-10">
-              <h2 className="mb-6 text-4xl font-bold md:text-5xl">
-                Nie przegap żadnej <br />{" "}
-                <span className="font-youngest text-arylideYellow">
-                  Wiadomości
-                </span>
-              </h2>
+              <h2 className="mb-6 text-4xl font-bold md:text-5xl">{heading}</h2>
               <p className="mx-auto mb-8 max-w-2xl text-lg text-white/70">
-                Zapisz się do naszego newslettera i otrzymuj najnowsze
-                informacje o koncertach, wydarzeniach i aktualności prosto na
-                swoją skrzynkę.
+                {text}
               </p>
               <form className="mx-auto flex max-w-md flex-col gap-4 sm:flex-row">
                 <input
@@ -43,7 +49,7 @@ export const NewsNewsletterClient = () => {
                   type="submit"
                   className="group inline-flex items-center justify-center gap-2 rounded-full bg-arylideYellow px-8 py-4 font-bold text-raisinBlack transition-all duration-300 hover:scale-105 hover:bg-arylideYellow/90 shadow-lg shadow-arylideYellow/20"
                 >
-                  Zapisz się{" "}
+                  {buttonLabel}
                   <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
                 </button>
               </form>
