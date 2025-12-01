@@ -1,13 +1,66 @@
-import { groq } from "next-sanity";
-import type { NewsArticleType } from "@/lib/types";
-import { client } from "@/sanity/lib/client";
-import AktualnosciClientPage from "./AktualnosciClientPage";
+// Plik: src/app/(user)/aktualnosci/page.tsx
 
-// Zapytanie GROQ do pobrania wszystkich artykułów, posortowanych od najnowszych
-export const newsQuery = groq`*[_type == "newsArticle"] | order(date desc)`;
+import type { Metadata } from "next";
+import { NewsHeroClient } from "@/components/news/NewsHero";
+import { FeaturedNewsClient } from "@/components/news/FeaturedNews";
+import { NewsFilterGridClient } from "@/components/news/NewsFilterGrid";
+import { NewsNewsletterClient } from "@/components/news/NewsNewsletter";
+import { getAllNews, getNewsPageSettings } from "@/sanity/lib/queries/news";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getNewsPageSettings();
+  return {
+    title: settings?.seo?.metaTitle || "Aktualności | Fundacja Maxime",
+    description: settings?.seo?.metaDescription || "Najnowsze wiadomości ze świata fundacji.",
+  };
+}
 
 export default async function AktualnosciPage() {
-  const allNews = await client.fetch<NewsArticleType[]>(newsQuery);
+  // Pobieramy równolegle ustawienia strony i artykuły
+  const [settings, allNews] = await Promise.all([
+    getNewsPageSettings(),
+    getAllNews(),
+  ]);
 
-  return <AktualnosciClientPage allNews={allNews} />;
+  // Fallbacki dla danych tekstowych, jeśli jeszcze nie ma ich w CMS
+  const heroData = {
+    badge: "Bądź na bieżąco",
+    line1: settings?.heroHeading || "Aktualności",
+    line2: settings?.heroSubheading || "Fundacji",
+    desc: settings?.heroDescription || "Najnowsze wiadomości, wydarzenia i relacje z naszych koncertów",
+  };
+
+  const newestArticle = allNews.length > 0 ? allNews[0] : null;
+  const featuredArticle = allNews.find((item) => item.featured) || null;
+
+  const highlightedNews = [];
+  if (newestArticle) highlightedNews.push(newestArticle);
+  if (featuredArticle && featuredArticle._id !== newestArticle?._id) {
+    highlightedNews.push(featuredArticle);
+  }
+
+  return (
+    <div className="min-h-screen pt-32 pb-20 overflow-x-hidden">
+      {/* Przekazujemy dane z CMS do Hero */}
+      <NewsHeroClient 
+        badge={heroData.badge}
+        titleLine1={heroData.line1}
+        titleLine2={heroData.line2}
+        description={heroData.desc}
+      />
+
+      <FeaturedNewsClient 
+        highlightedNews={highlightedNews} 
+        newestId={newestArticle?._id || ""}
+      />
+
+      <NewsFilterGridClient 
+        allNews={allNews} 
+        newestId={newestArticle?._id}
+        featuredId={featuredArticle?._id}
+      />
+
+      <NewsNewsletterClient />
+    </div>
+  );
 }

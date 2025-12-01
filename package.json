@@ -17,6 +17,7 @@
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
     "framer-motion": "^12.23.24",
+    "get-random-values-esm": "1.0.2",
     "next": "16.0.4",
     "next-sanity": "^11.6.9",
     "pnpm": "^10.23.0",
@@ -33,6 +34,7 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "babel-plugin-react-compiler": "1.0.0",
+    "baseline-browser-mapping": "^2.8.32",
     "tailwindcss": "^4.1.17",
     "typescript": "^5.9.3"
   }

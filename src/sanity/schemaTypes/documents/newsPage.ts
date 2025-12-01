@@ -1,105 +1,35 @@
-import { DocumentTextIcon } from "@sanity/icons";
+import { BlockContentIcon } from "@sanity/icons";
 import { defineField, defineType } from "sanity";
-/**
-Definiuje schemat dla pojedynczego artykułu w sekcji "Aktualności".
-*/
+
 export default defineType({
-  name: "newsArticle",
-  title: "Artykuł (Aktualności)",
+  name: "newsPage",
+  title: "Strona Aktualności (Ustawienia)",
   type: "document",
-  icon: DocumentTextIcon,
+  icon: BlockContentIcon,
   fields: [
     defineField({
-      name: "title",
-      title: "Tytuł artykułu",
+      name: "seo",
+      title: "SEO Strony Aktualności",
+      type: "seo",
+    }),
+    defineField({
+      name: "heroHeading",
+      title: "Nagłówek Hero (Góra)",
       type: "string",
-      validation: (Rule) => Rule.required(),
+      initialValue: "Aktualności",
     }),
     defineField({
-      name: "slug",
-      title: "Slug (link)",
-      type: "slug",
-      options: {
-        source: "title",
-        maxLength: 96,
-      },
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "date",
-      title: "Data publikacji",
-      type: "date",
-      options: {
-        dateFormat: "YYYY-MM-DD",
-      },
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "dateDisplay",
-      title: "Wyświetlana data tekstowa",
+      name: "heroSubheading",
+      title: "Nagłówek Hero (Dół - Kolor)",
       type: "string",
-      description: 'Np. "28 Października 2025"',
-      validation: (Rule) => Rule.required(),
+      initialValue: "Fundacji",
     }),
     defineField({
-      name: "category",
-      title: "Kategoria",
-      type: "string",
-      options: {
-        list: [
-          { title: "Ogłoszenia", value: "Ogłoszenia" },
-          { title: "Relacje", value: "Relacje" },
-          { title: "Wydarzenia", value: "Wydarzenia" },
-        ],
-        layout: "radio",
-      },
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "image",
-      title: "Główne zdjęcie artykułu",
-      type: "image",
-      options: {
-        hotspot: true,
-      },
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "excerpt",
-      title: "Zajawka (krótki opis)",
+      name: "heroDescription",
+      title: "Opis pod nagłówkiem",
       type: "text",
       rows: 3,
-      description: "Krótki tekst widoczny na liście aktualności.",
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "content",
-      title: "Treść artykułu",
-      type: "text", // Dla prostego tekstu. Użyj 'array', of: [{type: 'block'}] dla edytora rich-text.
-      description: "Główna zawartość widoczna po wejściu w szczegóły.",
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "author",
-      title: "Autor",
-      type: "string",
-      initialValue: "Fundacja Maxime",
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "featured",
-      title: "Wyróżniony artykuł?",
-      type: "boolean",
-      description:
-        "Zaznacz, jeśli ten artykuł ma być specjalnie wyróżniony na stronie.",
-      initialValue: false,
+      initialValue: "Najnowsze wiadomości, wydarzenia i relacje z naszych koncertów",
     }),
   ],
-  preview: {
-    select: {
-      title: "title",
-      subtitle: "dateDisplay",
-      media: "image",
-    },
-  },
 });

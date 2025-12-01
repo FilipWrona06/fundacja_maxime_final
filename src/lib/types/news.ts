@@ -1,15 +1,23 @@
-import type { SanityImage, SanitySlug } from "./sanity";
+import type { PortableTextContent, SanityImage, SanitySlug } from "./sanity";
+import type { SeoData } from "./common";
 
 export interface NewsArticleType {
   _id: string;
   slug: SanitySlug;
   title: string;
   excerpt: string;
-  content: string;
+  content: PortableTextContent;
   image: SanityImage;
-  date: string;
-  dateDisplay: string;
-  category: string;
+  date: string; // To jest surowy string "YYYY-MM-DD"
+  // USUNIĘTO: dateDisplay, category
   author: string;
   featured: boolean;
+  seo?: SeoData;
+}
+
+export interface NewsPageSettings {
+  seo?: SeoData;
+  heroHeading: string;
+  heroSubheading: string;
+  heroDescription: string;
 }
