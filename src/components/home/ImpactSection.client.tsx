@@ -6,7 +6,6 @@ import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
-// Dodajemy import typu dla ikon
 import type { IconType } from "react-icons";
 import { FiArrowRight, FiCalendar, FiCamera, FiFileText } from "react-icons/fi";
 
@@ -16,12 +15,7 @@ import {
   ultraSmoothSpring,
   viewportConfig,
 } from "@/lib/animations";
-import type {
-  EventType,
-  Gallery,
-  NewsArticleType,
-  SanityImage,
-} from "@/lib/types";
+import type { SanityImage } from "@/lib/types";
 import { urlFor } from "@/sanity/lib/image";
 
 // Warianty animacji
@@ -60,14 +54,41 @@ const mobileCardVariant: Variants = {
   },
 };
 
-// --- POPRAWIONA DEFINICJA TYPU KARTY ---
+// --- LOKALNE DEFINICJE TYPÓW (Dopasowane do projekcji zapytania Sanity) ---
+
+interface ImpactEvent {
+  _id: string;
+  title: string;
+  dateDisplay: string;
+  location: string;
+  image: SanityImage;
+  slug: { current: string };
+}
+
+interface ImpactNews {
+  _id: string;
+  title: string;
+  excerpt: string;
+  image: SanityImage;
+  slug: { current: string };
+}
+
+interface ImpactGallery {
+  _id: string;
+  title: string;
+  date: string; // Zapytanie zwraca datę jako string
+  location: string;
+  images: SanityImage[];
+  slug: { current: string };
+}
+
 interface ImpactCardItem {
   title: string;
   subtitle: string;
   description: string;
   image: SanityImage;
   link: string;
-  icon: IconType; // Zmiana z React.ElementType na IconType
+  icon: IconType;
   color?: string;
 }
 
@@ -75,9 +96,9 @@ interface ImpactDynamicData {
   headingPrefix?: string;
   headingHighlighted: string;
   subheading: string;
-  upcomingEvent: EventType | null;
-  latestNews: NewsArticleType | null;
-  latestGallery: Gallery | null;
+  upcomingEvent: ImpactEvent | null;
+  latestNews: ImpactNews | null;
+  latestGallery: ImpactGallery | null;
 }
 
 export const ImpactSectionClient = ({
