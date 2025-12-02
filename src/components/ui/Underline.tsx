@@ -1,8 +1,6 @@
-"use client";
-
-import { m } from "framer-motion";
 import { memo } from "react";
-import { durations, premiumEase } from "@/lib/animations";
+// Zakładam, że durations.normal to np. 300ms, wpisuję tutaj klasę duration-300
+// Jeśli premiumEase to cubic-bezier, można go wpisać w ease-[...]
 
 interface UnderlineProps {
   isActive?: boolean;
@@ -14,7 +12,6 @@ export const Underline = memo(
   ({ isActive, isHovered, variant = "default" }: UnderlineProps) => {
     const isVisible = isActive || isHovered;
 
-    // Różne warianty wysokości
     const heightVariants = {
       default: "h-0.5",
       prominent: "h-0.5",
@@ -23,7 +20,6 @@ export const Underline = memo(
       glow: "h-0.5",
     };
 
-    // Różne warianty stylów
     const variantStyles = {
       default:
         "bg-gradient-to-r from-transparent via-arylideYellow to-transparent",
@@ -36,20 +32,15 @@ export const Underline = memo(
     };
 
     return (
-      <m.span
-        className={`absolute -bottom-0.5 left-0 ${heightVariants[variant]} w-full rounded-full ${variantStyles[variant]}`}
-        initial={{ scaleX: 0, opacity: 0 }}
-        animate={{
-          scaleX: isVisible ? 1 : 0,
-          opacity: isVisible ? 1 : 0,
-        }}
-        transition={{
-          duration: durations.normal,
-          ease: premiumEase,
-        }}
-        style={{
-          transformOrigin: "center",
-        }}
+      <span
+        className={`
+          absolute -bottom-0.5 left-0 w-full rounded-full origin-center
+          transition-all duration-300 ease-[cubic-bezier(0.65,0,0.35,1)]
+          ${heightVariants[variant]} 
+          ${variantStyles[variant]}
+          ${isVisible ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"}
+        `}
+        aria-hidden="true" // Dobra praktyka: element dekoracyjny nie powinien być czytany przez screen readery
       />
     );
   },

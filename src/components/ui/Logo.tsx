@@ -1,9 +1,5 @@
-"use client";
-
-import { m } from "framer-motion";
 import Link from "next/link";
 import { memo } from "react";
-import { durations, hoverScales, premiumEase } from "@/lib/animations";
 
 interface LogoProps {
   className?: string;
@@ -14,25 +10,22 @@ export const Logo = memo(({ className = "" }: LogoProps) => {
     <Link
       href="/"
       aria-label="Fundacja Maxime - strona główna"
-      className={`group relative font-youngest text-arylideYellow transition-all duration-500 ease-out ${className}`}
+      // Dodajemy klasy transform, transition i hover/active scale
+      className={`group relative inline-block font-youngest text-arylideYellow transition-all duration-500 ease-out ${className}`}
     >
-      <m.span
-        className="relative inline-block"
-        whileHover={{
-          scale: hoverScales.subtle,
-        }}
-        whileTap={{
-          scale: 0.98,
-        }}
-        transition={{
-          duration: durations.fast,
-          ease: premiumEase,
-        }}
+      <span
+        className="
+          relative inline-block z-10
+          transition-transform duration-300 ease-[cubic-bezier(0.6,0.01,0.05,0.9)] 
+          group-hover:scale-105 
+          group-active:scale-95
+        "
       >
-        {/* Subtelny glow effect na hover */}
-        <span className="relative z-10">Fundacja Maxime</span>
+        Fundacja Maxime
+        
+        {/* Glow effect - działa tak samo na CSS */}
         <span className="absolute inset-0 blur-lg bg-arylideYellow/0 group-hover:bg-arylideYellow/20 transition-all duration-500 -z-10" />
-      </m.span>
+      </span>
     </Link>
   );
 });

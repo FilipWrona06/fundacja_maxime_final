@@ -1,43 +1,7 @@
-"use client";
+"use client"; // Zostawiamy, bo komponent obsługuje onClick (interakcję)
 
-import { m, type Variants } from "framer-motion";
 import Link from "next/link";
 import { memo } from "react";
-import {
-  durations,
-  premiumEase,
-  tapScales,
-  ultraSmoothSpring,
-} from "@/lib/animations";
-
-// Warianty dla wersji mobilnej
-const mobileLinkVariants: Variants = {
-  hidden: { opacity: 0, y: -20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: durations.normal,
-      ease: premiumEase,
-    },
-  },
-};
-
-// Warianty dla podkreślenia - desktop
-const underlineVariants: Variants = {
-  initial: {
-    scaleX: 0,
-    opacity: 0,
-  },
-  hovered: {
-    scaleX: 1,
-    opacity: 1,
-  },
-  active: {
-    scaleX: 1,
-    opacity: 1,
-  },
-};
 
 interface AnimatedNavLinkProps {
   href: string;
@@ -57,72 +21,75 @@ export const AnimatedNavLink = memo(
     className = "",
     onClick,
   }: AnimatedNavLinkProps) => {
+    // Wspólne style dla paska (podkreślenia)
+    const underlineBase =
+      "absolute -bottom-0.5 left-0 h-0.5 w-full rounded-full origin-center transition-transform duration-300 ease-[cubic-bezier(0.65,0,0.35,1)]";
+    
+    // Gradient paska
+    const underlineGradient = 
+      "bg-gradient-to-r from-transparent via-arylideYellow to-transparent";
+
+    // Stan aktywny paska
+    const activeScale = isActive ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0";
+
     if (isMobile) {
       return (
-        <m.li variants={mobileLinkVariants}>
+        // Usuwamy m.li - animację wejścia listy (stagger) najlepiej obsłużyć w rodzicu (MobileMenu)
+        // lub dodać prostą klasę 'animate-in fade-in slide-in-from-bottom-2'
+        <li className="block">
           <Link
             href={href}
-            className={`relative block text-xl sm:text-2xl font-semibold transition-all duration-500 ease-out ${className}`}
             onClick={onClick}
+            className={`
+              relative block text-xl sm:text-2xl font-semibold 
+              transition-colors duration-300 ease-out
+              group w-fit
+              ${className}
+            `}
             aria-current={isActive ? "page" : undefined}
           >
-            <m.span
-              className="inline-block"
-              whileHover={{ x: 6 }}
-              whileTap={{ scale: tapScales.normal }}
-              transition={ultraSmoothSpring}
+            {/* Tekst z efektem przesunięcia przy hover (imitacja whileHover={{ x: 6 }}) */}
+            <span 
+              className="inline-block transition-transform duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:translate-x-1.5 group-active:scale-95"
             >
               {name}
-            </m.span>
+            </span>
 
             {/* Mobile underline */}
-            <m.span
-              className="absolute -bottom-0.5 left-0 h-0.5 w-full rounded-full bg-linear-to-r from-transparent via-arylideYellow to-transparent"
-              initial={{ scaleX: 0, opacity: 0 }}
-              animate={{
-                scaleX: isActive ? 1 : 0,
-                opacity: isActive ? 1 : 0,
-              }}
-              transition={{
-                duration: durations.normal,
-                ease: premiumEase,
-              }}
-              style={{ transformOrigin: "center" }}
+            <span
+              className={`${underlineBase} ${underlineGradient} ${activeScale}`}
             />
           </Link>
-        </m.li>
+        </li>
       );
     }
 
-    // Wersja desktopowa z ultra-smooth transitions
+    // Wersja desktopowa
     return (
       <li>
-        <m.div animate={isActive ? "active" : "initial"} whileHover="hovered">
-          <Link
-            href={href}
-            className={`group block py-1 relative transition-all duration-500 ease-out ${
-              isActive
-                ? "font-semibold text-white"
-                : "font-normal text-white/85 hover:text-white"
-            } ${className}`}
-            aria-current={isActive ? "page" : undefined}
-          >
-            <span className="inline-block relative">
-              {name}
+        <Link
+          href={href}
+          className={`
+            group block py-1 relative transition-colors duration-300 ease-out
+            ${isActive ? "font-semibold text-white" : "font-normal text-white/85 hover:text-white"}
+            ${className}
+          `}
+          aria-current={isActive ? "page" : undefined}
+        >
+          <span className="inline-block relative">
+            {name}
 
-              {/* Premium underline z smooth shadow */}
-              <m.span
-                className="absolute -bottom-0.5 left-0 h-0.5 w-full rounded-full bg-linear-to-r from-transparent via-arylideYellow to-transparent shadow-lg shadow-arylideYellow/20"
-                style={{ transformOrigin: "center" }}
-                variants={underlineVariants}
-                transition={{
-                  duration: durations.normal,
-                  ease: premiumEase,
-                }}
-              />
-            </span>
-          </Link>
-        </m.div>
+            {/* Premium underline z hover effectem */}
+            <span
+              className={`
+                ${underlineBase} ${underlineGradient} shadow-lg shadow-arylideYellow/20
+                scale-x-0 opacity-0
+                group-hover:scale-x-100 group-hover:opacity-100
+                ${isActive ? "scale-x-100! opacity-100!" : ""}
+              `}
+            />
+          </span>
+        </Link>
       </li>
     );
   },
