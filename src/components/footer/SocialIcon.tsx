@@ -1,11 +1,6 @@
-"use client";
-
-import { m } from "framer-motion";
 import Link from "next/link";
 import type { FC, SVGProps } from "react";
-import { memo, useState } from "react";
 import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
-import { tapScales, ultraSmoothSpring } from "@/lib/animations";
 import type { SocialLink } from "@/lib/types/index";
 
 interface IconProps extends SVGProps<SVGSVGElement> {
@@ -33,41 +28,25 @@ const ICON_MAP: Record<string, FC<IconProps>> = {
   patronite: PatroniteIcon,
 };
 
-export const SocialIcon = memo(({ social }: { social: SocialLink }) => {
-  const [isHovered, setIsHovered] = useState(false);
+export const SocialIcon = ({ social }: { social: SocialLink }) => {
   const IconComponent = ICON_MAP[social.icon] || null;
 
   return (
-    <m.div
-      whileHover={{ scale: 1.05, y: -2 }}
-      whileTap={{ scale: tapScales.normal }}
-      transition={ultraSmoothSpring}
+    <Link
+      href={social.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={social.name}
+      // 'group' - pozwala dziecku (span z ikoną) reagować na hover rodzica
+      // hover:scale-105 - powiększenie całego przycisku
+      // hover:-translate-y-0.5 - przesunięcie o 2px w górę (0.5 unit * 4px = 2px)
+      // active:scale-95 - efekt wciśnięcia (tap)
+      className={`group relative flex h-10 w-10 items-center justify-center rounded-full border border-philippineSilver/50 text-philippineSilver transition-all duration-300 ease-out hover:scale-105 hover:-translate-y-0.5 active:scale-95 ${social.colorClasses.hover}`}
     >
-      <Link
-        href={social.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={social.name}
-        className={`relative flex h-10 w-10 items-center justify-center rounded-full border border-philippineSilver/50 text-philippineSilver transition-all duration-300 ${social.colorClasses.hover}`}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        {/* Icon */}
-        <m.span
-          animate={
-            isHovered
-              ? {
-                  scale: 1.1,
-                }
-              : { scale: 1 }
-          }
-          transition={{ duration: 0.3 }}
-        >
-          {IconComponent && <IconComponent size={20} />}
-        </m.span>
-      </Link>
-    </m.div>
+      {/* group-hover:scale-110 - ikona w środku rośnie dodatkowo przy najechaniu na rodzica */}
+      <span className="transition-transform duration-300 ease-out group-hover:scale-110">
+        {IconComponent && <IconComponent size={20} />}
+      </span>
+    </Link>
   );
-});
-
-SocialIcon.displayName = "SocialIcon";
+};

@@ -1,6 +1,4 @@
-"use client";
-
-// Importujemy dane i komponenty po stronie klienta
+// Brak "use client" = Server Component
 import { socialLinks } from "@/data/siteData";
 import { SocialIcon } from "./SocialIcon";
 
