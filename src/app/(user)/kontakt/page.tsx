@@ -1,18 +1,4 @@
 import type { Metadata } from "next";
-
-// Importy danych i zapytań
-import { getContactPageData } from "@/sanity/lib/queries/contact";
-// Fallback data (na wypadek pustego CMS)
-import { 
-  contactData as fallbackContact, 
-  faqItems as fallbackFaq, 
-  socialLinks as fallbackSocials 
-} from "@/data/siteData";
-
-// Typy
-import type { SocialLink } from "@/lib/types";
-import { urlFor } from "@/sanity/lib/image";
-
 // Importy "Wysp" (Komponentów Klienckich)
 import { ContactCtaClient } from "@/components/contact/ContactCta";
 import { ContactFormClient } from "@/components/contact/ContactForm";
@@ -20,6 +6,17 @@ import { ContactHeaderClient } from "@/components/contact/ContactHeader";
 import { ContactInfoCardsClient } from "@/components/contact/ContactInfoCards";
 import { FaqAccordionClient } from "@/components/contact/FaqAccordion";
 import { SocialsAndMapClient } from "@/components/contact/SocialsAndMap";
+// Fallback data (na wypadek pustego CMS)
+import {
+  contactData as fallbackContact,
+  faqItems as fallbackFaq,
+  socialLinks as fallbackSocials,
+} from "@/data/siteData";
+// Typy
+import type { SocialLink } from "@/lib/types";
+import { urlFor } from "@/sanity/lib/image";
+// Importy danych i zapytań
+import { getContactPageData } from "@/sanity/lib/queries/contact";
 
 // Helper do mapowania kolorów dla Social Media z CMS
 // Sanity przechowuje tylko nazwę ikony, kolory Tailwind nadajemy tutaj
@@ -28,7 +25,8 @@ const mapSocialColors = (socialsFromSanity: any[]): SocialLink[] => {
     facebook: { background: "bg-[#1877F2]", hover: "hover:bg-[#1877F2]" },
     instagram: {
       background: "bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#FCB045]",
-      hover: "hover:bg-gradient-to-br hover:from-[#833AB4] hover:via-[#FD1D1D] hover:to-[#FCB045]",
+      hover:
+        "hover:bg-gradient-to-br hover:from-[#833AB4] hover:via-[#FD1D1D] hover:to-[#FCB045]",
     },
     youtube: { background: "bg-[#FF0000]", hover: "hover:bg-[#FF0000]" },
     patronite: { background: "bg-[#F96854]", hover: "hover:bg-[#F96854]" },
@@ -36,7 +34,10 @@ const mapSocialColors = (socialsFromSanity: any[]): SocialLink[] => {
 
   return socialsFromSanity.map((s) => ({
     ...s,
-    colorClasses: colorMap[s.icon] || { background: "bg-white/10", hover: "hover:bg-white/20" },
+    colorClasses: colorMap[s.icon] || {
+      background: "bg-white/10",
+      hover: "hover:bg-white/20",
+    },
   }));
 };
 
@@ -84,21 +85,22 @@ export default async function KontaktPage() {
     badge: "Jesteśmy do Twojej dyspozycji",
     headingLine1: "Skontaktuj się",
     headingLine2: "z nami",
-    description: "Masz pytania? Chcesz współpracować? Napisz do nas - odpowiemy najszybciej jak to możliwe",
+    description:
+      "Masz pytania? Chcesz współpracować? Napisz do nas - odpowiemy najszybciej jak to możliwe",
   };
 
   const contactInfo = sanityData?.contactInfo || fallbackContact;
   const faq = sanityData?.faq || fallbackFaq;
-  
+
   // Mapujemy sociale z Sanity
-  const socialLinks = sanityData?.socialLinks 
-    ? mapSocialColors(sanityData.socialLinks) 
+  const socialLinks = sanityData?.socialLinks
+    ? mapSocialColors(sanityData.socialLinks)
     : fallbackSocials;
 
   return (
     <div className="min-h-screen pt-32 pb-20 overflow-x-hidden">
       {/* WYSPA 1: Nagłówek */}
-      <ContactHeaderClient 
+      <ContactHeaderClient
         badge={hero.badge}
         headingLine1={hero.headingLine1}
         headingLine2={hero.headingLine2}
@@ -116,7 +118,6 @@ export default async function KontaktPage() {
       <section className="mb-32">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 gap-16 lg:grid-cols-2">
-            
             {/* WYSPA 3: Formularz */}
             <div>
               <h2 className="mb-8 text-4xl font-bold md:text-5xl">

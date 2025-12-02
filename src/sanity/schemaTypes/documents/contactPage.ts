@@ -1,5 +1,5 @@
-import { defineField, defineType } from "sanity";
 import { FiPhone } from "react-icons/fi";
+import { defineField, defineType } from "sanity";
 
 export default defineType({
   name: "contactPage",

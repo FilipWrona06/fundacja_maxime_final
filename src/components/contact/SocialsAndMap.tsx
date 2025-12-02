@@ -112,7 +112,9 @@ export const SocialsAndMapClient = ({
                   >
                     {IconComponent && <IconComponent size={24} />}
                   </m.div>
-                  <span className="font-semibold text-white">{social.name}</span>
+                  <span className="font-semibold text-white">
+                    {social.name}
+                  </span>
                 </div>
               </Link>
             </m.div>

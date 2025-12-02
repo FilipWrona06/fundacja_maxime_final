@@ -1,8 +1,7 @@
 import { groq } from "next-sanity";
 import { cache } from "react";
-import type { ContactData, FaqItem, SocialLink } from "@/lib/types";
+import type { ContactData, FaqItem, SeoData, SocialLink } from "@/lib/types";
 import { client } from "../client";
-import type { SeoData } from "@/lib/types";
 
 // Definicja typu zwracanego z Sanity
 export interface ContactPageData {

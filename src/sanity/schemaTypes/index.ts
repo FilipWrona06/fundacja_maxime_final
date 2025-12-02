@@ -1,6 +1,7 @@
 // Plik: src/sanity/schemaTypes/index.ts
 
 import type { SchemaTypeDefinition } from "sanity";
+import contactPage from "./documents/contactPage";
 import eventsPage from "./documents/eventsPage";
 import { galeriaPage } from "./documents/galeriaPage";
 import homePage from "./documents/homePage";
@@ -17,7 +18,6 @@ import horizontalRule from "./objects/horizontalRule";
 import { richText } from "./objects/richText";
 import seo from "./objects/seo";
 import spacer from "./objects/spacer";
-import contactPage from "./documents/contactPage";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [

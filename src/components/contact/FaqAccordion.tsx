@@ -4,7 +4,11 @@ import { domAnimation, LazyMotion, m } from "framer-motion";
 import { useState } from "react";
 import type { FaqItem } from "@/lib/types";
 
-export const FaqAccordionClient = ({ items }: { items: readonly FaqItem[] }) => {
+export const FaqAccordionClient = ({
+  items,
+}: {
+  items: readonly FaqItem[];
+}) => {
   const [activeQuestion, setActiveQuestion] = useState<number | null>(null);
 
   return (
