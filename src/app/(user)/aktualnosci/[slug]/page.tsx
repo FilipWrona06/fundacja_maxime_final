@@ -3,9 +3,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 // Importy nowych komponentów klienckich
-import { ArticleContentClient } from "@/components/news/slug/ArticleContent";
-import { ArticleHeroClient } from "@/components/news/slug/ArticleHero";
-import { RelatedNewsClient } from "@/components/news/slug/RelatedNews";
+import { ArticleContent } from "@/components/news/slug/ArticleContent";
+import { ArticleHero } from "@/components/news/slug/ArticleHero";
+import { RelatedNews } from "@/components/news/slug/RelatedNews";
 // Importy typów i narzędzi Sanity
 import { urlFor } from "@/sanity/lib/image";
 import {
@@ -79,13 +79,13 @@ export default async function NewsDetailPage(props: Props) {
   return (
     <main className="min-h-screen bg-raisinBlack pb-20 overflow-x-hidden">
       {/* Sekcja Hero - Zdjęcie tła i tytuł */}
-      <ArticleHeroClient article={article} />
+      <ArticleHero article={article} />
 
       {/* Sekcja Treści - PortableText i nawigacja */}
-      <ArticleContentClient article={article} />
+      <ArticleContent article={article} />
 
       {/* Sekcja Powiązanych - Karuzela/Grid z innymi artykułami */}
-      <RelatedNewsClient news={relatedNews} />
+      <RelatedNews news={relatedNews} />
     </main>
   );
 }

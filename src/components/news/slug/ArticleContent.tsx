@@ -1,23 +1,17 @@
-// Plik: src/components/news/slug/ArticleContent.client.tsx
-
-"use client";
-
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
-import { domAnimation, LazyMotion, m } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
-import { FiArrowLeft } from "react-icons/fi"; // Usunięto FiUser
-import { premiumEase } from "@/lib/animations";
 import type { NewsArticleType } from "@/lib/types";
 import { urlFor } from "@/sanity/lib/image";
+import { ArticleContentClient } from "./ArticleContent.client";
 
-// Konfiguracja renderowania PortableText
+// Konfiguracja PortableText (zdefiniowana na serwerze!)
 const newsPortableTextComponents: PortableTextComponents = {
   types: {
     image: ({ value }) => {
       if (!value?.asset?._ref) {
         return null;
       }
+      // Generowanie URL odbywa się teraz na serwerze
       return (
         <div className="my-8 overflow-hidden rounded-2xl relative aspect-video">
           <Image
@@ -79,51 +73,23 @@ const newsPortableTextComponents: PortableTextComponents = {
   },
 };
 
-export const ArticleContentClient = ({
-  article,
-}: {
-  article: NewsArticleType;
-}) => {
+export const ArticleContent = ({ article }: { article: NewsArticleType }) => {
   return (
-    <LazyMotion features={domAnimation}>
-      <div className="container relative z-20 mx-auto mt-[-50px] px-6">
-        <m.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5, ease: premiumEase }}
-          className="mb-8"
-        >
-          <Link
-            href="/aktualnosci"
-            className="group inline-flex items-center gap-3 rounded-xl border border-white/5 bg-raisinBlack/50 px-5 py-2.5 text-sm font-semibold text-white/80 backdrop-blur-md transition-all duration-300 hover:border-arylideYellow/30 hover:bg-raisinBlack/80 hover:text-white"
-          >
-            <FiArrowLeft className="text-arylideYellow transition-transform duration-300 group-hover:-translate-x-1" />
-            Wróć do listy
-          </Link>
-        </m.div>
+    // Przekazujemy wyrenderowaną treść jako children do klienta
+    <ArticleContentClient>
+      <div className="prose prose-invert prose-lg max-w-none">
+        {article.excerpt && (
+          <p className="lead mb-8 border-l-4 border-arylideYellow pl-6 text-xl italic text-white/90">
+            {article.excerpt}
+          </p>
+        )}
 
-        <m.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6, ease: premiumEase }}
-          className="mx-auto max-w-4xl rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl shadow-2xl lg:p-12"
-        >
-          <div className="prose prose-invert prose-lg max-w-none">
-            {article.excerpt && (
-              <p className="lead mb-8 border-l-4 border-arylideYellow pl-6 text-xl italic text-white/90">
-                {article.excerpt}
-              </p>
-            )}
-
-            <PortableText
-              value={article.content}
-              components={newsPortableTextComponents}
-            />
-          </div>
-
-          {/* USUNIĘTO SEKCJĘ AUTORA CAŁKOWICIE */}
-        </m.div>
+        {/* To renderuje się na serwerze do czystego HTML! */}
+        <PortableText
+          value={article.content}
+          components={newsPortableTextComponents}
+        />
       </div>
-    </LazyMotion>
+    </ArticleContentClient>
   );
 };
