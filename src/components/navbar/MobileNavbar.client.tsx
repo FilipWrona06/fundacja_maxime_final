@@ -93,7 +93,10 @@ interface MobileNavbarClientProps {
   logo: ReactNode;
 }
 
-export const MobileNavbarClient = ({ navLinks, logo }: MobileNavbarClientProps) => {
+export const MobileNavbarClient = ({
+  navLinks,
+  logo,
+}: MobileNavbarClientProps) => {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [announceMessage, setAnnounceMessage] = useState("");
@@ -187,7 +190,7 @@ export const MobileNavbarClient = ({ navLinks, logo }: MobileNavbarClientProps) 
         >
           {/* Logo wstrzyknięte jako prop */}
           {logo}
-          
+
           <AnimatedMenuButton
             isOpen={isMobileMenuOpen}
             onClick={toggleMobileMenu}

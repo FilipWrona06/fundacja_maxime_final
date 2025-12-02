@@ -22,7 +22,6 @@ export const Logo = memo(({ className = "" }: LogoProps) => {
         "
       >
         Fundacja Maxime
-        
         {/* Glow effect - działa tak samo na CSS */}
         <span className="absolute inset-0 blur-lg bg-arylideYellow/0 group-hover:bg-arylideYellow/20 transition-all duration-500 -z-10" />
       </span>

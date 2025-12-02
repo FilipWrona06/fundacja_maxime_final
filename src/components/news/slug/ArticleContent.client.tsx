@@ -2,15 +2,11 @@
 
 import { domAnimation, LazyMotion, m } from "framer-motion";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import { premiumEase } from "@/lib/animations";
-import type { ReactNode } from "react";
 
-export const ArticleContentClient = ({
-  children,
-}: {
-  children: ReactNode;
-}) => {
+export const ArticleContentClient = ({ children }: { children: ReactNode }) => {
   return (
     <LazyMotion features={domAnimation}>
       <div className="container relative z-20 mx-auto mt-[-50px] px-6">

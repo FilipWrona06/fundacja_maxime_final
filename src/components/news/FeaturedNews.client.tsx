@@ -13,7 +13,7 @@ export type FeaturedNewsItemProps = {
   excerpt: string;
   slug: string;
   formattedDate: string; // Gotowa data
-  imageUrl: string;      // Gotowy URL zdjęcia
+  imageUrl: string; // Gotowy URL zdjęcia
   isNewest: boolean;
 };
 
@@ -22,7 +22,10 @@ interface FeaturedNewsClientProps {
   isSingleMode: boolean;
 }
 
-export const FeaturedNewsClient = ({ items, isSingleMode }: FeaturedNewsClientProps) => {
+export const FeaturedNewsClient = ({
+  items,
+  isSingleMode,
+}: FeaturedNewsClientProps) => {
   return (
     <LazyMotion features={domAnimation}>
       <m.h2

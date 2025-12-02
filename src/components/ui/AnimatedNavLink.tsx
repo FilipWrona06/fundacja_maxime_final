@@ -24,13 +24,15 @@ export const AnimatedNavLink = memo(
     // Wspólne style dla paska (podkreślenia)
     const underlineBase =
       "absolute -bottom-0.5 left-0 h-0.5 w-full rounded-full origin-center transition-transform duration-300 ease-[cubic-bezier(0.65,0,0.35,1)]";
-    
+
     // Gradient paska
-    const underlineGradient = 
+    const underlineGradient =
       "bg-gradient-to-r from-transparent via-arylideYellow to-transparent";
 
     // Stan aktywny paska
-    const activeScale = isActive ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0";
+    const activeScale = isActive
+      ? "scale-x-100 opacity-100"
+      : "scale-x-0 opacity-0";
 
     if (isMobile) {
       return (
@@ -49,9 +51,7 @@ export const AnimatedNavLink = memo(
             aria-current={isActive ? "page" : undefined}
           >
             {/* Tekst z efektem przesunięcia przy hover (imitacja whileHover={{ x: 6 }}) */}
-            <span 
-              className="inline-block transition-transform duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:translate-x-1.5 group-active:scale-95"
-            >
+            <span className="inline-block transition-transform duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:translate-x-1.5 group-active:scale-95">
               {name}
             </span>
 

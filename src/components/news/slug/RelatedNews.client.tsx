@@ -11,14 +11,18 @@ export type RelatedNewsItemProps = {
   _id: string;
   title: string;
   slug: string;
-  imageUrl: string;      // Gotowy URL
+  imageUrl: string; // Gotowy URL
   formattedDate: string; // Gotowy tekst daty
 };
 
-export const RelatedNewsClient = ({ items }: { items: RelatedNewsItemProps[] }) => {
+export const RelatedNewsClient = ({
+  items,
+}: {
+  items: RelatedNewsItemProps[];
+}) => {
   // Sprawdzenie długości można zrobić też tutaj, ale lepiej w rodzicu (Server),
   // żeby w ogóle nie ładować tego komponentu, jeśli jest pusty.
-  
+
   return (
     <LazyMotion features={domAnimation}>
       <section className="mt-24 mb-20">

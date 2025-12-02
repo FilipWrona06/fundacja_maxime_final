@@ -1,4 +1,5 @@
 import { memo } from "react";
+
 // Zakładam, że durations.normal to np. 300ms, wpisuję tutaj klasę duration-300
 // Jeśli premiumEase to cubic-bezier, można go wpisać w ease-[...]
 

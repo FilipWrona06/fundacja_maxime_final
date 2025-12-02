@@ -1,5 +1,5 @@
-import type { NavLink as LinkItem } from "@/lib/types/index";
 import type { ReactNode } from "react";
+import type { NavLink as LinkItem } from "@/lib/types/index";
 import { MobileNavbarClient } from "./MobileNavbar.client";
 
 interface MobileNavbarProps {

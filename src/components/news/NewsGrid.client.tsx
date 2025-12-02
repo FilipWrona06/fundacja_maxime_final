@@ -12,10 +12,10 @@ export type PreparedNewsItem = {
   title: string;
   excerpt: string;
   slug: string;
-  imageUrl: string;      // Gotowy URL
+  imageUrl: string; // Gotowy URL
   formattedDate: string; // Gotowy tekst daty
-  isNewest: boolean;     // Czy to najnowszy?
-  isFeatured: boolean;   // Czy wyróżniony?
+  isNewest: boolean; // Czy to najnowszy?
+  isFeatured: boolean; // Czy wyróżniony?
 };
 
 export const NewsFilterGridClient = ({

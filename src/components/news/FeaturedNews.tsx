@@ -40,10 +40,7 @@ export const FeaturedNews = ({
   return (
     <section className="mb-32">
       <div className="container mx-auto px-6">
-        <FeaturedNewsClient 
-          items={preparedItems} 
-          isSingleMode={isSingleMode} 
-        />
+        <FeaturedNewsClient items={preparedItems} isSingleMode={isSingleMode} />
       </div>
     </section>
   );

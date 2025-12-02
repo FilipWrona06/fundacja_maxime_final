@@ -15,7 +15,7 @@ const formatDate = (dateString: string) => {
 export const ArticleHero = ({ article }: { article: NewsArticleType }) => {
   // Generowanie URL-i na serwerze
   const imageUrl = urlFor(article.image).width(1920).quality(90).url();
-  
+
   // Generowanie URL dla placeholdera (bardzo mały obrazek, mocno rozmyty)
   const blurDataUrl = urlFor(article.image).width(20).blur(10).url();
 

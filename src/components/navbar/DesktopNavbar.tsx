@@ -1,5 +1,5 @@
-import type { NavLink as LinkItem } from "@/lib/types/index";
 import type { ReactNode } from "react";
+import type { NavLink as LinkItem } from "@/lib/types/index";
 import { DesktopNavbarClient } from "./DesktopNavbar.client";
 
 interface DesktopNavbarProps {
@@ -13,10 +13,10 @@ export const DesktopNavbar = ({ navLinks, logo }: DesktopNavbarProps) => {
   const rightLinks = navLinks.slice(3);
 
   return (
-    <DesktopNavbarClient 
-      leftLinks={leftLinks} 
-      rightLinks={rightLinks} 
-      logo={logo} 
+    <DesktopNavbarClient
+      leftLinks={leftLinks}
+      rightLinks={rightLinks}
+      logo={logo}
     />
   );
 };
