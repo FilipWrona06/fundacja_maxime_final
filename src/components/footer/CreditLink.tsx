@@ -3,7 +3,13 @@ import type { ReactNode } from "react";
 // Zakładam, że Underline da się dostosować lub zastąpić prostym div-em w CSS
 // Jeśli Underline wymaga propa isHovered (JS), lepiej go tu zastąpić zwykłym CSS.
 
-export const CreditLink = ({ href, children }: { href: string; children: ReactNode }) => {
+export const CreditLink = ({
+  href,
+  children,
+}: {
+  href: string;
+  children: ReactNode;
+}) => {
   return (
     <Link
       href={href}
@@ -19,15 +25,15 @@ export const CreditLink = ({ href, children }: { href: string; children: ReactNo
       >
         {children}
       </span>
-      
+
       {/* 
          Zamiast komponentu <Underline isHovered={...} /> 
          robimy to w CSS (lub dostosowujemy Underline, by reagował na grupę)
       */}
-      <span 
+      <span
         className="absolute left-0 bottom-0 block h-px w-full bg-current 
                    scale-x-0 transition-transform duration-300 ease-out 
-                   origin-left group-hover:scale-x-100" 
+                   origin-left group-hover:scale-x-100"
       />
     </Link>
   );

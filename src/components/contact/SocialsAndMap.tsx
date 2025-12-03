@@ -1,9 +1,12 @@
-"use client";
+// Plik: src/components/contact/SocialsAndMap.tsx
+// (Usuń .client z nazwy pliku i usuń "use client")
 
-import { domAnimation, LazyMotion, m, type Transition } from "framer-motion";
 import Link from "next/link";
-import { type FC, type SVGProps, useState } from "react";
+import type { FC, SVGProps } from "react";
 import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
+
+// Importujemy Twój wrapper (Island) dla animacji wejścia
+import { MotionWrapper } from "@/components/ui/MotionWrapper";
 import type { SocialLink } from "@/lib/types";
 
 // Definicja typów dla Ikon
@@ -34,93 +37,46 @@ const ICON_MAP: Record<string, FC<IconProps>> = {
   patronite: PatroniteIcon,
 };
 
-const hoverTransition: Transition = {
-  duration: 0.4,
-  ease: [0.43, 0.13, 0.23, 0.96],
-};
-
-const shineTransition: Transition = {
-  duration: 0.7,
-  ease: "circOut",
-  delay: 0.1,
-};
-
-export const SocialsAndMapClient = ({
+export const SocialsAndMap = ({
   socialLinks,
 }: {
   socialLinks: readonly SocialLink[];
 }) => {
-  const [hoveredSocial, setHoveredSocial] = useState<number | null>(null);
-
   return (
-    <LazyMotion features={domAnimation}>
-      <m.div
-        initial={{ opacity: 0, x: 50 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-        className="grid grid-cols-2 gap-4"
-      >
-        {socialLinks.map((social, index) => {
+    // Używamy MotionWrapper tylko do animacji wejścia (viewport)
+    <MotionWrapper delay={0.2}>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {socialLinks.map((social) => {
           const IconComponent = ICON_MAP[social.icon];
           return (
-            <m.div
+            <Link
               key={social.name}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative flex items-center gap-4 overflow-hidden rounded-xl border border-white/20 bg-white/5 p-6 transition-all duration-300 hover:scale-[1.02] hover:border-white/30 active:scale-95"
             >
-              <Link
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                onMouseEnter={() => setHoveredSocial(index)}
-                onMouseLeave={() => setHoveredSocial(null)}
-                className="relative flex items-center gap-4 overflow-hidden rounded-xl border border-white/20 bg-white/5 p-6 transition-colors duration-300"
-              >
-                <m.span
-                  className={`absolute inset-0 ${social.colorClasses.background}`}
-                  initial={{ x: "-100%" }}
-                  animate={
-                    hoveredSocial === index ? { x: "0%" } : { x: "-100%" }
-                  }
-                  transition={hoverTransition}
-                />
-                <m.span
-                  className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent"
-                  initial={{ x: "-150%", skewX: -20 }}
-                  animate={
-                    hoveredSocial === index ? { x: "150%" } : { x: "-150%" }
-                  }
-                  transition={shineTransition}
-                />
-                <div className="relative z-10 flex items-center gap-4">
-                  <m.div
-                    animate={
-                      hoveredSocial === index
-                        ? {
-                            scale: [1, 1.2, 1],
-                            rotate: [0, 10, -5, 0],
-                          }
-                        : {}
-                    }
-                    transition={{ duration: 0.4 }}
-                    className="text-white"
-                  >
-                    {IconComponent && <IconComponent size={24} />}
-                  </m.div>
-                  <span className="font-semibold text-white">
-                    {social.name}
-                  </span>
+              {/* TŁO: Slide-in effect przy użyciu CSS group-hover */}
+              <span
+                className={`absolute inset-0 -translate-x-full transition-transform duration-300 ease-out group-hover:translate-x-0 ${social.colorClasses.background}`}
+              />
+
+              {/* SHINE: Przesuwający się błysk przy użyciu CSS group-hover */}
+              <span className="absolute inset-0 -translate-x-[150%] -skew-x-20 bg-linear-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-[150%]" />
+
+              {/* TREŚĆ */}
+              <div className="relative z-10 flex items-center gap-4">
+                <div className="text-white transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
+                  {IconComponent && <IconComponent size={24} />}
                 </div>
-              </Link>
-            </m.div>
+                <span className="font-semibold text-white transition-colors duration-300">
+                  {social.name}
+                </span>
+              </div>
+            </Link>
           );
         })}
-      </m.div>
-    </LazyMotion>
+      </div>
+    </MotionWrapper>
   );
 };

@@ -34,7 +34,7 @@ export const NewsletterForm = memo(() => {
           onChange={(e) => setEmail(e.target.value)}
           className="w-full appearance-none border-none bg-transparent text-sm text-white placeholder:text-philippineSilver focus:outline-none focus:ring-0"
         />
-        
+
         <m.button
           type="submit"
           aria-label="Zapisz się do newslettera"

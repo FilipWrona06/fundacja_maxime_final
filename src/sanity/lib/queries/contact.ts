@@ -49,3 +49,27 @@ export const getContactPageData = cache(
     return data ?? null;
   },
 );
+
+export const getFaqRange = async (start: number, end: number) => {
+  const data = await client.fetch<FaqItem[]>(
+    groq`*[_type == "contactPage"][0].faq[$start...$end] {
+      question,
+      answer
+    }`,
+    { start, end },
+    { next: { tags: ["contactPage"] } },
+  );
+  return data || [];
+};
+
+/**
+ * Liczy ile łącznie jest pytań w tablicy.
+ */
+export const getTotalFaqCount = async (): Promise<number> => {
+  const count = await client.fetch<number>(
+    groq`count(*[_type == "contactPage"][0].faq)`,
+    {},
+    { next: { tags: ["contactPage"] } },
+  );
+  return count || 0;
+};

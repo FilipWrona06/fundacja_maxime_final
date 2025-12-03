@@ -1,8 +1,6 @@
-// Plik: src/components/events/slug/EventSidebar.client.tsx
+// Plik: src/components/events/slug/EventSidebar.tsx
+// (Zmień rozszerzenie usuwając .client i usuń "use client" z góry)
 
-"use client";
-
-import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
 import Link from "next/link";
 import {
   FiAlertCircle,
@@ -14,38 +12,12 @@ import {
   FiTag,
 } from "react-icons/fi";
 
-import { durations, premiumEase, staggerConfig } from "@/lib/animations";
+// Importujemy Twój wrapper (Island)
+import { MotionWrapper } from "@/components/ui/MotionWrapper";
 import type { EventType } from "@/lib/types";
 
-// --- WARIANTY ANIMACJI ---
-const containerVariants: Variants = {
-  hidden: { opacity: 0, x: 30 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: {
-      duration: durations.slow,
-      ease: premiumEase,
-      staggerChildren: staggerConfig.normal,
-      delayChildren: 0.3,
-    },
-  },
-};
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, x: 15 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: {
-      duration: durations.fast,
-      ease: premiumEase,
-    },
-  },
-};
-
 export const EventSidebar = ({ event }: { event: EventType }) => {
-  // Logika daty i ceny
+  // --- LOGIKA (wykonywana na serwerze) ---
   const eventDate = new Date(`${event.date}T${event.time}:00`);
   const now = new Date();
   const isPastEvent = eventDate < now;
@@ -57,7 +29,6 @@ export const EventSidebar = ({ event }: { event: EventType }) => {
     event.price?.toLowerCase().includes("bezpłatne") ||
     event.price === "0";
 
-  // Poprawiono logikę, aby uniknąć non-null assertion (!)
   const buttonHref =
     hasTicketLink && event.ticketLink ? event.ticketLink : "/kontakt";
 
@@ -67,14 +38,11 @@ export const EventSidebar = ({ event }: { event: EventType }) => {
       ? "Zarezerwuj miejsce"
       : "Skontaktuj się z nami";
 
+  // --- RENDEROWANIE (HTML wysyłany z serwera) ---
   return (
-    <LazyMotion features={domAnimation}>
-      <m.aside
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
-        className="w-full"
-      >
+    // Animujemy wejście całego sidebara
+    <MotionWrapper variant="slideLeft" delay={0.3} className="w-full">
+      <aside>
         <div className="relative overflow-hidden rounded-3xl border border-white/6 bg-linear-to-br from-white/8 to-white/2 p-6 shadow-premium backdrop-blur-2xl sm:p-8">
           {/* Top accent line */}
           <div className="absolute left-0 right-0 top-0 h-px bg-linear-to-r from-transparent via-arylideYellow/20 to-transparent" />
@@ -93,10 +61,7 @@ export const EventSidebar = ({ event }: { event: EventType }) => {
               value={event.dateDisplay || event.date}
             />
             <DetailRow icon={<FiClock />} label="Godzina" value={event.time} />
-            <m.li
-              variants={itemVariants}
-              className="group flex gap-4 transition-all duration-500"
-            >
+            <li className="group flex gap-4 transition-all duration-500">
               <div className="mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-white/8 to-white/3 text-arylideYellow transition-all duration-500 group-hover:from-arylideYellow/15 group-hover:to-arylideYellow/5 group-hover:shadow-lg group-hover:shadow-arylideYellow/10">
                 <FiMapPin size={20} />
               </div>
@@ -113,7 +78,7 @@ export const EventSidebar = ({ event }: { event: EventType }) => {
                   </p>
                 )}
               </div>
-            </m.li>
+            </li>
             <DetailRow
               icon={<FiTag />}
               label="Bilety"
@@ -123,10 +88,7 @@ export const EventSidebar = ({ event }: { event: EventType }) => {
           </ul>
 
           {/* --- SEKCJA CTA --- */}
-          <m.div
-            variants={itemVariants}
-            className="relative z-10 mt-8 border-t border-white/6 pt-8"
-          >
+          <div className="relative z-10 mt-8 border-t border-white/6 pt-8">
             {isPastEvent ? (
               <div className="flex w-full items-center justify-center gap-3 rounded-2xl border border-white/6 bg-white/4 py-4 font-bold text-white/50 backdrop-blur-sm">
                 <FiAlertCircle size={20} />
@@ -140,7 +102,7 @@ export const EventSidebar = ({ event }: { event: EventType }) => {
                   rel={hasTicketLink ? "noopener noreferrer" : undefined}
                   className="group/btn relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl bg-linear-to-r from-arylideYellow to-arylideYellow/90 px-6 py-4 font-bold text-raisinBlack shadow-lg shadow-arylideYellow/20 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl hover:shadow-arylideYellow/30 active:scale-100"
                 >
-                  {/* Hover overlay effect */}
+                  {/* Hover overlay effect (CSS) */}
                   <span className="absolute inset-0 bg-linear-to-r from-white to-white/90 opacity-0 transition-opacity duration-500 group-hover/btn:opacity-100" />
 
                   <span className="relative z-10 transition-transform duration-300">
@@ -149,7 +111,6 @@ export const EventSidebar = ({ event }: { event: EventType }) => {
                   <FiArrowRight className="relative z-10 transition-transform duration-500 group-hover/btn:translate-x-1" />
                 </Link>
 
-                {/* Info text pod przyciskiem */}
                 <p className="flex items-center justify-center gap-2.5 text-center text-xs text-white/40">
                   <FiCheckCircle className="text-green-400" size={14} />
                   <span>
@@ -160,14 +121,14 @@ export const EventSidebar = ({ event }: { event: EventType }) => {
                 </p>
               </div>
             )}
-          </m.div>
+          </div>
 
           {/* Bottom accent */}
           <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-white/6 to-transparent" />
         </div>
 
         {/* Contact link */}
-        <m.div variants={itemVariants} className="mt-6 text-center">
+        <div className="mt-6 text-center">
           <p className="text-sm text-white/50">
             Masz pytania?{" "}
             <Link
@@ -177,12 +138,13 @@ export const EventSidebar = ({ event }: { event: EventType }) => {
               Skontaktuj się z nami
             </Link>
           </p>
-        </m.div>
-      </m.aside>
-    </LazyMotion>
+        </div>
+      </aside>
+    </MotionWrapper>
   );
 };
 
+// Helper jako zwykła funkcja zwracająca HTML (Server)
 function DetailRow({
   icon,
   label,
@@ -195,10 +157,7 @@ function DetailRow({
   highlight?: boolean;
 }) {
   return (
-    <m.li
-      variants={itemVariants}
-      className="group flex items-center gap-4 transition-all duration-500"
-    >
+    <li className="group flex items-center gap-4 transition-all duration-500">
       <div
         className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-all duration-500 ${
           highlight
@@ -222,6 +181,6 @@ function DetailRow({
           {value}
         </p>
       </div>
-    </m.li>
+    </li>
   );
 }
