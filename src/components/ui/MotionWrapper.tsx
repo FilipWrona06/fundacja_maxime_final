@@ -1,5 +1,3 @@
-// Plik: src/components/ui/MotionWrapper.client.tsx
-
 "use client";
 
 import { domAnimation, LazyMotion, m, type Variants } from "framer-motion";
@@ -7,6 +5,8 @@ import {
   blurValues,
   durations,
   premiumEase,
+  tapScales,
+  ultraSmoothSpring,
   viewportConfig,
 } from "@/lib/animations";
 
@@ -14,86 +14,44 @@ interface MotionWrapperProps {
   children: React.ReactNode;
   className?: string;
   delay?: number;
-  /**
-   * Czy animacja ma się wykonać tylko raz? (Domyślnie: true)
-   */
   once?: boolean;
-  /**
-   * Ile % elementu musi być widoczne, aby odpalić animację (0-1)
-   */
   amount?: number;
-  /**
-   * Typ animacji wejścia
-   */
   variant?: "fadeUp" | "fade" | "scale" | "slideLeft" | "slideRight";
-  /**
-   * Długość animacji (można nadpisać defaultową)
-   */
   duration?: number;
+  /**
+   * Czy włączyć efekt podniesienia przy najechaniu myszką?
+   */
+  enableHover?: boolean;
+  /**
+   * Czy włączyć efekt wciśnięcia przy kliknięciu?
+   */
+  enableTap?: boolean;
 }
 
-// Różne warianty animacji
+// --- WARIANTY ANIMACJI ---
 const fadeUpVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 20,
-    filter: blurValues.normal,
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    filter: blurValues.none,
-  },
+  hidden: { opacity: 0, y: 20, filter: blurValues.normal },
+  visible: { opacity: 1, y: 0, filter: blurValues.none },
 };
 
 const fadeVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    filter: blurValues.subtle,
-  },
-  visible: {
-    opacity: 1,
-    filter: blurValues.none,
-  },
+  hidden: { opacity: 0, filter: blurValues.subtle },
+  visible: { opacity: 1, filter: blurValues.none },
 };
 
 const scaleVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    scale: 0.95,
-    filter: blurValues.normal,
-  },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    filter: blurValues.none,
-  },
+  hidden: { opacity: 0, scale: 0.95, filter: blurValues.normal },
+  visible: { opacity: 1, scale: 1, filter: blurValues.none },
 };
 
 const slideLeftVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    x: 30,
-    filter: blurValues.normal,
-  },
-  visible: {
-    opacity: 1,
-    x: 0,
-    filter: blurValues.none,
-  },
+  hidden: { opacity: 0, x: 30, filter: blurValues.normal },
+  visible: { opacity: 1, x: 0, filter: blurValues.none },
 };
 
 const slideRightVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    x: -30,
-    filter: blurValues.normal,
-  },
-  visible: {
-    opacity: 1,
-    x: 0,
-    filter: blurValues.none,
-  },
+  hidden: { opacity: 0, x: -30, filter: blurValues.normal },
+  visible: { opacity: 1, x: 0, filter: blurValues.none },
 };
 
 const variantMap = {
@@ -112,6 +70,8 @@ export const MotionWrapper = ({
   amount = 0.2,
   variant = "fadeUp",
   duration,
+  enableHover = false,
+  enableTap = false, // Domyślnie false
 }: MotionWrapperProps) => {
   const selectedVariants = variantMap[variant];
   const animationDuration = duration || durations.slow;
@@ -132,6 +92,23 @@ export const MotionWrapper = ({
           duration: animationDuration,
           ease: premiumEase,
         }}
+        // Obsługa hovera
+        whileHover={
+          enableHover
+            ? {
+                y: -8,
+                transition: ultraSmoothSpring,
+              }
+            : undefined
+        }
+        // Obsługa kliknięcia (Tap)
+        whileTap={
+          enableTap
+            ? {
+                scale: tapScales.normal, // lub 0.95 jeśli nie masz tapScales
+              }
+            : undefined
+        }
         className={className}
       >
         {children}
@@ -140,7 +117,6 @@ export const MotionWrapper = ({
   );
 };
 
-// Export dodatkowy helper dla stagger container
 export const StaggerContainer = ({
   children,
   className = "",

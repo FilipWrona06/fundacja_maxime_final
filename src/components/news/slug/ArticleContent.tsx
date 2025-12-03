@@ -1,17 +1,19 @@
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import Image from "next/image";
+import Link from "next/link";
+import { FiArrowLeft } from "react-icons/fi";
+
+import { MotionWrapper } from "@/components/ui/MotionWrapper";
 import type { NewsArticleType } from "@/lib/types";
 import { urlFor } from "@/sanity/lib/image";
-import { ArticleContentClient } from "./ArticleContent.client";
 
-// Konfiguracja PortableText (zdefiniowana na serwerze!)
+// Konfiguracja PortableText (zdefiniowana na serwerze)
 const newsPortableTextComponents: PortableTextComponents = {
   types: {
     image: ({ value }) => {
       if (!value?.asset?._ref) {
         return null;
       }
-      // Generowanie URL odbywa się teraz na serwerze
       return (
         <div className="my-8 overflow-hidden rounded-2xl relative aspect-video">
           <Image
@@ -75,21 +77,38 @@ const newsPortableTextComponents: PortableTextComponents = {
 
 export const ArticleContent = ({ article }: { article: NewsArticleType }) => {
   return (
-    // Przekazujemy wyrenderowaną treść jako children do klienta
-    <ArticleContentClient>
-      <div className="prose prose-invert prose-lg max-w-none">
-        {article.excerpt && (
-          <p className="lead mb-8 border-l-4 border-arylideYellow pl-6 text-xl italic text-white/90">
-            {article.excerpt}
-          </p>
-        )}
+    <div className="container relative z-20 mx-auto mt-[-50px] px-6">
+      {/* Przycisk powrotu - Animowany Wrapper */}
+      <MotionWrapper variant="fadeUp" delay={0.5} className="mb-8">
+        <Link
+          href="/aktualnosci"
+          className="group inline-flex items-center gap-3 rounded-xl border border-white/5 bg-raisinBlack/50 px-5 py-2.5 text-sm font-semibold text-white/80 backdrop-blur-md transition-all duration-300 hover:border-arylideYellow/30 hover:bg-raisinBlack/80 hover:text-white"
+        >
+          <FiArrowLeft className="text-arylideYellow transition-transform duration-300 group-hover:-translate-x-1" />
+          Wróć do listy
+        </Link>
+      </MotionWrapper>
 
-        {/* To renderuje się na serwerze do czystego HTML! */}
-        <PortableText
-          value={article.content}
-          components={newsPortableTextComponents}
-        />
-      </div>
-    </ArticleContentClient>
+      {/* Kontener treści - Animowany Wrapper */}
+      <MotionWrapper
+        variant="fadeUp"
+        delay={0.6}
+        className="mx-auto max-w-4xl rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl shadow-2xl lg:p-12"
+      >
+        <div className="prose prose-invert prose-lg max-w-none">
+          {article.excerpt && (
+            <p className="lead mb-8 border-l-4 border-arylideYellow pl-6 text-xl italic text-white/90">
+              {article.excerpt}
+            </p>
+          )}
+
+          {/* Renderowanie PortableText NA SERWERZE */}
+          <PortableText
+            value={article.content}
+            components={newsPortableTextComponents}
+          />
+        </div>
+      </MotionWrapper>
+    </div>
   );
 };

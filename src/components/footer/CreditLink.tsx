@@ -1,7 +1,5 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-// Zakładam, że Underline da się dostosować lub zastąpić prostym div-em w CSS
-// Jeśli Underline wymaga propa isHovered (JS), lepiej go tu zastąpić zwykłym CSS.
 
 export const CreditLink = ({
   href,
@@ -15,26 +13,19 @@ export const CreditLink = ({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      // "group" pozwala dzieciom reagować na hover rodzica
-      className="group relative font-semibold inline-block"
+      // 'group' pozwala dzieciom (spanom) reagować na hover rodzica (linku)
+      className="group relative inline-block font-semibold transition-colors duration-300 hover:text-white"
     >
-      <span
-        // Zastępujemy animate={{ y: -2 }} klasami Tailwinda
-        // transition-transform + ease-out symuluje płynny ruch
-        className="inline-block transition-transform duration-300 ease-out group-hover:-translate-y-0.5"
-      >
+      {/* Tekst unoszący się do góry */}
+      <span className="inline-block transition-transform duration-300 ease-out group-hover:-translate-y-0.5">
         {children}
       </span>
 
       {/* 
-         Zamiast komponentu <Underline isHovered={...} /> 
-         robimy to w CSS (lub dostosowujemy Underline, by reagował na grupę)
+        Podkreślenie rozwijające się od lewej.
+        Używamy 'bg-arylideYellow' lub 'bg-current' w zależności od preferencji designu.
       */}
-      <span
-        className="absolute left-0 bottom-0 block h-px w-full bg-current 
-                   scale-x-0 transition-transform duration-300 ease-out 
-                   origin-left group-hover:scale-x-100"
-      />
+      <span className="absolute bottom-0 left-0 block h-px w-full bg-arylideYellow scale-x-0 transition-transform duration-300 ease-out origin-left group-hover:scale-x-100" />
     </Link>
   );
 };

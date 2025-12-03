@@ -10,7 +10,7 @@ import { urlFor } from "@/sanity/lib/image";
 export const RelatedEvents = ({ events }: { events: EventType[] }) => {
   return (
     <section className="container mx-auto px-4 pb-20 sm:px-6 lg:px-8">
-      {/* NAGŁÓWEK SEKCJI */}
+      {/* NAGŁÓWEK SEKCJI */}nm
       <MotionWrapper className="mb-16 text-center">
         <div className="mb-6 flex items-center justify-center gap-3">
           <span className="h-px w-12 bg-linear-to-r from-transparent to-arylideYellow/60" />
@@ -29,7 +29,6 @@ export const RelatedEvents = ({ events }: { events: EventType[] }) => {
           Sprawdź nadchodzące koncerty i wydarzenia muzyczne
         </p>
       </MotionWrapper>
-
       {/* GRID KAFLI Z STAGGER ANIMATION */}
       <StaggerContainer
         staggerDelay={0.12}

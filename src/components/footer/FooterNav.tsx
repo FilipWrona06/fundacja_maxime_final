@@ -1,10 +1,10 @@
-// ===== FooterNav.tsx =====
 "use client";
 
-import { m } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { memo } from "react";
-import { smoothSpring, staggerConfig } from "@/lib/animations";
+
+// Używamy Twoich wrapperów zamiast ręcznego m.div
+import { MotionWrapper, StaggerContainer } from "@/components/ui/MotionWrapper";
 import type { NavLink } from "@/lib/types/index";
 import { AnimatedNavLink } from "../ui/AnimatedNavLink";
 
@@ -16,26 +16,20 @@ export const FooterNav = memo(({ links }: FooterNavProps) => {
   const pathname = usePathname();
 
   return (
-    <ul className="mt-6 space-y-2">
-      {links.map((link, index) => (
-        <m.div
-          key={link.href}
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{
-            delay: 0.4 + index * staggerConfig.normal,
-            ...smoothSpring,
-          }}
-        >
+    // StaggerContainer zarządza opóźnieniami dzieci
+    <StaggerContainer className="mt-6 space-y-2" staggerDelay={0.1}>
+      {links.map((link) => (
+        // MotionWrapper zarządza animacją wejścia (Slide Right)
+        <MotionWrapper key={link.href} variant="slideRight">
           <AnimatedNavLink
             href={link.href}
             name={link.name}
             isActive={pathname === link.href}
             className="text-sm"
           />
-        </m.div>
+        </MotionWrapper>
       ))}
-    </ul>
+    </StaggerContainer>
   );
 });
 

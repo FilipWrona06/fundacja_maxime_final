@@ -1,29 +1,8 @@
+// Plik: src/components/navbar/AnimatedMenuButton.tsx
+
 "use client";
 
-import { m, type Transition } from "framer-motion";
-import type { Ref } from "react";
-import { memo } from "react";
-import { premiumEase, tapScales } from "@/lib/animations";
-
-const menuButtonVariants = {
-  top: {
-    closed: { rotate: 0, y: 0 },
-    open: { rotate: 45, y: 8 },
-  },
-  middle: {
-    closed: { opacity: 1, scaleX: 1 },
-    open: { opacity: 0, scaleX: 0.3 },
-  },
-  bottom: {
-    closed: { rotate: 0, y: 0 },
-    open: { rotate: -45, y: -8 },
-  },
-};
-
-const menuTransition: Transition = {
-  duration: 0.4,
-  ease: premiumEase,
-};
+import { memo, type Ref } from "react";
 
 interface AnimatedMenuButtonProps {
   isOpen: boolean;
@@ -32,42 +11,47 @@ interface AnimatedMenuButtonProps {
 }
 
 export const AnimatedMenuButton = memo(
-  ({ isOpen, onClick, buttonRef }: AnimatedMenuButtonProps) => (
-    <m.button
-      ref={buttonRef}
-      type="button"
-      onClick={onClick}
-      className="z-50 p-3 relative rounded-xl transition-colors duration-300 hover:bg-arylideYellow/10"
-      aria-label={isOpen ? "Zamknij menu" : "Otwórz menu"}
-      aria-expanded={isOpen}
-      aria-controls="mobile-menu"
-      whileTap={{ scale: tapScales.normal }}
-      transition={{ duration: 0.2, ease: premiumEase }}
-    >
-      <m.div
-        className="flex flex-col justify-around w-6 h-6 relative z-10"
-        animate={isOpen ? "open" : "closed"}
-        initial={false}
-        transition={menuTransition}
+  ({ isOpen, onClick, buttonRef }: AnimatedMenuButtonProps) => {
+    // Wspólne style dla linii, w tym 'cubic-bezier' imitujący premiumEase
+    const lineBaseClass =
+      "block h-0.5 w-full bg-white rounded-full transition-all duration-300 ease-[cubic-bezier(0.45,0,0.55,1)] origin-center";
+
+    return (
+      <button
+        ref={buttonRef}
+        type="button"
+        onClick={onClick}
+        // active:scale-95 zastępuje whileTap={{ scale: 0.96 }}
+        className="z-50 p-3 relative rounded-xl transition-all duration-200 hover:bg-arylideYellow/10 active:scale-95"
+        aria-label={isOpen ? "Zamknij menu" : "Otwórz menu"}
+        aria-expanded={isOpen}
+        aria-controls="mobile-menu"
       >
-        <m.span
-          className="block h-0.5 w-full bg-white origin-center will-change-transform rounded-full"
-          variants={menuButtonVariants.top}
-          transition={menuTransition}
-        />
-        <m.span
-          className="block h-0.5 w-full bg-white will-change-transform rounded-full"
-          variants={menuButtonVariants.middle}
-          transition={{ ...menuTransition, duration: 0.3 }}
-        />
-        <m.span
-          className="block h-0.5 w-full bg-white origin-center will-change-transform rounded-full"
-          variants={menuButtonVariants.bottom}
-          transition={menuTransition}
-        />
-      </m.div>
-    </m.button>
-  ),
+        <div className="flex flex-col justify-between w-6 h-5 relative z-10 overflow-hidden">
+          {/* Górna linia: Obrót i przesunięcie w dół */}
+          <span
+            className={`${lineBaseClass} ${
+              isOpen ? "rotate-45 translate-y-[9px]" : ""
+            }`}
+          />
+
+          {/* Środkowa linia: Zanikanie i skalowanie */}
+          <span
+            className={`${lineBaseClass} ${
+              isOpen ? "opacity-0 translate-x-full" : "opacity-100"
+            }`}
+          />
+
+          {/* Dolna linia: Obrót i przesunięcie w górę */}
+          <span
+            className={`${lineBaseClass} ${
+              isOpen ? "-rotate-45 -translate-y-[9px]" : ""
+            }`}
+          />
+        </div>
+      </button>
+    );
+  },
 );
 
 AnimatedMenuButton.displayName = "AnimatedMenuButton";

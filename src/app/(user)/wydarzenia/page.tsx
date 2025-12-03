@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 // Upewnij się, że importujesz właściwy plik (EventsCalendar.client)
 import { EventsCalendarClient } from "@/components/events/EventsCalendar";
 import { FeaturedEvent } from "@/components/events/FeaturedEvents";
-import { WydarzeniaHeroSectionClient as WydarzeniaHeroSection } from "@/components/events/WydarzeniaHeroSection";
+import { WydarzeniaHeroSection } from "@/components/events/WydarzeniaHeroSection";
 import {
   getAllEvents,
   getEventsPageSettings,
