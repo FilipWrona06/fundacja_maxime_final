@@ -5,7 +5,6 @@ import type { Metadata } from "next";
 // --- IMPORTY KOMPONENTÓW ---
 
 // 2. Client Components (Interaktywne wyspy)
-import { ContactCta } from "@/components/contact/ContactCta";
 import { ContactFormClient } from "@/components/contact/ContactForm"; // Pamiętaj o zmianie nazwy pliku jeśli zmieniłeś na .client
 // 1. Server Components (zoptymalizowane, usunięto "use client")
 import { ContactHeader } from "@/components/contact/ContactHeader";
@@ -213,9 +212,6 @@ export default async function KontaktPage() {
           />
         </div>
       </section>
-
-      {/* 5. CTA (Client Component) */}
-      <ContactCta email={contactInfo.email} />
     </div>
   );
 }
