@@ -6,6 +6,7 @@
 import type React from "react";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
+import Preloader from "@/components/ui/Preloader";
 
 // -----------------------------------------
 
@@ -17,6 +18,7 @@ export default function UserPagesLayout({
 }) {
   return (
     <>
+      <Preloader />
       {/* Navbar jest renderowany dla wszystkich stron w tej grupie */}
       <Navbar />
 
