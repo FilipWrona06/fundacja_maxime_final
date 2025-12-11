@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 export default function Preloader() {
   // Czy preloader jest widoczny w drzewie DOM?
   const [show, setShow] = useState(true);
-  
+
   // Czy preloader zaczyna znikać (dodajemy klasę opacity-0)?
   const [fading, setFading] = useState(false);
 
@@ -27,7 +27,6 @@ export default function Preloader() {
       setTimeout(() => {
         setShow(false);
       }, 500); // Tyle samo co duration-500 w className
-
     }, 2000); // Czas trwania preloadera
 
     return () => clearTimeout(timer);
@@ -48,7 +47,10 @@ export default function Preloader() {
 
       {/* Prosty pasek ładowania (CSS only) */}
       <div className="w-48 h-1 bg-white/20 rounded-full overflow-hidden">
-        <div className="h-full bg-arylideYellow animate-[loading_2s_ease-in-out_infinite]" style={{ width: "100%" }}></div>
+        <div
+          className="h-full bg-arylideYellow animate-[loading_2s_ease-in-out_infinite]"
+          style={{ width: "100%" }}
+        ></div>
       </div>
     </div>
   );

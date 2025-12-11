@@ -5,20 +5,23 @@ import { FiArrowRight, FiLoader } from "react-icons/fi"; // Dodałem ikonę ład
 import { subscribeToNewsletter } from "@/actions/subscribe"; // Import akcji
 
 const initialState = {
-  status: 'idle' as const,
-  message: '',
+  status: "idle" as const,
+  message: "",
 };
 
 export const NewsletterForm = () => {
   // useActionState obsługuje stan formularza (pending, success, error)
-  const [state, formAction, isPending] = useActionState(subscribeToNewsletter, initialState);
-  
+  const [state, formAction, isPending] = useActionState(
+    subscribeToNewsletter,
+    initialState,
+  );
+
   // Zachowujemy lokalny stan tylko do czyszczenia inputa po sukcesie
   const [email, setEmail] = useState("");
 
   // Efekt czyszczący formularz po udanym zapisie
   useEffect(() => {
-    if (state.status === 'success') {
+    if (state.status === "success") {
       setEmail("");
       // Tutaj możesz też wywołać zewnętrzny Toast (np. sonner / react-hot-toast)
       // toast.success(state.message);
@@ -28,10 +31,10 @@ export const NewsletterForm = () => {
   return (
     <div className="w-full max-w-sm mt-6">
       <form action={formAction}>
-        <div 
+        <div
           className={`
             group relative flex items-center border-b py-2 transition-colors duration-300
-            ${state.status === 'error' ? 'border-red-500' : 'border-white/20 focus-within:border-arylideYellow/80'}
+            ${state.status === "error" ? "border-red-500" : "border-white/20 focus-within:border-arylideYellow/80"}
           `}
         >
           <input
@@ -65,12 +68,12 @@ export const NewsletterForm = () => {
 
       {/* Dyskretne komunikaty o statusie pod inputem */}
       <div className="mt-2 h-5 text-xs font-medium">
-        {state.status === 'error' && (
+        {state.status === "error" && (
           <p className="text-red-400 animate-in fade-in slide-in-from-top-1">
             {state.message}
           </p>
         )}
-        {state.status === 'success' && (
+        {state.status === "success" && (
           <p className="text-green-400 animate-in fade-in slide-in-from-top-1">
             {state.message}
           </p>
