@@ -46,7 +46,7 @@ export const WelcomeEmail = ({
             <Section className="text-center mt-8 mb-8">
               <Link
                 className="bg-brand rounded text-white text-[12px] font-semibold no-underline text-center px-5 py-3"
-                href="https://twoja-domena.pl"
+                href="https://fundacja-maxime-final.vercel.app"
               >
                 Przejdź do strony
               </Link>
