@@ -1,13 +1,19 @@
 import type { PortableTextComponents } from "@portabletext/react";
 import { PortableText } from "@portabletext/react";
 import Link from "next/link";
-// Importy animacji
-import { MotionWrapper } from "@/components/ui/MotionWrapper"; // Twój wrapper wejścia
-import { getHeroSectionData } from "@/sanity/lib/queries/home";
-import { HeroButtonWrapper, ScrollArrow } from "./HeroComponents"; // Mikro-interakcje
-import { HeroParallax } from "./HeroParallax"; // Nowy wrapper scrolla
+// 1. IMPORTUJEMY BIBLIOTEKĘ I WIDEO
+import Video from "next-video";
+// UWAGA: Ścieżka zależy od tego, gdzie jest ten plik względem folderu /videos.
+// Zakładam, że HeroSection jest głęboko w components, więc wychodzimy do głównego katalogu.
+// Zmień nazwę pliku na taką, jaką wrzuciłeś do folderu videos.
+import backgroundVideo from "../../../videos/background-video.mp4";
 
-// --- KONFIGURACJA PORTABLE TEXT ---
+import { MotionWrapper } from "@/components/ui/MotionWrapper";
+import { getHeroSectionData } from "@/sanity/lib/queries/home";
+import { HeroButtonWrapper, ScrollArrow } from "./HeroComponents";
+import { HeroParallax } from "./HeroParallax";
+
+// --- KONFIGURACJA PORTABLE TEXT (Bez zmian) ---
 const myPortableTextComponents: PortableTextComponents = {
   types: {
     horizontalRule: () => <hr className="my-8 border-white/20" />,
@@ -31,7 +37,7 @@ const myPortableTextComponents: PortableTextComponents = {
   },
 };
 
-// --- HELPER DLA PRZYCISKU (Statyczny HTML) ---
+// --- HELPER DLA PRZYCISKU (Bez zmian) ---
 const renderButton = (
   href: string,
   label: string,
@@ -64,23 +70,22 @@ export async function HeroSection() {
     return null;
   }
 
-  // PRZYGOTOWANIE SLOTU WIDEO (Czysty HTML)
+  // 2. TWORZENIE SLOTU WIDEO PRZY UŻYCIU NEXT-VIDEO
+  // Zastępujemy standardowy tag <video> komponentem <Video> z next-video
+  // Atrybuty są ustawione tak, aby działało to jako tło (zgodnie z filmikiem)
   const videoSlot = (
-    <video
-      poster={heroData.posterUrl}
+    <Video
+      src={backgroundVideo} // Tutaj przekazujemy zaimportowany plik
       autoPlay
-      loop
       muted
+      loop
       playsInline
-      preload="metadata"
-      className="h-full w-full object-cover"
-    >
-      <source src={heroData.videoWebmUrl} type="video/webm" />
-      <source src={heroData.videoMp4Url} type="video/mp4" />
-    </video>
+      controls={false} // Ukrywamy kontrolki playera
+      className="h-full w-full object-cover" // Zachowujemy style wypełniające tło
+    />
   );
 
-  // PRZYGOTOWANIE SLOTU TREŚCI (Statyczny HTML + MotionWrapper do wejścia)
+  // --- RESZTA KODU BEZ ZMIAN ---
   const contentSlot = (
     <>
       {/* Badge */}
@@ -135,9 +140,10 @@ export async function HeroSection() {
     </>
   );
 
+  // Przekazujemy posterUrl z Sanity jako fallback, chociaż next-video ma własny mechanizm placeholderów
   return (
     <HeroParallax
-      posterUrl={heroData.posterUrl}
+      posterUrl={heroData.posterUrl} 
       videoSlot={videoSlot}
       contentSlot={contentSlot}
       arrowSlot={<ScrollArrow />}

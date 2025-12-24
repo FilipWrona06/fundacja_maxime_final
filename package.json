@@ -21,6 +21,7 @@
     "get-random-values-esm": "1.0.2",
     "next": "16.0.7",
     "next-sanity": "^11.6.9",
+    "next-video": "^2.6.0",
     "pnpm": "^10.23.0",
     "react": "19.2.1",
     "react-dom": "19.2.1",
