@@ -1,0 +1,157 @@
+/* Plik: src/app/globals.css */
+@import "tailwindcss";
+
+/* 
+  Konfiguracja motywu Tailwind v4.
+  Zmienne CSS są mapowane bezpośrednio na klasy użytkowe.
+  */
+@theme {
+  /* Kolory */
+  --color-raisinBlack: rgb(38, 38, 38);
+  --color-philippineSilver: rgb(178, 178, 178);
+  --color-arylideYellow: rgb(239, 213, 111);
+  --color-oxfordBlue: rgb(0, 28, 72);
+
+  /* Fonty */
+  --font-montserrat: var(--font-montserrat);
+  --font-youngest: var(--font-youngest);
+}
+
+/* Warstwa bazowa - style ogólne */
+@layer base {
+  body {
+    @apply bg-raisinBlack text-white font-montserrat;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Bg noise texture */
+  .bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  }
+}
+
+/* Warstwa komponentów - własne klasy złożone */
+@layer components {
+  .glass-effect {
+    @apply bg-linear-to-br from-oxfordBlue/15 to-oxfordBlue/5 backdrop-blur-2xl border border-white/6 shadow-2xl shadow-black/30;
+  }
+
+  /* Premium glassmorphism effect */
+  .glass-premium {
+    @apply bg-linear-to-br from-white/8 to-white/2 backdrop-blur-2xl border border-white/6 shadow-[0_8px_32px_rgba(0,0,0,0.3)];
+  }
+
+  /* Hover lift effect */
+  .hover-lift {
+    @apply transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-2xl;
+  }
+
+  /* Smooth glow effect */
+  .glow-arylide {
+    @apply shadow-lg shadow-arylideYellow/10 hover:shadow-xl hover:shadow-arylideYellow/20 transition-shadow duration-500;
+  }
+}
+
+/* Warstwa narzędziowa - scrollbar & utilities */
+@layer utilities {
+  /* Ultra-smooth custom scrollbar */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(239, 213, 111, 0.2) transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+      180deg,
+      rgba(239, 213, 111, 0.3),
+      rgba(239, 213, 111, 0.1)
+    );
+    border-radius: 10px;
+    transition: background 0.3s ease;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(
+      180deg,
+      rgba(239, 213, 111, 0.5),
+      rgba(239, 213, 111, 0.2)
+    );
+  }
+
+  /* Text gradient utility */
+  .text-gradient-arylide {
+    @apply bg-linear-to-r from-arylideYellow via-arylideYellow to-arylideYellow/80 bg-clip-text text-transparent;
+  }
+
+  /* Radial gradient utility */
+  .bg-radial-gradient {
+    background: radial-gradient(circle, var(--tw-gradient-stops));
+  }
+
+  /* Subtle border glow */
+  .border-glow {
+    @apply border border-white/4 hover:border-arylideYellow/20 transition-colors duration-500;
+  }
+
+  /* Premium shadow */
+  .shadow-premium {
+    box-shadow:
+      0 4px 24px -2px rgba(0, 0, 0, 0.3),
+      0 2px 8px -2px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  /* Ultra-smooth transitions */
+  .transition-premium {
+    transition: all 0.5s cubic-bezier(0.45, 0, 0.55, 1);
+  }
+}
+
+/* Animacje keyframes dla efektów specjalnych */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.6;
+    box-shadow: 0 0 8px rgba(239, 213, 111, 0.3);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 16px rgba(239, 213, 111, 0.5);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes loading {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(0%); }
+  100% { transform: translateX(100%); }
+}
